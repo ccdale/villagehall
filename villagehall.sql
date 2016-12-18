@@ -1,3 +1,5 @@
+-- Adminer 4.2.5 MySQL dump
+
 SET NAMES utf8;
 SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
@@ -18,12 +20,23 @@ CREATE TABLE `booking` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+DROP TABLE IF EXISTS `hall`;
+CREATE TABLE `hall` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 DROP TABLE IF EXISTS `rooms`;
 CREATE TABLE `rooms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hallid` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   `size` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `hallid` (`hallid`),
+  CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`hallid`) REFERENCES `hall` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -39,3 +52,6 @@ CREATE TABLE `user` (
   `postcode` varchar(10) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- 2016-12-18 10:52:15

@@ -3,10 +3,10 @@
 /*
  * vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker:
  *
- * lidlington.php
+ * config.php
  *
- * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Sunday 18 December 2016, 10:56:18
+ * Started: Tuesday 22 November 2016, 10:26:19
+ * Last Modified: Tuesday 22 November 2016, 10:36:49
  *
  * Copyright (c) 2016 Chris Allison chris.allison@hotmail.com
  *
@@ -26,27 +26,6 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "base.class.php";
-require_once "logging.class.php";
-require_once "booking.class.php";
-
-date_default_timezone_set("Europe/London");
-
-$logg=new Logging(false,"VHPHP",0,LOG_INFO);
-
-$content=$apppath . "<br>" . $libpath . "<br>" . $pvpath;
+$appname="villagehall";
+$displayname="Village Hall";
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-<title><?php echo $displayname; ?></title>
-</head>
-<body>
-<div>
-<h1><?php echo $displayname; ?></h1>
-<p>
-<?php echo $content; ?>
-</p>
-</div>
-</body>
-</html>

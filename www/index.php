@@ -6,7 +6,7 @@
  * index.php
  *
  * Started: Saturday 19 November 2016, 15:35:53
- * Last Modified: Tuesday 22 November 2016, 10:37:44
+ * Last Modified: Sunday 18 December 2016, 11:06:46
  *
  * Copyright (c) 2016 Chris Allison chris.allison@hotmail.com
  *
@@ -26,12 +26,33 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * layout of this application
+ * (adjust the vars below accordingly if this changes)
+ *
+ * root/
+ *     |
+ *     - villagehall-config.php
+ *     - app
+ *     - lib
+ *     - www (or public dir)
+ */
+
+/*
+ * strip this many directories off of the current
+ * path, to find the root
+ */
+$stripcn=1;
+
+/*
+ * work out where we are in the file system
+ */
 $publicpath=getcwd();
 $ppatha=explode("/",$publicpath);
 $cn=count($ppatha);
 $pvpatha=array();
-if($cn>=1){
-    for($i=0;$i<$cn-1;$i++){
+if($cn>=$stripcn){
+    for($i=0;$i<$cn-$stripcn;$i++){
         $pvpatha[$i]=$ppatha[$i];
     }
 }
@@ -53,6 +74,6 @@ unset($tmpa);
 
 set_include_path($libpath . PATH_SEPARATOR . get_include_path());
 
-include $pvpath . "/config.php";
+include $pvpath . "/villagehall-config.php";
 include $apppath . "/" . $appname . ".php";
 ?>
