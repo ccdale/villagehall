@@ -6,7 +6,7 @@
  * index.php
  *
  * Started: Saturday 19 November 2016, 15:35:53
- * Last Modified: Sunday 18 December 2016, 11:06:46
+ * Last Modified: Sunday 18 December 2016, 11:24:59
  *
  * Copyright (c) 2016 Chris Allison chris.allison@hotmail.com
  *
@@ -37,6 +37,8 @@
  *     - lib
  *     - www (or public dir)
  */
+
+date_default_timezone_set("Europe/London");
 
 /*
  * strip this many directories off of the current
