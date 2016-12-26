@@ -6,9 +6,9 @@
  * simple-sqlite.class.php
  *
  * Started: Sunday  2 August 2015, 12:29:49
- * Last Modified: Saturday 22 October 2016, 10:31:50
+ * Last Modified: Sunday 25 December 2016, 10:00:43
  * 
- * Copyright (c) 2015 Chris Allison chris.allison@hotmail.com
+ * Copyright (c) 2015 Chris Allison chris.charles.allison+vh@gmail.com
  *
  * This file is part of cristel.
  * 

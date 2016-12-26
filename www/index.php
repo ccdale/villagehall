@@ -6,9 +6,9 @@
  * index.php
  *
  * Started: Saturday 19 November 2016, 15:35:53
- * Last Modified: Sunday 18 December 2016, 11:24:59
+ * Last Modified: Monday 26 December 2016, 06:39:56
  *
- * Copyright (c) 2016 Chris Allison chris.allison@hotmail.com
+ * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
  * This file is part of villagehall.
  * 
@@ -33,14 +33,26 @@
  * root/
  *     |
  *     - villagehall-config.php
+ *
  *     - app
+ *          |
+ *          villagehall.php
+ *
  *     - lib
+ *          |
+ *          php classes
+ *
  *     - www (or public dir)
+ *          |
+ *          index.php
  */
 
+$appname="villagehall";
 date_default_timezone_set("Europe/London");
 
 /*
+ * If you need to put this application into a
+ * subdirectory then adjust this variable accordingly.
  * strip this many directories off of the current
  * path, to find the root
  */
@@ -74,8 +86,28 @@ unset($i);
 unset($vn);
 unset($tmpa);
 
-set_include_path($libpath . PATH_SEPARATOR . get_include_path());
+/*
+ * run some checks
+ */
+$libcheck=$libpath . DIRECTORY_SEPARATOR . "base.class.php";
+if(file_exists($libcheck)){
+    set_include_path($libpath . PATH_SEPARATOR . get_include_path());
+}else{
+    echo "Libraries not found";
+    exit(128);
+}
 
-include $pvpath . "/villagehall-config.php";
-include $apppath . "/" . $appname . ".php";
+$configfn=$pvpath . DIRECTORY_SEPARATOR . $appname . "-config.php";
+$appfn=$apppath . DIRECTORY_SEPARATOR . $appname . ".php";
+if(!file_exists($configfn)){
+    echo "Config not found";
+    exit(128);
+}
+if(!file_exists($appfn)){
+    echo "Application not found";
+    exit(128);
+}
+
+include $configfn;
+include $appfn;
 ?>

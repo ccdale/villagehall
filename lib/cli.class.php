@@ -6,9 +6,9 @@
  * cli.class.php
  *
  * Started: Sunday  6 October 2013, 11:21:55
- * Last Modified: Tuesday 22 November 2016, 10:39:58
+ * Last Modified: Sunday 25 December 2016, 10:00:15
  * 
- * Copyright (c) 2014 Chris Allison chris.allison@hotmail.com
+ * Copyright (c) 2014 Chris Allison chris.charles.allison+vh@gmail.com
  *
  * This file is part of villagehall.
  * 

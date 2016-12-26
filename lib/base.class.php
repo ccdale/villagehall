@@ -6,9 +6,9 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Tuesday 22 November 2016, 10:40:25
+ * Last Modified: Sunday 25 December 2016, 09:59:58
  *
- * Copyright (c) 2016 Chris Allison chris.allison@hotmail.com
+ * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
  * This file is part of villagehall.
  * 

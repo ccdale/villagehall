@@ -6,9 +6,9 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Sunday 25 December 2016, 09:55:46
+ * Last Modified: Sunday 25 December 2016, 09:59:46
  *
- * Copyright (c) 2016 Chris Allison chris.allison@hotmail.com
+ * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
  * This file is part of villagehall.
  * 

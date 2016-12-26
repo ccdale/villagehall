@@ -6,9 +6,9 @@
  * simple-mysql.class.php
  *
  * Started: Monday 23 July 2012, 13:41:11
- * Last Modified: Tuesday 22 November 2016, 10:41:54
+ * Last Modified: Sunday 25 December 2016, 10:00:32
  *
- * Copyright (c) 2014 Chris Allison chris.allison@hotmail.com
+ * Copyright (c) 2014 Chris Allison chris.charles.allison+vh@gmail.com
  *
  * This file is part of villagehall.
  * 
