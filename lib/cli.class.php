@@ -1,12 +1,12 @@
 <?php
 
 /*
- * vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker:
+ * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * cli.class.php
  *
  * Started: Sunday  6 October 2013, 11:21:55
- * Last Modified: Sunday 25 December 2016, 10:00:15
+ * Last Modified: Monday 26 December 2016, 07:05:03
  * 
  * Copyright (c) 2014 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -73,299 +73,299 @@ require_once "base.class.php";
 
 class CLI extends Base
 {
-    private $menu=false;
-    private $menucmds;
-    private $menuop;
-    private $menuwidth;
+  private $menu=false;
+  private $menucmds;
+  private $menuop;
+  private $menuwidth;
 
-    public function __construct($logg=false,$menuwidth=40)/*{{{*/
-    {
-        parent::__construct($logg);
-        $this->menuwidth=$menuwidth;
-        $this->menuInit();
-    }/*}}}*/
-    public function __destruct()/*{{{*/
-    {
-        parent::__destruct();
-    }/*}}}*/
-    private function switchCase($char)/*{{{*/
-    {
-        $val=ord($char);
-        if($val>=65 && $val<=90){
-            $val=$val+32;
-        }elseif($val>=97 && $val<=122){
-            $val=$val-32;
-        }
-        return chr($val);
-    }/*}}}*/
-    private function insertMenuLine($mline)/*{{{*/
-    {
-        if(strlen($mline)){
-            if(strlen($this->menuop)){
-                $this->menuop.="\n" . $mline;
-            }else{
-                $this->menuop=$mline;
-            }
-        }
-    }/*}}}*/
-    private function buildMenu()/*{{{*/
-    {
-        if(false!==($cn=$this->ValidArray($this->menu))){
-            $this->menuop="";
-            $mline="";
-            $mlen=0;
-            foreach($this->menu as $str=>$sarr){
-                $dlen=strlen($sarr["display"]);
-                if($dlen<$this->menuwidth){
-                    if(($dlen+$mlen)>$this->menuwidth){
-                        $this->insertMenuLine($mline);
-                        $mline=$sarr["display"];
-                        $mlen=$dlen;
-                    }else{
-                        if(strlen($mline)){
-                            $mline.=", " . $sarr["display"];
-                        }else{
-                            $mline=$sarr["display"];
-                        }
-                    }
-                }else{
-                    $this->insertMenuLine($mline);
-                    $mline="";
-                    $mlen=0;
-                    $this->insertMenuLine($sarr["display"]);
-                }
-            }
+  public function __construct($logg=false,$menuwidth=40)/*{{{*/
+  {
+    parent::__construct($logg);
+    $this->menuwidth=$menuwidth;
+    $this->menuInit();
+  }/*}}}*/
+  public function __destruct()/*{{{*/
+  {
+    parent::__destruct();
+  }/*}}}*/
+  private function switchCase($char)/*{{{*/
+  {
+    $val=ord($char);
+    if($val>=65 && $val<=90){
+      $val=$val+32;
+    }elseif($val>=97 && $val<=122){
+      $val=$val-32;
+    }
+    return chr($val);
+  }/*}}}*/
+  private function insertMenuLine($mline)/*{{{*/
+  {
+    if(strlen($mline)){
+      if(strlen($this->menuop)){
+        $this->menuop.="\n" . $mline;
+      }else{
+        $this->menuop=$mline;
+      }
+    }
+  }/*}}}*/
+  private function buildMenu()/*{{{*/
+  {
+    if(false!==($cn=$this->ValidArray($this->menu))){
+      $this->menuop="";
+      $mline="";
+      $mlen=0;
+      foreach($this->menu as $str=>$sarr){
+        $dlen=strlen($sarr["display"]);
+        if($dlen<$this->menuwidth){
+          if(($dlen+$mlen)>$this->menuwidth){
             $this->insertMenuLine($mline);
-            $this->menuop.="\n[" . $this->menucmds . "] > ";
-            return true;
-        }
-        return false;
-    }/*}}}*/
-    public function menuInit()/*{{{*/
-    {
-        $this->menu=array();
-        $this->menuop="";
-        $this->menucmds="";
-    }/*}}}*/
-    public function menuAdd($str)/*{{{*/
-    {
-        $ret=false;
-        if(false!==($len=$this->ValidStr($str))){
-            $hotkey=false;
-            $pos=0;
-            while($pos<$len){
-                $tmp=substr($str,$pos,1);
-                if(preg_match("/[a-zA-Z]/",$tmp)){
-                    if(false===($hpos=strpos($this->menucmds,$tmp))){
-                        $hotkey=$tmp;
-                        break;
-                    }else{
-                        $tmp=$this->switchCase($tmp);
-                        if(false===($hpos=strpos($this->menucmds,$tmp))){
-                            $hotkey=$tmp;
-                            break;
-                        }
-                    }
-                }
-                $pos++;
-            }
-            if(false!==$hotkey){
-                if($pos>0 && $pos<$len){
-                    $tmp=substr($str,0,$pos);
-                    $tmp.="(" . $hotkey . ")" . substr($str,$pos+1);
-                    $this->menu[$str]=array("hotkey"=>$hotkey,"display"=>$tmp);
-                    $this->menucmds.=$hotkey;
-                }elseif($pos>0){
-                    $tmp=substr($str,0,$pos);
-                    $tmp.="(" . $hotkey . ")";
-                    $this->menu[$str]=array("hotkey"=>$hotkey,"display"=>$tmp);
-                    $this->menucmds.=$hotkey;
-                }else{
-                    $this->menu[$str]=array("hotkey"=>$hotkey,"display"=>"(" . $hotkey . ")" . substr($str,1));
-                    $this->menucmds.=$hotkey;
-                }
-                $ret=true;
-            }
-        }
-        return $ret;
-    }/*}}}*/
-    public function menuAddArr($arr,$init=true)/*{{{*/
-    {
-        $ret=false;
-        if($init){
-            $this->menuInit();
-        }
-        if(false!==($cn=$this->ValidArray($arr))){
-            $ret=true;
-            foreach($arr as $key=>$val){
-                $ret=$ret && $this->menuAdd($val);
-            }
-        }
-        return $ret;
-    }/*}}}*/
-    public function menuDelete($str)/*{{{*/
-    {
-        if($this->ValidStr($str) && isset($this->menu[$str])){
-            unset($this->menu[$str]);
-        }
-    }/*}}}*/
-    /** cliParse {{{1
-     * Command line input accepting only certain commands
-     * 
-     * @access public
-     * @return array
-     */
-    public function cliParse()
-    {
-        $this->buildMenu();
-        $cmds=$this->menucmds;
-        $prompt=$this->menuop;
-        $cmd="";
-        $num=0;
-        $input=strtolower($this->cliInput($prompt));
-        $mats=preg_match("/([0-9]*)([" . $cmds . "]*)/",$input,$matches);
-        if($mats){
-            $cmd=$matches[2];
-            $num=$matches[1];
-        }
-        $num=$num+0;
-        return array("cmd"=>$cmd,"num"=>$num);
-    } /*}}}*/
-    /** cliInput {{{
-     * command line input with prompt
-     * 
-     * @access public
-     * @return string
-     */
-    public function cliInput( $prompt="php>" )
-    {
-        echo $prompt . " ";
-        return rtrim( fgets( STDIN ), "\n" );
-    } /*}}}*/
-    /** colourString {{{1
-     * add terminal colour information to string
-     *
-     * @param string $str
-     * @param string $colour
-     * @return string
-     */
-    public function colourString($str,$colour="white")
-    {
-        $col=parseColourString($colour);
-        return $col . $str . CCA_COff;
-    } /*}}}*/
-    public function parseColourString($colour="white") /*{{{*/
-    {
-        $col=CCA_CDGrey;
-        if(is_string($colour) && strlen($colour)){
-            $colour=trim(strtolower($colour));
-            if(false!==($pos=strpos($colour,"light"))){
-                $light=true;
+            $mline=$sarr["display"];
+            $mlen=$dlen;
+          }else{
+            if(strlen($mline)){
+              $mline.=", " . $sarr["display"];
             }else{
-                $light=false;
+              $mline=$sarr["display"];
             }
-            if(false!==($pos=strpos($colour,"dark"))){
-                $dark=true;
-            }else{
-                $dark=false;
-            }
-            $cchar=substr($colour,0,1);
-            $breaknext=false;
-            while($cchar!==""){
-                switch($cchar){
-                case "l":
-                    $light=true;
-                    if($breaknext){
-                        $colour=trim(substr($colour,0,strlen($colour)-1));
-                    }else{
-                        $colour=trim(substr($colour,1));
-                    }
-                    break;
-                case "d":
-                    $dark=true;
-                    if($breaknext){
-                        $colour=trim(substr($colour,0,strlen($colour)-1));
-                    }else{
-                        $colour=trim(substr($colour,1));
-                    }
-                    break;
-                }
-                if($colour!=="red"){
-                    $cchar=substr($colour,-1);
-                }
-                if($breaknext){
-                    $cchar="";
-                }else{
-                    $breaknext=true;
-                }
-            }
-            switch($colour){
-            case "white":
-                $col=CCA_CWhite;
-                if($dark){
-                    $col=CCA_LGray;
-                }
-                break;
-            case "black":
-                $col=CCA_CBlack;
-                break;
-            case "cyan":
-                $col=CCA_CCyan;
-                if($dark){
-                    $col=CCA_CDCyan;
-                }
-                break;
-            case "green":
-                $col=CCA_CGreen;
-                if($dark){
-                    $col=CCA_CDGreen;
-                }
-                break;
-            case "red":
-                $col=CCA_CRed;
-                if($dark){
-                    $col=CCA_CDRed;
-                }
-                break;
-            case "blue":
-                $col=CCA_CBlue;
-                if($dark){
-                    $col=CCA_CDBlue;
-                }
-                break;
-            case "brown":
-                $col=CCA_CBrown;
-                break;
-            case "yellow":
-                $col=CCA_CYellow;
-                break;
-            case "grey":
-                $col=CCA_CGrey;
-                if($dark){
-                    $col=CCA_CDGrey;
-                }
-                break;
-            case "gray":
-                $col=CCA_CGrey;
-                if($dark){
-                    $col=CCA_CDGrey;
-                }
-                break;
-            case "purple":
-                $col=CCA_CPurple;
-                if($dark){
-                    $col=CCA_CDPurple;
-                }
-                break;
-            case "magenta":
-                $col=CCA_CPurple;
-                if($dark){
-                    $col=CCA_CDPurple;
-                }
-                break;
-            }
+          }
+        }else{
+          $this->insertMenuLine($mline);
+          $mline="";
+          $mlen=0;
+          $this->insertMenuLine($sarr["display"]);
         }
-        return $col;
-    } /*}}}*/
+      }
+      $this->insertMenuLine($mline);
+      $this->menuop.="\n[" . $this->menucmds . "] > ";
+      return true;
+    }
+    return false;
+  }/*}}}*/
+  public function menuInit()/*{{{*/
+  {
+    $this->menu=array();
+    $this->menuop="";
+    $this->menucmds="";
+  }/*}}}*/
+  public function menuAdd($str)/*{{{*/
+  {
+    $ret=false;
+    if(false!==($len=$this->ValidStr($str))){
+      $hotkey=false;
+      $pos=0;
+      while($pos<$len){
+        $tmp=substr($str,$pos,1);
+        if(preg_match("/[a-zA-Z]/",$tmp)){
+          if(false===($hpos=strpos($this->menucmds,$tmp))){
+            $hotkey=$tmp;
+            break;
+          }else{
+            $tmp=$this->switchCase($tmp);
+            if(false===($hpos=strpos($this->menucmds,$tmp))){
+              $hotkey=$tmp;
+              break;
+            }
+          }
+        }
+        $pos++;
+      }
+      if(false!==$hotkey){
+        if($pos>0 && $pos<$len){
+          $tmp=substr($str,0,$pos);
+          $tmp.="(" . $hotkey . ")" . substr($str,$pos+1);
+          $this->menu[$str]=array("hotkey"=>$hotkey,"display"=>$tmp);
+          $this->menucmds.=$hotkey;
+        }elseif($pos>0){
+          $tmp=substr($str,0,$pos);
+          $tmp.="(" . $hotkey . ")";
+          $this->menu[$str]=array("hotkey"=>$hotkey,"display"=>$tmp);
+          $this->menucmds.=$hotkey;
+        }else{
+          $this->menu[$str]=array("hotkey"=>$hotkey,"display"=>"(" . $hotkey . ")" . substr($str,1));
+          $this->menucmds.=$hotkey;
+        }
+        $ret=true;
+      }
+    }
+    return $ret;
+  }/*}}}*/
+  public function menuAddArr($arr,$init=true)/*{{{*/
+  {
+    $ret=false;
+    if($init){
+      $this->menuInit();
+    }
+    if(false!==($cn=$this->ValidArray($arr))){
+      $ret=true;
+      foreach($arr as $key=>$val){
+        $ret=$ret && $this->menuAdd($val);
+      }
+    }
+    return $ret;
+  }/*}}}*/
+  public function menuDelete($str)/*{{{*/
+  {
+    if($this->ValidStr($str) && isset($this->menu[$str])){
+      unset($this->menu[$str]);
+    }
+  }/*}}}*/
+  /** cliParse {{{1
+   * Command line input accepting only certain commands
+   * 
+   * @access public
+   * @return array
+   */
+  public function cliParse()
+  {
+    $this->buildMenu();
+    $cmds=$this->menucmds;
+    $prompt=$this->menuop;
+    $cmd="";
+    $num=0;
+    $input=strtolower($this->cliInput($prompt));
+    $mats=preg_match("/([0-9]*)([" . $cmds . "]*)/",$input,$matches);
+    if($mats){
+      $cmd=$matches[2];
+      $num=$matches[1];
+    }
+    $num=$num+0;
+    return array("cmd"=>$cmd,"num"=>$num);
+  } /*}}}*/
+  /** cliInput {{{
+   * command line input with prompt
+   * 
+   * @access public
+   * @return string
+   */
+  public function cliInput( $prompt="php>" )
+  {
+    echo $prompt . " ";
+    return rtrim( fgets( STDIN ), "\n" );
+  } /*}}}*/
+  /** colourString {{{1
+   * add terminal colour information to string
+   *
+   * @param string $str
+   * @param string $colour
+   * @return string
+   */
+  public function colourString($str,$colour="white")
+  {
+    $col=parseColourString($colour);
+    return $col . $str . CCA_COff;
+  } /*}}}*/
+  public function parseColourString($colour="white") /*{{{*/
+  {
+    $col=CCA_CDGrey;
+    if(is_string($colour) && strlen($colour)){
+      $colour=trim(strtolower($colour));
+      if(false!==($pos=strpos($colour,"light"))){
+        $light=true;
+      }else{
+        $light=false;
+      }
+      if(false!==($pos=strpos($colour,"dark"))){
+        $dark=true;
+      }else{
+        $dark=false;
+      }
+      $cchar=substr($colour,0,1);
+      $breaknext=false;
+      while($cchar!==""){
+        switch($cchar){
+        case "l":
+          $light=true;
+          if($breaknext){
+            $colour=trim(substr($colour,0,strlen($colour)-1));
+          }else{
+            $colour=trim(substr($colour,1));
+          }
+          break;
+        case "d":
+          $dark=true;
+          if($breaknext){
+            $colour=trim(substr($colour,0,strlen($colour)-1));
+          }else{
+            $colour=trim(substr($colour,1));
+          }
+          break;
+        }
+        if($colour!=="red"){
+          $cchar=substr($colour,-1);
+        }
+        if($breaknext){
+          $cchar="";
+        }else{
+          $breaknext=true;
+        }
+      }
+      switch($colour){
+      case "white":
+        $col=CCA_CWhite;
+        if($dark){
+          $col=CCA_LGray;
+        }
+        break;
+      case "black":
+        $col=CCA_CBlack;
+        break;
+      case "cyan":
+        $col=CCA_CCyan;
+        if($dark){
+          $col=CCA_CDCyan;
+        }
+        break;
+      case "green":
+        $col=CCA_CGreen;
+        if($dark){
+          $col=CCA_CDGreen;
+        }
+        break;
+      case "red":
+        $col=CCA_CRed;
+        if($dark){
+          $col=CCA_CDRed;
+        }
+        break;
+      case "blue":
+        $col=CCA_CBlue;
+        if($dark){
+          $col=CCA_CDBlue;
+        }
+        break;
+      case "brown":
+        $col=CCA_CBrown;
+        break;
+      case "yellow":
+        $col=CCA_CYellow;
+        break;
+      case "grey":
+        $col=CCA_CGrey;
+        if($dark){
+          $col=CCA_CDGrey;
+        }
+        break;
+      case "gray":
+        $col=CCA_CGrey;
+        if($dark){
+          $col=CCA_CDGrey;
+        }
+        break;
+      case "purple":
+        $col=CCA_CPurple;
+        if($dark){
+          $col=CCA_CDPurple;
+        }
+        break;
+      case "magenta":
+        $col=CCA_CPurple;
+        if($dark){
+          $col=CCA_CDPurple;
+        }
+        break;
+      }
+    }
+    return $col;
+  } /*}}}*/
 }
 ?>

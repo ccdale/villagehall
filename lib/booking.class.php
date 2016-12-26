@@ -1,12 +1,12 @@
 <?php
 
 /*
- * vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker:
+ * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 25 December 2016, 10:00:06
+ * Last Modified: Monday 26 December 2016, 07:02:42
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -30,13 +30,13 @@ require_once "base.class.php";
 
 class Booking extends Base
 {
-    public function __construct($logg=false)/*{{{*/
-    {
-        parent::__construct($logg);
-    }/*}}}*/
-    public function __destruct()/*{{{*/
-    {
-        parent::__destruct();
-    }/*}}}*/
+  public function __construct($logg=false)/*{{{*/
+  {
+    parent::__construct($logg);
+  }/*}}}*/
+  public function __destruct()/*{{{*/
+  {
+    parent::__destruct();
+  }/*}}}*/
 }
 ?>

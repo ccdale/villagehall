@@ -1,12 +1,12 @@
 <?php
 
 /*
- * vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker:
+ * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Sunday 25 December 2016, 09:59:46
+ * Last Modified: Monday 26 December 2016, 06:52:17
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -28,18 +28,21 @@
 
 require_once "base.class.php";
 require_once "logging.class.php";
+require_once "simple-mysql.class.php";
+require_once "simple-sqlite.class.php";
+require_once "booking.class.php";
 
 $logg=new Logging(false,"VHPHP",0,LOG_INFO);
 
+/*
+ * setup database connection
+ */
 if($dbtype=="mysql"){
-    require_once "simple-mysql.class.php";
-    $db=new MySql($logg,$dbhost,$dbuser,$dbpass,$dbname);
+  $db=new MySql($logg,$dbhost,$dbuser,$dbpass,$dbname);
 }elseif($dbtype=="sqlite"){
-    require_once "simple-sqlite.class.php";
-    $db=new SSql($dbfn,$logg);
+  $db=new SSql($dbfn,$logg);
 }
 
-require_once "booking.class.php";
 
 $content=$apppath . "<br>" . $libpath . "<br>" . $pvpath;
 ?>

@@ -1,12 +1,12 @@
 <?php
 
 /*
- * vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker:
+ * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * index.php
  *
  * Started: Saturday 19 November 2016, 15:35:53
- * Last Modified: Monday 26 December 2016, 06:39:56
+ * Last Modified: Monday 26 December 2016, 07:09:07
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -66,9 +66,9 @@ $ppatha=explode("/",$publicpath);
 $cn=count($ppatha);
 $pvpatha=array();
 if($cn>=$stripcn){
-    for($i=0;$i<$cn-$stripcn;$i++){
-        $pvpatha[$i]=$ppatha[$i];
-    }
+  for($i=0;$i<$cn-$stripcn;$i++){
+    $pvpatha[$i]=$ppatha[$i];
+  }
 }
 $vn=count($pvpatha);
 $tmpa=$pvpatha;
@@ -91,21 +91,21 @@ unset($tmpa);
  */
 $libcheck=$libpath . DIRECTORY_SEPARATOR . "base.class.php";
 if(file_exists($libcheck)){
-    set_include_path($libpath . PATH_SEPARATOR . get_include_path());
+  set_include_path($libpath . PATH_SEPARATOR . get_include_path());
 }else{
-    echo "Libraries not found";
-    exit(128);
+  echo "Libraries not found";
+  exit(128);
 }
 
 $configfn=$pvpath . DIRECTORY_SEPARATOR . $appname . "-config.php";
 $appfn=$apppath . DIRECTORY_SEPARATOR . $appname . ".php";
 if(!file_exists($configfn)){
-    echo "Config not found";
-    exit(128);
+  echo "Config not found";
+  exit(128);
 }
 if(!file_exists($appfn)){
-    echo "Application not found";
-    exit(128);
+  echo "Application not found";
+  exit(128);
 }
 
 include $configfn;
