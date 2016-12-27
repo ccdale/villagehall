@@ -6,7 +6,7 @@
  * simple-mysql.class.php
  *
  * Started: Monday 23 July 2012, 13:41:11
- * Last Modified: Monday 26 December 2016, 07:08:30
+ * Last Modified: Tuesday 27 December 2016, 12:39:31
  *
  * Copyright (c) 2014 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -43,10 +43,12 @@ class MySql extends Base
   private $canconnect=false;
   private $connected=false;
   private $selected=true;
+  private $mysqlerror=array();
 
   public function __construct($logg=false,$host="",$user="",$pass="",$db="",$force=false) /*{{{*/
   {
     parent::__construct($logg);
+    $this->resetErrors();
     if($this->ValidStr($host)){
       $this->dbhost=$host;
     }elseif(defined("MYSQLHOST")){
@@ -101,6 +103,13 @@ class MySql extends Base
     $this->closedb();
     parent::__destruct();
   } // }}}
+  private function resetErrors()/*{{{*/
+  {
+    $this->mysqlerror=array(
+      "errno"=>0,
+      "error"=>""
+    );
+  }/*}}}*/
   public function closedb() // {{{
   {
     if($this->conn){
@@ -114,19 +123,30 @@ class MySql extends Base
   public function amOK() // {{{
   {
     if($this->connected && $this->selected){
-      return true;
+      if($this->mysqlerror["errno"]==0){
+        return true;
+      }else{
+        return false;
+      }
     }
     return false;
   } // }}}
+  public function getErrors()/*{{{*/
+  {
+    return $this->mysqlerror;
+  }/*}}}*/
   public function query($sql="") // {{{
   {
     $this->rs=null;
+    $this->resetErrors();
     if($this->amOK() && $this->ValidStr($sql)){
       $this->debug("Query: $sql");
       $this->rs=mysqli_query($this->conn,$sql);
       if(false===$this->rs){
         $this->error("Query error: $sql");
-        $this->error("mysql said: " . mysqli_errno($this->conn) . ": " . mysqli_error($this->conn));
+        $this->mysqlerror["errno"]=mysqli_errno($this->conn);
+        $this->mysqlerror["error"]=mysqli_error($this->conn);
+        $this->error("mysql said: " . $this->mysqlerror["errno"] . ": " . $this->mysqlerror["error"]);
       }
     }else{
       $this->warning("mysql class not ok, or sql not a valid str");

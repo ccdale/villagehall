@@ -6,7 +6,7 @@
  * simple-sqlite.class.php
  *
  * Started: Sunday  2 August 2015, 12:29:49
- * Last Modified: Monday 26 December 2016, 06:58:19
+ * Last Modified: Tuesday 27 December 2016, 12:46:08
  * 
  * Copyright (c) 2015 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -36,10 +36,12 @@ class SSql extends Base
   private $db=false;
   private $connected=false;
   private $rs=false;
+  private $sqlerror=array();
 
   public function __construct($fqfn=false,$logg=false)/*{{{*/
   {
     parent::__construct($logg);
+    $this->resetErrors();
     if(false!==$fqfn){
       if(file_exists($fqfn)){
         try {
@@ -62,9 +64,25 @@ class SSql extends Base
       $this->connected=false;
     }
   }/*}}}*/
+  private function resetErrors()/*{{{*/
+  {
+    $this->sqlerror=array(
+      "errno"=>0,
+      "error"=>""
+    );
+  }/*}}}*/
   public function amOK()/*{{{*/
   {
-    return $this->connected;
+    if($this->connected){
+      if($this->sqlerror["errno"]==0){
+        return true;
+      }
+    }
+    return false;
+  }/*}}}*/
+  public function getErrors()/*{{{*/
+  {
+    return $this->sqlerror;
   }/*}}}*/
   public function query($sql)/*{{{*/
   {
@@ -74,7 +92,9 @@ class SSql extends Base
       try{
         $this->rs=$this->db->query($sql);
       }catch (Exception $e){
-        $this->error("Query Error: " . $e->getMessage());
+        $this->sqlerror["errno"]=1;
+        $this->sqlerror["error"]=$e->getMessage();
+        $this->error("Query Error: " . $this->sqlerror["error"]);
         $this->error("Query: $sql");
       }
     }else{
