@@ -6,7 +6,7 @@
  * config.php
  *
  * Started: Tuesday 22 November 2016, 10:26:19
- * Last Modified: Tuesday 27 December 2016, 12:02:28
+ * Last Modified: Tuesday 27 December 2016, 12:07:51
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -41,7 +41,7 @@ $dbhost="localhost";
 /*
  * sqlite
  */
-$dbfn=$pvpath . "/villagehall.db";
+$dbfn=$pvpath . DIRECTORY_SEPARATOR . "db/villagehall.db";
 /*
  * end of sqlite
  */
