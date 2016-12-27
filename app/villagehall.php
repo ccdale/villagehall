@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Monday 26 December 2016, 06:52:17
+ * Last Modified: Tuesday 27 December 2016, 12:02:33
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -26,23 +26,34 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "base.class.php";
-require_once "logging.class.php";
-require_once "simple-mysql.class.php";
-require_once "simple-sqlite.class.php";
-require_once "booking.class.php";
+switch($logtype){
+case "file":
+  require_once "logfile.class.php";
+  $logg=new LogFile($logfilename,$loglevel,$logdorotate,$logkeep,$logrotate,$logtracelevel);
+  break;
+case "syslog":
+  require_once "logging.class.php";
+  $logg=new Logging(false,"VHPHP",0,$loglevel,false,false,$logtracelevel);
+  break;
+}
 
-$logg=new Logging(false,"VHPHP",0,LOG_INFO);
+require_once "base.class.php";
 
 /*
  * setup database connection
  */
 if($dbtype=="mysql"){
+  require_once "simple-mysql.class.php";
   $db=new MySql($logg,$dbhost,$dbuser,$dbpass,$dbname);
 }elseif($dbtype=="sqlite"){
+  require_once "simple-sqlite.class.php";
   $db=new SSql($dbfn,$logg);
 }
 
+require_once "booking.class.php";
+require_once "user.class.php";
+
+$un=new User($logg,$db,"chris.allison@hotmail.com","somepassword");
 
 $content=$apppath . "<br>" . $libpath . "<br>" . $pvpath;
 ?>

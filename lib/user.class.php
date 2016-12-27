@@ -27,34 +27,40 @@
  * Last Modified: Tuesday 15 April 2014, 07:27:19
  */
 
-require_once "base.class.php";
+require_once "data.class.php";
 
-class User extends Base
+class User extends Data
 {
-    private $db=false;
-    private $dirty=false;
-    private $data=false;
-    private $id=false;
-
-    public function __construct($logg=false,$db=false)/*{{{*/
+    public function __construct($logg=false,$db=false,$email=false,$password=false)/*{{{*/
     {
-        parent::__construct($logg);
-        $this->db=$db;
-        $this->data=array(
-            "name"=>"",
-            "password"=>"",
-            "email"=>"",
-            "phone"=>"",
-            "address1"=>"",
-            "address2"=>"",
-            "town"=>"",
-            "postcode"=>""
-        );
+        parent::__construct($logg,$db,"user","email",$email);
+        $this->validate($password);
     }/*}}}*/
     public function __destruct()/*{{{*/
     {
         parent::__destruct();
-        $this->db=null;
+    }/*}}}*/
+    private function validate($incomingpass=false)/*{{{*/
+    {
+        $ret=false;
+        if(false!==($junk=$this->ValidStr($incomingpass))){
+            if(false!==($junk=$this->ValidArray($this->data))){
+                if(isset($this->data["password"])){
+                    if($ret=password_verify($incomingpass,$this->data["password"])){
+                        $this->debug("User class validate: Password correct!");
+                    }else{
+                        $this->debug("User class validate: Password not correct");
+                    }
+                }else{
+                    $this->debug("User class validate: Password field not set in data");
+                }
+            }else{
+                $this->debug("User class validate: User data is not set");
+            }
+        }else{
+            $this->debug("User class validate: incoming password is not set");
+        }
+        return $ret;
     }/*}}}*/
 }
 ?>

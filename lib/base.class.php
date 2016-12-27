@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Monday 26 December 2016, 07:01:43
+ * Last Modified: Tuesday 27 December 2016, 11:29:50
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -33,7 +33,7 @@ class Base
 
   public function __construct($log=false)/*{{{*/
   {
-    if($log && is_object($log) && get_class($log)=="Logging"){
+    if($log && is_object($log) && (get_class($log)=="Logging" || get_class($log)=="LogFile")){
       $this->log=$log;
       $this->canlog=true;
     }
