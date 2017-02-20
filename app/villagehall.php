@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Tuesday 27 December 2016, 12:02:33
+ * Last Modified: Tuesday 27 December 2016, 14:03:07
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -48,6 +48,20 @@ if($dbtype=="mysql"){
 }elseif($dbtype=="sqlite"){
   require_once "simple-sqlite.class.php";
   $db=new SSql($dbfn,$logg);
+}
+$sql="select * from hall";
+$rarr=$db->arrayQuery($sql);
+if(!$db->amOK()){
+  $earr=$db->getErrors();
+  if($earr["errno"]!=0){
+    /* database not set up */
+    $sqlstr=file_get_contents($dbsetupfn);
+    if($result=$db->query($sqlstr)){
+      $db->info($appname . " database setup ok.");
+    }else{
+      $db->error("failed to setup database for " . $appname);
+    }
+  }
 }
 
 require_once "booking.class.php";

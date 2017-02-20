@@ -6,7 +6,7 @@
  * index.php
  *
  * Started: Saturday 19 November 2016, 15:35:53
- * Last Modified: Monday 26 December 2016, 07:09:07
+ * Last Modified: Sunday 19 February 2017, 08:11:55
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -37,6 +37,15 @@
  *     - app
  *          |
  *          villagehall.php
+ *
+ *     - db
+ *          |
+ *          villagehall.db
+ *
+ *     - log
+ *          |
+ *          villagehall.log
+ *          villagehall.log.1
  *
  *     - lib
  *          |
@@ -93,21 +102,33 @@ $libcheck=$libpath . DIRECTORY_SEPARATOR . "base.class.php";
 if(file_exists($libcheck)){
   set_include_path($libpath . PATH_SEPARATOR . get_include_path());
 }else{
-  echo "Libraries not found";
+  echo "Base Libraries not found";
   exit(128);
 }
 
+/*
+ * if we have the find the config and application files
+ * include them (switch to the app file).
+ * otherwise, if the config file is not there
+ * run setup,
+ * otherwise complain and stop
+ */
 $configfn=$pvpath . DIRECTORY_SEPARATOR . $appname . "-config.php";
-$appfn=$apppath . DIRECTORY_SEPARATOR . $appname . ".php";
 if(!file_exists($configfn)){
-  echo "Config not found";
-  exit(128);
-}
-if(!file_exists($appfn)){
-  echo "Application not found";
-  exit(128);
-}
+  $setupfn=$apppath . DIRECTORY_SEPARATOR . "setup-" . $appname . ".php";
+  if(!file_exists($setupfn)){
+    echo "setup not found.";
+    exit(128);
+  }
+  include $setupfn;
+}else{
+  $appfn=$apppath . DIRECTORY_SEPARATOR . $appname . ".php";
+  if(!file_exists($appfn)){
+    echo "Application not found";
+    exit(128);
+  }
 
-include $configfn;
-include $appfn;
+  include $configfn;
+  include $appfn;
+}
 ?>
