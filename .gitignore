@@ -2,3 +2,4 @@ config.php
 villagehall-config.php
 villagehall.log*
 villagehall.db
+testlogfile*

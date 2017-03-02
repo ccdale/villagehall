@@ -148,51 +148,61 @@ class LogFile
   }/*}}}*/
   private function checkRotate()/*{{{*/
   {
-    $tago=86400;
-    if($this->fp){
-      $now=time();
-      $tfn=filectime($this->fn);
-      switch($this->frequency){
-      case "monthly":
-        $tago=$tago*30;
-        break;
-      case "weekly":
-        $tago=$tago*7;
-        break;
-      case "hourly":
-        $tago=3600;
-        break;
-      }
-      $then=$now-$tago;
-      if($tfn<$then){
-        $this->rotateFiles();
+    if($this->rotate){
+      $tago=86400;
+      if($this->fp){
+        $now=time();
+        $tfn=filectime($this->fn);
+        switch($this->frequency){
+        case "monthly":
+          $tago=$tago*30;
+          break;
+        case "weekly":
+          $tago=$tago*7;
+          break;
+        case "hourly":
+          $tago=3600;
+          break;
+        }
+        $then=$now-$tago;
+        if($tfn<$then){
+          $this->rotateFiles();
+        }
       }
     }
   }/*}}}*/
   private function rotateFiles()/*{{{*/
   {
-    if($this->fp){
-      if($this->keep){
-        $tmp=date("D d H:i:s");
-        fwrite($this->fp,$tmp . " Log file rotation starting.");
-        fflush($this->fp);
-        fclose($this->fp);
-        $xfn=$this->fn . "." . $this->keep;
-        if(file_exists($xfn)){
-          unlink($xfn);
-        }
-        for($x=$this->keep-1;$x>0;$x--){
-          $dx=$x+1;
-          $ofn=$this->fn . "." . $x;
-          if(file_exists($ofn)){
-            $nfn=$this->fn . "." . $dx;
-            rename($ofn,$nfn);
+    if($this->rotate){
+      if($this->fp){
+        if($this->keep){
+          $tmp=date("D d H:i:s");
+          fwrite($this->fp,$tmp . " Log file rotation starting.\n");
+          fflush($this->fp);
+          fclose($this->fp);
+          $xfn=$this->fn . "." . $this->keep;
+          if(file_exists($xfn)){
+            unlink($xfn);
           }
+          for($x=$this->keep-1;$x>0;$x--){
+            $dx=$x+1;
+            $ofn=$this->fn . "." . $x;
+            if(file_exists($ofn)){
+              $nfn=$this->fn . "." . $dx;
+              rename($ofn,$nfn);
+            }
+          }
+          $nfn=$this->fn . ".1";
+          rename($this->fn,$nfn);
+          $this->fp=fopen($this->fn,"w");
+          $this->message("Log file rotation completed.\n",LOG_INFO);
         }
-        $this->fp=fopen($this->fn,"w");
-        $this->message("Log file rotation completed.",LOG_INFO);
       }
     }
+  }/*}}}*/
+  public function forceRotate()/*{{{*/
+  {
+    $this->rotateFiles();
   }/*}}}*/
 }
 ?>
