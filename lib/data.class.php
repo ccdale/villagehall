@@ -34,13 +34,15 @@ class Data extends Base
     private $db=false;
     private $dirty=false;
     protected $id=false;
+    protected $table=false;
     protected $data=false;
 
     public function __construct($logg=false,$db=false,$table=false,$field=false,$data=false)/*{{{*/
     {
         parent::__construct($logg);
         $this->db=$db;
-        $this->init($table,$field,$data);
+        $this->table=$table;
+        $this->init($this->table,$field,$data);
     }/*}}}*/
     public function __destruct()/*{{{*/
     {
@@ -63,7 +65,66 @@ class Data extends Base
             }
             $sql="select * from $table where $field='" . $this->db->escape($data) . "'";
             $this->data=$this->db->arrayQuery($sql);
+            $this->id=$this->data["id"];
+            unset($this->data["id"]);
         }
+    }/*}}}*/
+    private function insertFields($fields)/*{{{*/
+    {
+        $ret=false;
+        if(false!==($this->ValidArray())){
+            $fs=$vs="";
+            foreach($fields as $field=>$value){
+                if(strlen($fs)){
+                    $fs.="," . $field;
+                    $vs.="," . $this->db->makeFieldString($value);
+                }else{
+                    $fs=$field;
+                    $vs=$this->db->makeFieldString($value);
+                }
+            }
+            $ret="(" . $fs . ") values (" . $vs . ")";
+        }
+        return $ret;
+    }/*}}}*/
+    private function updateFields($fields)/*{{{*/
+    {
+        $ret=false;
+        if(false!==($this->ValidArray($fields))){
+            $tstr="";
+            foreach($fields as $field=>$value){
+                if(strlen($tstr)){
+                    $tstr.=" and " . $field . "=" . $this->db->makeFieldString($value);
+                }else{
+                    $tstr=$field . "=" . $this->db->makeFieldString($value);
+                }
+            }
+            $ret=$tstr;
+        }
+        return $ret;
+    }/*}}}*/
+    public function update()/*{{{*/
+    {
+        if($this->dirty){
+            if(false!==($sql=$this->insertUpdate($this->table,$this->data,$this->id))){
+            }
+        }
+    }/*}}}*/
+    public function insertUpdate($table,$fields,$id=false)/*{{{*/
+    {
+        $ret=false;
+        if(false===$id){
+            if(false!==($tmp=$this->insertFields($fields))){
+                $sql="insert into " . $table . " " . $tmp;
+                $ret=$this->db->insertQuery($sql);
+            }
+        }else{
+            if(false!==($tmp=$this->updateFields($fields))){
+                $sql="update " . $table . " set " . $tmp . " where id=" . $id;
+                $ret=$this->db->query($sql);
+            }
+        }
+        return $ret;
     }/*}}}*/
 }
 ?>

@@ -6,7 +6,7 @@
  * simple-mysql.class.php
  *
  * Started: Monday 23 July 2012, 13:41:11
- * Last Modified: Friday  3 March 2017, 09:09:46
+ * Last Modified: Friday  3 March 2017, 10:54:52
  *
  * Copyright (c) 2014 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -238,22 +238,6 @@ class MySql extends Base
       $ret=$iid;
     }
     return $ret;
-  }/*}}}*/
-  public function insertUpdate($table,$fields,$id=false)/*{{{*/
-  {
-    $isql=$usql=$fs=$vs="";
-    foreach($fields as $field=>$value){
-      $tval=$this->makeFieldString($value);
-      if(strlen($usql)){
-        $usql.=" and " . $field . "=" . $tval;
-        $fs.="," . $field;
-        $vs.="," . $tval;
-      }else{
-        $usql=$field . "=" . $tval;
-        $fs=$field;
-        $vs=$tval;
-      }
-    }
   }/*}}}*/
 }
 ?>
