@@ -69,7 +69,7 @@ class Data extends Base
             unset($this->data["id"]);
         }
     }/*}}}*/
-    private function insertFields($fields)/*{{{*/
+    protected function insertFields($fields)/*{{{*/
     {
         $ret=false;
         if(false!==($this->ValidArray())){
@@ -87,7 +87,7 @@ class Data extends Base
         }
         return $ret;
     }/*}}}*/
-    private function updateFields($fields)/*{{{*/
+    protected function updateFields($fields)/*{{{*/
     {
         $ret=false;
         if(false!==($this->ValidArray($fields))){
@@ -126,5 +126,18 @@ class Data extends Base
         }
         return $ret;
     }/*}}}*/
+    public function getData() /*{{{*/
+    {
+        return $this->data;
+    } /*}}}*/
+    public function setData($key="",$val="") /*{{{*/
+    {
+        if($this->ValidStr($key)){
+            if($this->ValidStr($val)){
+                $this->data[$key]=$val;
+                $this->dirty=true;
+            }
+        }
+    } /*}}}*/
 }
 ?>
