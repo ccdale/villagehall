@@ -28,7 +28,7 @@
 
 require_once "data.class.php";
 
-class Hall extends Data
+class Room extends Data
 {
     public function __construct($logg=false,$db=false,$name=false)/*{{{*/
     {
