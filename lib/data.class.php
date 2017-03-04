@@ -173,5 +173,9 @@ class Data extends Base
     {
         return $this->data;
     } /*}}}*/
+    public function amDirty()/*{{{*/
+    {
+        return $this->dirty;
+    }/*}}}*/
 }
 ?>
