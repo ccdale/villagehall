@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Monday 26 December 2016, 07:02:42
+ * Last Modified: Saturday  4 March 2017, 18:36:03
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -26,13 +26,15 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "base.class.php";
+require_once "data.class.php";
 
-class Booking extends Base
+class Booking extends Data
 {
-  public function __construct($logg=false)/*{{{*/
+  private $fields=false;
+
+  public function __construct($logg=false,$db=false)/*{{{*/
   {
-    parent::__construct($logg);
+    parent::__construct($logg,$db,"booking");
   }/*}}}*/
   public function __destruct()/*{{{*/
   {

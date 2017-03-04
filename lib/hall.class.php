@@ -30,7 +30,7 @@ require_once "data.class.php";
 
 class Hall extends Data
 {
-    public function __construct($logg=false,$d=false,$name=false)/*{{{*/
+    public function __construct($logg=false,$db=false,$name=false)/*{{{*/
     {
         parent::__construct($logg,$db,"hall","name",$name);
     }/*}}}*/

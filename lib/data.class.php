@@ -42,32 +42,73 @@ class Data extends Base
         parent::__construct($logg);
         $this->db=$db;
         $this->table=$table;
-        $this->init($this->table,$field,$data);
+        $this->init($field,$data);
     }/*}}}*/
     public function __destruct()/*{{{*/
     {
         parent::__destruct();
     }/*}}}*/
-    private function init($table=false,$field=false,$data=false)/*{{{*/
+    private function init($field=false,$data=false)/*{{{*/
     {
-        if($this->db){
-            if(!$this->ValidStr($table)){
-                $this->debug("Data class: Table string not set");
+        if(is_object($this->db)){
+            $class=get_class($this->db);
+            if($class=="SSql"){
+                $this->getSSqlFields();
+            }elseif($class=="MySql"){
+                $this->getMysqlFields();
+            }else{
+                $this->error("DB class is neither MySql nor SSql");
                 return false;
             }
-            if(!$this->ValidStr($field)){
-                $this->debug("Data class: Field string not set");
-                return false;
-            }
-            if(!$this->ValidStr($data)){
-                $this->debug("Data class: Data string not set");
-                return false;
-            }
+        }
+        if($this->ValidStr($field) && $this->ValidStr($data)){
             $sql="select * from $table where $field='" . $this->db->escape($data) . "'";
             $this->data=$this->db->arrayQuery($sql);
             $this->id=$this->data["id"];
             unset($this->data["id"]);
         }
+    }/*}}}*/
+    private function getMysqlFields()/*{{{*/
+    {
+        $sql="show colomns from " . $this->table;
+        if(false!==($colsarr=$this->db->arrayQuery($sql))){
+            $this->data=array();
+            foreach($colsarr as $val){
+                $this->data[$val["field"]]=false;
+            }
+            unset($this->data["id"]);
+        }
+    }/*}}}*/
+    private function getSSqlFields()/*{{{*/
+    {
+        $sql="PRAGMA table_info(" . $this->table . ")";
+        if(false!==($colsarr=$this->db->arrayQuery($sql))){
+            $this->data=array();
+            foreach($colsarr as $val){
+                $this->data[$val["name"]]=false;
+            }
+            unset($this->data["id"]);
+        }
+    }/*}}}*/
+    private function insertUpdate($table,$fields,$id=false)/*{{{*/
+    {
+        $ret=false;
+        if(false===$id){
+            if(false!==($tmp=$this->insertFields($fields))){
+                $sql="insert into " . $table . " " . $tmp;
+                if(false!==($tret=$this->db->insertQuery($sql))){
+                    $ret=$tret;
+                }
+            }
+        }else{
+            if(false!==($tmp=$this->updateFields($fields))){
+                $sql="update " . $table . " set " . $tmp . " where id=" . $id;
+                if(false!==($tret=$this->db->query($sql))){
+                    $ret=$id;
+                }
+            }
+        }
+        return $ret;
     }/*}}}*/
     protected function insertFields($fields)/*{{{*/
     {
@@ -111,26 +152,6 @@ class Data extends Base
                 $this->id=$tid;
             }
         }
-    }/*}}}*/
-    public function insertUpdate($table,$fields,$id=false)/*{{{*/
-    {
-        $ret=false;
-        if(false===$id){
-            if(false!==($tmp=$this->insertFields($fields))){
-                $sql="insert into " . $table . " " . $tmp;
-                if(false!==($tret=$this->db->insertQuery($sql))){
-                    $ret=$tret;
-                }
-            }
-        }else{
-            if(false!==($tmp=$this->updateFields($fields))){
-                $sql="update " . $table . " set " . $tmp . " where id=" . $id;
-                if(false!==($tret=$this->db->query($sql))){
-                    $ret=$id;
-                }
-            }
-        }
-        return $ret;
     }/*}}}*/
     public function setField($Field="",$val="") /*{{{*/
     {
