@@ -106,7 +106,9 @@ class Data extends Base
     public function update()/*{{{*/
     {
         if($this->dirty){
-            if(false!==($sql=$this->insertUpdate($this->table,$this->data,$this->id))){
+            if(false!==($tid=$this->insertUpdate($this->table,$this->data,$this->id))){
+                $this->dirty=false;
+                $this->id=$tid;
             }
         }
     }/*}}}*/
@@ -116,28 +118,39 @@ class Data extends Base
         if(false===$id){
             if(false!==($tmp=$this->insertFields($fields))){
                 $sql="insert into " . $table . " " . $tmp;
-                $ret=$this->db->insertQuery($sql);
+                if(false!==($tret=$this->db->insertQuery($sql))){
+                    $ret=$tret;
+                }
             }
         }else{
             if(false!==($tmp=$this->updateFields($fields))){
                 $sql="update " . $table . " set " . $tmp . " where id=" . $id;
-                $ret=$this->db->query($sql);
+                if(false!==($tret=$this->db->query($sql))){
+                    $ret=$id;
+                }
             }
         }
         return $ret;
     }/*}}}*/
-    public function getData() /*{{{*/
+    public function setField($Field="",$val="") /*{{{*/
     {
-        return $this->data;
-    } /*}}}*/
-    public function setData($key="",$val="") /*{{{*/
-    {
-        if($this->ValidStr($key)){
+        if($this->ValidStr($Field)){
             if($this->ValidStr($val)){
-                $this->data[$key]=$val;
+                $this->data[$Field]=$val;
                 $this->dirty=true;
             }
         }
+    } /*}}}*/
+    public function setDataA($data=false)/*{{{*/
+    {
+        if($this->ValidArray($data)){
+            $this->data=$data;
+            $this->dirty=true;
+        }
+    }/*}}}*/
+    public function getDataA() /*{{{*/
+    {
+        return $this->data;
     } /*}}}*/
 }
 ?>
