@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Tuesday 27 December 2016, 14:03:07
+ * Last Modified: Monday 20 March 2017, 06:56:05
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -26,62 +26,142 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-switch($logtype){
-case "file":
-  require_once "logfile.class.php";
-  $logg=new LogFile($logfilename,$loglevel,$logdorotate,$logkeep,$logrotate,$logtracelevel);
-  break;
-case "syslog":
-  require_once "logging.class.php";
-  $logg=new Logging(false,"VHPHP",0,$loglevel,false,false,$logtracelevel);
-  break;
-}
-
-require_once "base.class.php";
-
-/*
- * setup database connection
- */
-if($dbtype=="mysql"){
-  require_once "simple-mysql.class.php";
-  $db=new MySql($logg,$dbhost,$dbuser,$dbpass,$dbname);
-}elseif($dbtype=="sqlite"){
-  require_once "simple-sqlite.class.php";
-  $db=new SSql($dbfn,$logg);
-}
-$sql="select * from hall";
-$rarr=$db->arrayQuery($sql);
-if(!$db->amOK()){
-  $earr=$db->getErrors();
-  if($earr["errno"]!=0){
-    /* database not set up */
-    $sqlstr=file_get_contents($dbsetupfn);
-    if($result=$db->query($sqlstr)){
-      $db->info($appname . " database setup ok.");
-    }else{
-      $db->error("failed to setup database for " . $appname);
-    }
+function importLib($libfn,$desc,$log)/*{{{*/
+{
+    $log->debug("Importing $desc from $libfn");
+    require_once $libfn;
+}/*}}}*/
+function calendarDiv($monthoffset=0)/*{{{*/
+{
+  $thismonth=date("n");
+  $month=$thismonth+$monthoffset;
+  $thisyear=$year=date("Y");
+  $day=date("j");
+  $xday=$thismonth==$month && $thisyear==$year?$day:0;
+  $tag=new Tag("div",singleCalendar($month,$year,$xday),array("class"=>"col-sm-4"));
+  $row=$tag->makeTag();
+  $month++;
+  if($month>12){
+    $month=1;
+    $year++;
   }
-}
+  $xday=$thismonth==$month && $thisyear==$year?$day:0;
+  $tag=new Tag("div",singleCalendar($month,$year,$xday),array("class"=>"col-sm-4"));
+  $row.=$tag->makeTag();
+  $month++;
+  if($month>12){
+    $month=1;
+    $year++;
+  }
+  $xday=$thismonth==$month && $thisyear==$year?$day:0;
+  $tag=new Tag("div",singleCalendar($month,$year,$xday),array("class"=>"col-sm-4"));
+  $row.=$tag->makeTag();
+  $cdiv=new Tag("div",$row,array("class"=>"row","name"=>"calendar"));
+  return $cdiv->makeTag();
+}/*}}}*/
+function singleCalendar($month, $year,$day=0)/*{{{*/
+{
+  $months=array("padding","January","February","March","April","May","June","July","August","September","October","November","December");
+  $op="";
+  $op.=weekDays();
+  $op.=calDays($month,$year,$day);
+  $tag=new Tag("table",$op,array("class"=>"table"));
+  $op=$tag->makeTag();
+  $tag=new Tag("div",$op,array("class"=>"panel-body"));
+  $op=$tag->makeTag();
+  $tag=new Tag("div",$months[$month],array("class"=>"panel-heading"));
+  $tmp=$tag->makeTag();
+  $tag=new Tag("div",$tmp . $op,array("class"=>"panel panel-primary"));
+  return $tag->makeTag();
+}/*}}}*/
+function calDays($month,$year,$day)/*{{{*/
+{
+  $op="";
+  $rows=0;
+  $d=cal_days_in_month(CAL_GREGORIAN,$month,$year);
+  $jd=gregoriantojd($month,1,$year);
+  $dow=jddayofweek($jd,0);
+  $days=1;
+  $firstrow=true;
+  while($days<=$d){
+    $sop="";
+    $idx=0;
+    while($idx<7){
+      if($firstrow && $idx<$dow){
+        $tag=new Tag("td","&nbsp;");
+        $sop.=$tag->makeTag();
+      }else{
+        if($days<=$d){
+          $xdays=$days<10?"&nbsp;$days":"$days";
+          if($days==$day){
+            $tag=new Tag("td",$xdays,array("class"=>"info"));
+          }else{
+            $tag=new Tag("td",$xdays);
+          }
+          $sop.=$tag->makeTag();
+          $days+=1;
+        }else{
+          $tag=new Tag("td","&nbsp;");
+          $sop.=$tag->makeTag();
+        }
+      }
+      $idx+=1;
+    }
+    $firstrow=false;
+    $tag=new Tag("tr",$sop);
+    $op.=$tag->makeTag();
+    $rows++;
+  }
+  if($rows<6){
+    $tmp="";
+    for($x=0;$x<7;$x++){
+      $tag=new Tag("td","&nbsp;");
+      $tmp.=$tag->makeTag();
+    }
+    $tag=new Tag("tr",$tmp);
+    $op.=$tag->makeTag();
+  }
+  $tag=new Tag("tbody",$op);
+  return $tag->makeTag();
+}/*}}}*/
+function weekDays()/*{{{*/
+{
+  $op="";
+  $days=array("Su","Mo","Tu","We","Th","Fr","Sa");
+  foreach($days as $day){
+    $tag=new Tag("th",$day);
+    $op.=$tag->makeTag();
+  }
+  $tag=new Tag("tr",$op);
+  $op=$tag->makeTag();
+  $tag=new Tag("thead",$op);
+  return $tag->makeTag();
+}/*}}}*/
 
-require_once "booking.class.php";
-require_once "user.class.php";
+importLib("www.php","GP funcs",$logg);
+importLib("HTML/form.class.php","Form Class",$logg);
+importLib("HTML/tag.class.php","TAG class",$logg);
+importLib("HTML/link.class.php","Link class",$logg);
+importLib("HTML/input_field.class.php","Inputfield class",$logg);
 
-$un=new User($logg,$db,"chris.allison@hotmail.com","somepassword");
+// $un=new User($logg,$db,"chris.allison@hotmail.com","somepassword");
 
-$content=$apppath . "<br>" . $libpath . "<br>" . $pvpath;
+$mo=GP("monthoffset");
+$content=calendarDiv($mo);
+
+$headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
+$footfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-footer.php";
+
+$pagetitle="Lidlington Village Hall";
+
+include $headfn;
+include $footfn;
+
+$tag=new Tag("div",$content,array("id"=>"body"));
+$bodytag=$tag->makeTag();
+$tag=new Tag("body",$bheader . $bodytag . $bfooter);
+$body=$tag->makeTag();
+$tag=new Tag("html",$head . $body,array("lang"=>"en"));
+$html=" <!DOCTYPE html>\n" . $tag->makeTag();
+echo $html;
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-<title><?php echo $displayname; ?></title>
-</head>
-<body>
-<div>
-<h1><?php echo $displayname; ?></h1>
-<p>
-<?php echo $content; ?>
-</p>
-</div>
-</body>
-</html>

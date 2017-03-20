@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Tuesday 21 February 2017, 06:02:54
- * Last Modified: Saturday 25 February 2017, 00:43:08
+ * Last Modified: Monday 20 March 2017, 06:02:35
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -23,13 +23,13 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$footcontent="Copyright © 2016-" . date("Y") . " Chris Allison";
-$tag=new Tag("div",$footcontent,array("class"=>"centre"));
-$footcontent=$tag->makeTag();
-$tmp=new Tag("div",$footcontent,array("id"=>"footer"));
-$bfooter=$tmp->makeTag();
 /*
  * close the container div
  */
 $bfooter.="\n</div>\n";
+$footcontent="Copyright © 2016-" . date("Y") . " Chris Allison";
+$tag=new Tag("div",$footcontent);
+$footcontent=$tag->makeTag();
+$tmp=new Tag("footer",$footcontent,array("class"=>"container bg-4 text-center"));
+$bfooter=$tmp->makeTag();
 ?>

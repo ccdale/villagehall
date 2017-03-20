@@ -5,7 +5,7 @@
  * tag.class.php
  *
  * Started: Sunday 19 February 2017, 08:59:12
- * Last Modified: Sunday 19 February 2017, 09:03:07
+ * Last Modified: Sunday 19 March 2017, 12:51:32
  *
  * This file is part of villagehall.
  * 
@@ -100,7 +100,11 @@ class Tag
     }// }}}
     public function makeTag()
     {// {{{
+      if($this->newline){
+        $op="\n<" . $this->name;
+      }else{
         $op="<" . $this->name;
+      }
         $op.=$this->makeAtts();
         $op.=">";
         if($this->noclose){// {{{

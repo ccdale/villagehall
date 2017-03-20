@@ -6,7 +6,7 @@
  * index.php
  *
  * Started: Saturday 19 November 2016, 15:35:53
- * Last Modified: Sunday 19 February 2017, 08:11:55
+ * Last Modified: Sunday  5 March 2017, 11:22:34
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -114,6 +114,8 @@ if(file_exists($libcheck)){
  * otherwise complain and stop
  */
 $configfn=$pvpath . DIRECTORY_SEPARATOR . $appname . "-config.php";
+$appfn=$apppath . DIRECTORY_SEPARATOR . $appname . ".php";
+$includesfn=$libpath . DIRECTORY_SEPARATOR . "includes.php";
 if(!file_exists($configfn)){
   $setupfn=$apppath . DIRECTORY_SEPARATOR . "setup-" . $appname . ".php";
   if(!file_exists($setupfn)){
@@ -122,13 +124,17 @@ if(!file_exists($configfn)){
   }
   include $setupfn;
 }else{
-  $appfn=$apppath . DIRECTORY_SEPARATOR . $appname . ".php";
+  if(!file_exists($includesfn)){
+    echo "Libraries not found";
+    exit(128);
+  }
   if(!file_exists($appfn)){
     echo "Application not found";
     exit(128);
   }
 
   include $configfn;
+  include $includesfn;
   include $appfn;
 }
 ?>

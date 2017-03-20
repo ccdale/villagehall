@@ -1,34 +1,11 @@
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(127) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `email` varchar(127) NOT NULL,
-  `phone` varchar(12) DEFAULT NULL,
-  `address1` varchar(127) DEFAULT NULL,
-  `address2` varchar(127) DEFAULT NULL,
-  `town` varchar(127) DEFAULT NULL,
-  `postcode` varchar(10) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- Adminer 4.2.5 MySQL dump
 
-DROP TABLE IF EXISTS `hall`;
-CREATE TABLE `hall` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET NAMES utf8;
+SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-DROP TABLE IF EXISTS `rooms`;
-CREATE TABLE `rooms` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `hallid` int(11) NOT NULL,
-  `name` varchar(128) NOT NULL,
-  `size` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `hallid` (`hallid`),
-  CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`hallid`) REFERENCES `hall` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+USE `villagehall`;
 
 DROP TABLE IF EXISTS `booking`;
 CREATE TABLE `booking` (
@@ -43,3 +20,53 @@ CREATE TABLE `booking` (
   CONSTRAINT `booking_ibfk_1` FOREIGN KEY (`roomid`) REFERENCES `rooms` (`id`),
   CONSTRAINT `booking_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `hall`;
+CREATE TABLE `hall` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `privs`;
+CREATE TABLE `privs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) NOT NULL,
+  `ulevel` int(11) NOT NULL,
+  `hlevel` int(11) NOT NULL,
+  `alevel` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `userid` (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `rooms`;
+CREATE TABLE `rooms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hallid` int(11) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `size` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `hallid` (`hallid`),
+  CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`hallid`) REFERENCES `hall` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(127) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(127) NOT NULL,
+  `phone` varchar(12) DEFAULT NULL,
+  `address1` varchar(127) DEFAULT NULL,
+  `address2` varchar(127) DEFAULT NULL,
+  `town` varchar(127) DEFAULT NULL,
+  `postcode` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- 2017-03-05 11:46:14

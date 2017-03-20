@@ -62,7 +62,7 @@ class Data extends Base
             }
         }
         if($this->ValidStr($field) && $this->ValidStr($data)){
-            $sql="select * from $table where $field='" . $this->db->escape($data) . "'";
+            $sql="select * from $this->table where $field='" . $this->db->escape($data) . "'";
             $this->data=$this->db->arrayQuery($sql);
             $this->id=$this->data["id"];
             unset($this->data["id"]);
@@ -70,7 +70,7 @@ class Data extends Base
     }/*}}}*/
     private function getMysqlFields()/*{{{*/
     {
-        $sql="show colomns from " . $this->table;
+        $sql="show columns from " . $this->table;
         if(false!==($colsarr=$this->db->arrayQuery($sql))){
             $this->data=array();
             foreach($colsarr as $val){
