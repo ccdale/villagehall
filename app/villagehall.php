@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Monday 20 March 2017, 06:56:05
+ * Last Modified: Wednesday 22 March 2017, 07:26:15
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -31,123 +31,71 @@ function importLib($libfn,$desc,$log)/*{{{*/
     $log->debug("Importing $desc from $libfn");
     require_once $libfn;
 }/*}}}*/
-function calendarDiv($monthoffset=0)/*{{{*/
+function calendarDiv($monthoffset=0,$year=0,$month=0,$day=0)/*{{{*/
 {
+  $row="";
   $thismonth=date("n");
-  $month=$thismonth+$monthoffset;
   $thisyear=$year=date("Y");
-  $day=date("j");
-  $xday=$thismonth==$month && $thisyear==$year?$day:0;
-  $tag=new Tag("div",singleCalendar($month,$year,$xday),array("class"=>"col-sm-4"));
-  $row=$tag->makeTag();
-  $month++;
-  if($month>12){
-    $month=1;
-    $year++;
+  $thisday=date("j");
+  if($year>0 && $month>0 && $day>0){
+    $xday=$day;
+    $monthoffset=(($thisyear-$year)*12)+$month;
+  }else{
+    $month=$thismonth+$monthoffset;
+    if($month>12){
+      $month=$month-12;
+      $year++;
+    }
+    $day=$thisday;
+    $xday=$thismonth==$month && $thisyear==$year?$day:0;
   }
-  $xday=$thismonth==$month && $thisyear==$year?$day:0;
-  $tag=new Tag("div",singleCalendar($month,$year,$xday),array("class"=>"col-sm-4"));
-  $row.=$tag->makeTag();
-  $month++;
-  if($month>12){
-    $month=1;
-    $year++;
+  for($x=0;$x<3;$x++){
+    if($x>0){
+      $xday=0;
+    }
+    $showyear=$year>$thisyear?true:false;
+    $tag=new Tag("div",singleCalendar($month,$year,$xday,$showyear),array("class"=>"col-sm-4"));
+    $row.=$tag->makeTag();
+    $month++;
+    if($month>12){
+      $month=1;
+      $year++;
+    }
   }
-  $xday=$thismonth==$month && $thisyear==$year?$day:0;
-  $tag=new Tag("div",singleCalendar($month,$year,$xday),array("class"=>"col-sm-4"));
-  $row.=$tag->makeTag();
   $cdiv=new Tag("div",$row,array("class"=>"row","name"=>"calendar"));
-  return $cdiv->makeTag();
+  $cal=$cdiv->makeTag();
+  $buttons=nextMonthButton($monthoffset);
+  return $cal . $buttons;
 }/*}}}*/
-function singleCalendar($month, $year,$day=0)/*{{{*/
+function nextMonthButton($monthoffset)/*{{{*/
 {
-  $months=array("padding","January","February","March","April","May","June","July","August","September","October","November","December");
-  $op="";
-  $op.=weekDays();
-  $op.=calDays($month,$year,$day);
-  $tag=new Tag("table",$op,array("class"=>"table"));
-  $op=$tag->makeTag();
-  $tag=new Tag("div",$op,array("class"=>"panel-body"));
-  $op=$tag->makeTag();
-  $tag=new Tag("div",$months[$month],array("class"=>"panel-heading"));
-  $tmp=$tag->makeTag();
-  $tag=new Tag("div",$tmp . $op,array("class"=>"panel panel-primary"));
-  return $tag->makeTag();
-}/*}}}*/
-function calDays($month,$year,$day)/*{{{*/
-{
-  $op="";
-  $rows=0;
-  $d=cal_days_in_month(CAL_GREGORIAN,$month,$year);
-  $jd=gregoriantojd($month,1,$year);
-  $dow=jddayofweek($jd,0);
-  $days=1;
-  $firstrow=true;
-  while($days<=$d){
-    $sop="";
-    $idx=0;
-    while($idx<7){
-      if($firstrow && $idx<$dow){
-        $tag=new Tag("td","&nbsp;");
-        $sop.=$tag->makeTag();
-      }else{
-        if($days<=$d){
-          $xdays=$days<10?"&nbsp;$days":"$days";
-          if($days==$day){
-            $tag=new Tag("td",$xdays,array("class"=>"info"));
-          }else{
-            $tag=new Tag("td",$xdays);
-          }
-          $sop.=$tag->makeTag();
-          $days+=1;
-        }else{
-          $tag=new Tag("td","&nbsp;");
-          $sop.=$tag->makeTag();
-        }
-      }
-      $idx+=1;
-    }
-    $firstrow=false;
-    $tag=new Tag("tr",$sop);
-    $op.=$tag->makeTag();
-    $rows++;
+  if($monthoffset==0){
+    $tag=new ALink("","<","","btn btn-default disabled");
+  }else{
+    $tag=new ALink(array("monthoffset"=>$monthoffset-3),"<","","btn btn-default");
   }
-  if($rows<6){
-    $tmp="";
-    for($x=0;$x<7;$x++){
-      $tag=new Tag("td","&nbsp;");
-      $tmp.=$tag->makeTag();
-    }
-    $tag=new Tag("tr",$tmp);
-    $op.=$tag->makeTag();
-  }
-  $tag=new Tag("tbody",$op);
-  return $tag->makeTag();
-}/*}}}*/
-function weekDays()/*{{{*/
-{
-  $op="";
-  $days=array("Su","Mo","Tu","We","Th","Fr","Sa");
-  foreach($days as $day){
-    $tag=new Tag("th",$day);
-    $op.=$tag->makeTag();
-  }
-  $tag=new Tag("tr",$op);
-  $op=$tag->makeTag();
-  $tag=new Tag("thead",$op);
+  $leftb=$tag->makeLink();
+  $tag=new ALink(array("monthoffset"=>0),"Today","","btn bth-primary");
+  $middleb=$tag->makeLink();
+  $tag=new ALink(array("monthoffset"=>$monthoffset+3),">","","btn btn-default");
+  $rightb=$tag->makeLink();
+  $buttons=$leftb . $middleb . $rightb;
+  $tag=new Tag("div",$buttons,array("class"=>"col-sm-12 text-center"));
   return $tag->makeTag();
 }/*}}}*/
 
 importLib("www.php","GP funcs",$logg);
+importLib("calendar.php","Calendar funcs",$logg);
 importLib("HTML/form.class.php","Form Class",$logg);
 importLib("HTML/tag.class.php","TAG class",$logg);
 importLib("HTML/link.class.php","Link class",$logg);
 importLib("HTML/input_field.class.php","Inputfield class",$logg);
 
-// $un=new User($logg,$db,"chris.allison@hotmail.com","somepassword");
-
-$mo=GP("monthoffset");
-$content=calendarDiv($mo);
+$mo=getDefaultInt("monthoffset",0);
+$day=getDefaultInt("day",0);
+$month=getDefaultInt("month",0);
+$year=getDefaultInt("year",0);
+$content=calendarDiv($mo,$year,$month,$day);
 
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
 $footfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-footer.php";
