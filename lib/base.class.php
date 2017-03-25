@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Tuesday 27 December 2016, 11:29:50
+ * Last Modified: Saturday 25 March 2017, 20:25:53
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -28,7 +28,7 @@
 
 class Base
 {
-  private $log=false;
+  protected $log=false;
   private $canlog=false;
 
   public function __construct($log=false)/*{{{*/
