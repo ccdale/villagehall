@@ -11,3 +11,6 @@ td.caldeposit {
 td.calpaid {
   background-color: #80F080;
 }
+td.tdkey {
+  padding: 1em;
+}
