@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 25 March 2017, 19:36:37
+ * Last Modified: Saturday 25 March 2017, 20:33:58
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -25,23 +25,24 @@
 
 require_once "base.class.php";
 require_once "booking.class.php";
+require_once "bookings.class.php";
 require_once "HTML/link.class.php";
 require_once "HTML/tag.class.php";
 
 class Calendar extends Base
 {
   private $db=false;
-  private $booking=false;
+  private $bookings=false;
 
   public function __construct($logg=false,$db=false)/*{{{*/
   {
     parent::__construct($logg);
     $this->db=$db;
-    $this->booking=new Booking($logg,$db);
+    $this->bookings=new Booking($logg,$db);
   }/*}}}*/
   public function __destruct()/*{{{*/
   {
-    $this->booking=null;
+    $this->bookings=null;
     parent::__destruct();
   }/*}}}*/
   public function calendarDiv($monthoffset=0,$year=0,$month=0,$day=0)/*{{{*/
@@ -145,7 +146,7 @@ class Calendar extends Base
   }/*}}}*/
   private function calDays($month,$year,$day)/*{{{*/
   {
-    $barr=$this->doBookings($month,$year);
+    $barr=$this->transformMonthBookingsArray($month,$year);
     $op="";
     $rows=0;
     $d=cal_days_in_month(CAL_GREGORIAN,$month,$year);
@@ -209,12 +210,12 @@ class Calendar extends Base
     $tag=new Tag("thead",$op);
     return $tag->makeTag();
   }/*}}}*/
-  private function doBookings($month,$year)/*{{{*/
+  private function transformMonthBookingsArray($month,$year)/*{{{*/
   {
     $barr=array();
-    $numbookings=$this->booking->getBookingsForMonth($month,$year);
+    $numbookings=$this->bookings->getBookingsForMonth($month,$year);
     if($numbookings>0){
-      $blist=$this->booking->getBookingList();
+      $blist=$this->bookings->getBookingList();
       foreach($blist as $b){
         $day=date("j",$b["date"]);
         /* statuses:
@@ -243,6 +244,19 @@ class Calendar extends Base
         }
         $barr[$day]["status"]=$status;
         $barr[$day]["class"]=$class;
+      }
+    }
+    return $barr;
+  }/*}}}*/
+  private function transformDayBookingsArray($day,$month,$year)/*{{{*/
+  {
+    $barr=array();
+    $numbookings=$this->bookings->getBookingsForDay($day,$month,$year);
+    if($numbookings>0){
+      $blist=$this->bookings->getBookingList();
+      foreach($blist as $b){
+        $starthour=date("G",$b["date"]);
+        $startminute=date("i",$b["date"]);
       }
     }
     return $barr;
