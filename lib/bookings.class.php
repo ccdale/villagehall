@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday 25 March 2017, 20:40:41
+ * Last Modified: Saturday 25 March 2017, 20:52:54
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -46,13 +46,18 @@ class Bookings extends Base
     $this->destroyBookings();
     parent::__destruct();
   }/*}}}*/
+  /* simple iterator */
   public function nextBooking()/*{{{*/
   {
-    $this->currentbooking++;
-    if($this->numbookings>0 && $this->currentbooking>$this->numbookings){
-      $this->currentbooking=1;
+    $ret=false;
+    if($this->numbookings>0){
+      $this->currentbooking++;
+      if($this->currentbooking>$this->numbookings){
+        $this->currentbooking=1;
+      }
+      $ret=$this->bookings[$this->currentbooking-1];
     }
-    $index=$this->currentbooking-1;
+    return $ret;
   }/*}}}*/
   public function getBookingsForDay($day,$month,$year)/*{{{*/
   {
@@ -80,6 +85,15 @@ class Bookings extends Base
       }
     }
   }/*}}}*/
+  private function createBookings()/*{{{*/
+  {
+    if($this->numbookings>0){
+      $this->bookings=array();
+      foreach($this->bookinglist as $b){
+        $this->bookings[]=new Booking($this->log,$this->db,$b);
+      }
+    }
+  }/*}}}*/
   private function getBookings($starttm,$length=86400)/*{{{*/
   {
     $sql="select * from booking where date>=$starttm and date<=($starttm+$length) order by date asc";
@@ -87,13 +101,14 @@ class Bookings extends Base
   }/*}}}*/
   private function updateBookingList($sql)/*{{{*/
   {
+    $this->destroyBookings();
+    $this->bookinglist=false;
+    $this->numbookings=0;
     $tmp=$this->db->arrayQuery($sql);
     if(false!==($tcn=$this->ValidArray($tmp))){
       $this->bookinglist=$tmp;
       $this->numbookings=$tcn;
-    }else{
-      $this->bookinglist=false;
-      $this->numbookings=0;
+      $this->createBookings();
     }
   }/*}}}*/
 }
