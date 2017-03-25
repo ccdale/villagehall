@@ -63,7 +63,8 @@ class Data extends Base
         }
         if($this->ValidStr($field) && $this->ValidStr($data)){
             $sql="select * from $this->table where $field='" . $this->db->escape($data) . "'";
-            $this->data=$this->db->arrayQuery($sql);
+            $tmp=$this->db->arrayQuery($sql);
+            $this->data=$tmp[0];
             $this->id=$this->data["id"];
             unset($this->data["id"]);
         }

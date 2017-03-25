@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Saturday 25 March 2017, 12:12:36
+ * Last Modified: Saturday 25 March 2017, 23:12:00
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -30,58 +30,6 @@ function importLib($libfn,$desc,$log)/*{{{*/
 {
     $log->debug("Importing $desc from $libfn");
     require_once $libfn;
-}/*}}}*/
-function calendarDiv($monthoffset=0,$year=0,$month=0,$day=0)/*{{{*/
-{
-  $row="";
-  $thismonth=date("n");
-  $thisyear=$year=date("Y");
-  $thisday=date("j");
-  if($year>0 && $month>0 && $day>0){
-    $xday=$day;
-    $monthoffset=(($thisyear-$year)*12)+$month;
-  }else{
-    $month=$thismonth+$monthoffset;
-    if($month>12){
-      $month=$month-12;
-      $year++;
-    }
-    $day=$thisday;
-    $xday=$thismonth==$month && $thisyear==$year?$day:0;
-  }
-  for($x=0;$x<3;$x++){
-    if($x>0){
-      $xday=0;
-    }
-    $showyear=$year>$thisyear?true:false;
-    $tag=new Tag("div",singleCalendar($month,$year,$xday,$showyear),array("class"=>"col-sm-4"));
-    $row.=$tag->makeTag();
-    $month++;
-    if($month>12){
-      $month=1;
-      $year++;
-    }
-  }
-  $cdiv=new Tag("div",$row,array("class"=>"row","name"=>"calendar"));
-  $cal=$cdiv->makeTag();
-  $buttons=nextMonthButton($monthoffset);
-  return $cal . $buttons;
-}/*}}}*/
-function nextMonthButton($monthoffset)/*{{{*/
-{
-  if($monthoffset==0){
-    $tag=new ALink("","<","","btn btn-default disabled");
-  }else{
-    $tag=new ALink(array("monthoffset"=>$monthoffset-3),"<","","btn btn-default");
-  }
-  $leftb=$tag->makeLink();
-  $tag=new ALink(array("monthoffset"=>0),"Today","","btn bth-primary");
-  $middleb=$tag->makeLink();
-  $tag=new ALink(array("monthoffset"=>$monthoffset+3),">","","btn btn-default");
-  $rightb=$tag->makeLink();
-  $buttons=$leftb . $middleb . $rightb;
-  $tag=new Tag("div",$buttons,array("class"=>"col-sm-12 text-center"));
-  return $tag->makeTag();
 }/*}}}*/
 
 importLib("www.php","GP funcs",$logg);
