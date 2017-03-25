@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Tuesday 21 February 2017, 06:00:53
- * Last Modified: Saturday 25 March 2017, 14:46:38
+ * Last Modified: Saturday 25 March 2017, 19:41:20
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -30,7 +30,10 @@ $bootstrap=<<<EOBS
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <!-- colour and footer overrides -->
+<!--
+This is not affective, so is commented out
 <link rel="stylesheet" type="text/css" media="screen" href="css/override_default.css">
+-->
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <!-- Latest compiled JavaScript -->
