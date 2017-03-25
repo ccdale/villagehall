@@ -31,8 +31,8 @@ require_once "base.class.php";
 
 class Data extends Base
 {
-    private $db=false;
     private $dirty=false;
+    protected $db=false;
     protected $id=false;
     protected $table=false;
     protected $data=false;
@@ -74,7 +74,7 @@ class Data extends Base
         if(false!==($colsarr=$this->db->arrayQuery($sql))){
             $this->data=array();
             foreach($colsarr as $val){
-                $this->data[$val["field"]]=false;
+                $this->data[$val["Field"]]=false;
             }
             unset($this->data["id"]);
         }

@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Wednesday 22 March 2017, 07:26:15
+ * Last Modified: Saturday 25 March 2017, 12:12:36
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -85,7 +85,7 @@ function nextMonthButton($monthoffset)/*{{{*/
 }/*}}}*/
 
 importLib("www.php","GP funcs",$logg);
-importLib("calendar.php","Calendar funcs",$logg);
+importLib("calendar.class.php","Calendar class",$logg);
 importLib("HTML/form.class.php","Form Class",$logg);
 importLib("HTML/tag.class.php","TAG class",$logg);
 importLib("HTML/link.class.php","Link class",$logg);
@@ -95,7 +95,8 @@ $mo=getDefaultInt("monthoffset",0);
 $day=getDefaultInt("day",0);
 $month=getDefaultInt("month",0);
 $year=getDefaultInt("year",0);
-$content=calendarDiv($mo,$year,$month,$day);
+$cal=new Calendar($logg,$db);
+$content=$cal->calendarDiv($mo,$year,$month,$day);
 
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
 $footfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-footer.php";
