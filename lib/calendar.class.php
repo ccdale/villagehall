@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 25 March 2017, 13:14:25
+ * Last Modified: Saturday 25 March 2017, 14:30:50
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -77,24 +77,9 @@ class Calendar extends Base
     }
     $cdiv=new Tag("div",$row,array("class"=>"row","name"=>"calendar"));
     $cal=$cdiv->makeTag();
+    $key=$this->tableKey();
     $buttons=$this->nextMonthButton($monthoffset);
-    return $cal . $buttons;
-  }/*}}}*/
-  public function nextMonthButton($monthoffset)/*{{{*/
-  {
-    if($monthoffset==0){
-      $tag=new ALink("","<","","btn btn-default disabled");
-    }else{
-      $tag=new ALink(array("monthoffset"=>$monthoffset-3),"<","","btn btn-default");
-    }
-    $leftb=$tag->makeLink();
-    $tag=new ALink(array("monthoffset"=>0),"Today","","btn bth-primary");
-    $middleb=$tag->makeLink();
-    $tag=new ALink(array("monthoffset"=>$monthoffset+3),">","","btn btn-default");
-    $rightb=$tag->makeLink();
-    $buttons=$leftb . $middleb . $rightb;
-    $tag=new Tag("div",$buttons,array("class"=>"col-sm-12 text-center"));
-    return $tag->makeTag();
+    return $cal . $key . $buttons;
   }/*}}}*/
   public function singleCalendar($month, $year,$day=0,$showyear=false)/*{{{*/
   {
@@ -111,6 +96,49 @@ class Calendar extends Base
     $tmp=$tag->makeTag();
     $tag=new Tag("div",$tmp . $op,array("class"=>"panel panel-primary"));
     return $tag->makeTag();
+  }/*}}}*/
+  private function nextMonthButton($monthoffset)/*{{{*/
+  {
+    $chevl=new Tag("span","",array("class"=>"glyphicon glyphicon-chevron-left"));
+    if($monthoffset==0){
+      $tag=new ALink("",$chevl->makeTag(),"","btn btn-default disabled");
+    }else{
+      $tag=new ALink(array("monthoffset"=>$monthoffset-3),$chevl->makeTag(),"","btn btn-default");
+    }
+    $leftb=$tag->makeLink();
+    $tag=new ALink(array("monthoffset"=>0),"Today","","btn bth-primary");
+    $middleb=$tag->makeLink();
+    $chevr=new Tag("span","",array("class"=>"glyphicon glyphicon-chevron-right"));
+    $tag=new ALink(array("monthoffset"=>$monthoffset+3),$chevr->makeTag(),"","btn btn-default");
+    $rightb=$tag->makeLink();
+    $buttons=$leftb . $middleb . $rightb;
+    $tag=new Tag("div",$buttons,array("class"=>"col-sm-12 text-center"));
+    return $tag->makeTag();
+  }/*}}}*/
+  private function tableKey()/*{{{*/
+  {
+    $cells="";
+    $line="";
+    $stuff=array(
+      array("class"=>"calnodeposit","txt"=>"Booked: Deposit not yet paid."),
+      array("class"=>"caldeposit","txt"=>"Booked: Deposit paid."),
+      array("class"=>"calpaid","txt"=>"Booked: Fully paid.")
+    );
+    foreach($stuff as $val){
+      $tag=new Tag("td","1",array("class"=>$val["class"]));
+      $cells.=$tag->makeTag();
+      $tag=new Tag("td",$val["txt"]);
+      $cells.=$tag->makeTag();
+      $tag=new Tag("tr",$cells);
+      $row=$tag->makeTag();
+      $tag=new Tag("tbody",$row);
+      $tbody=$tag->makeTag();
+      $tag=new Tag("table",$tbody);
+      $table=$tag->makeTag();
+      $tag=new Tag("div",$table,array("class"=>"col-sm-4"));
+      $line.=$tag->makeTag();
+    }
+    return $line;
   }/*}}}*/
   private function calDays($month,$year,$day)/*{{{*/
   {
@@ -135,9 +163,9 @@ class Calendar extends Base
             if($days==$day){
               $tag=new Tag("td",$xdays,array("class"=>"todaymark"));
             }else{
-              $class=isset($barr[$days])?"caldaylink " . $barr[$days]["class"]:"caldaylink";
-              $link=new ALink(array("year"=>$year,"month"=>$month,"day"=>$days),$xdays,"",$class);
-              $tag=new Tag("td",$link->makeLink());
+              $class=isset($barr[$days])?$barr[$days]["class"]:"";
+              $link=new ALink(array("year"=>$year,"month"=>$month,"day"=>$days),$xdays,"","caldaylink");
+              $tag=new Tag("td",$link->makeLink(),array("class"=>$class));
             }
             $sop.=$tag->makeTag();
             $days+=1;
@@ -199,13 +227,13 @@ class Calendar extends Base
         }
         switch($status){
         case 3:
-          $class="danger";
+          $class="calnodeposit";
           break;
         case 2:
-          $class="warning";
+          $class="caldeposit";
           break;
         case 1:
-          $class="success";
+          $class="calpaid";
           break;
         default:
           $class="";

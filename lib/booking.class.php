@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday 25 March 2017, 12:35:02
+ * Last Modified: Saturday 25 March 2017, 13:31:16
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -56,7 +56,7 @@ class Booking extends Data
   }/*}}}*/
   private function getBookings($starttm,$length=86400)/*{{{*/
   {
-    $sql="select * from booking where date>=$starttm and date<=($starttm+$length) order by date ascending";
+    $sql="select * from booking where date>=$starttm and date<=($starttm+$length) order by date asc";
     $this->updateBookingList($sql);
   }/*}}}*/
   private function updateBookingList($sql)/*{{{*/

@@ -2,3 +2,12 @@ td.todaymark {
   color: white;
   background-color: #337AB7;
 }
+td.calnodeposit {
+  background-color: #F08080;
+}
+td.caldeposit {
+  background-color: #F0F080;
+}
+td.calpaid {
+  background-color: #80F080;
+}
