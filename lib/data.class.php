@@ -113,7 +113,7 @@ class Data extends Base
     protected function insertFields($fields)/*{{{*/
     {
         $ret=false;
-        if(false!==($this->ValidArray())){
+        if(false!==($this->ValidArray($fields))){
             $fs=$vs="";
             foreach($fields as $field=>$value){
                 if(strlen($fs)){

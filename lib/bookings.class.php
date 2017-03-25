@@ -3,10 +3,10 @@
 /*
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
- * booking.class.php
+ * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday 25 March 2017, 20:29:04
+ * Last Modified: Saturday 25 March 2017, 20:31:04
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -26,18 +26,18 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "data.class.php";
+require_once "base.class.php";
 
-class Booking extends Data
+class Bookings extends Base
 {
-  private $fields=false;
+  private $db=false;
   private $bookinglist=false;
   private $numbookings=0;
   private $currentbooking=0;
 
   public function __construct($logg=false,$db=false)/*{{{*/
   {
-    parent::__construct($logg,$db,"booking");
+    parent::__construct($logg,$db);
   }/*}}}*/
   public function __destruct()/*{{{*/
   {
