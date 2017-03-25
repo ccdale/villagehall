@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 25 March 2017, 14:30:50
+ * Last Modified: Saturday 25 March 2017, 19:36:37
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -52,7 +52,7 @@ class Calendar extends Base
     $thisday=date("j");
     if($year>0 && $month>0 && $day>0){
       $xday=$day;
-      $monthoffset=(($thisyear-$year)*12)+$month;
+      $monthoffset=(($thisyear-$year)*12)+$month-3;
     }else{
       $month=$thismonth+$monthoffset;
       if($month>12){
@@ -77,9 +77,9 @@ class Calendar extends Base
     }
     $cdiv=new Tag("div",$row,array("class"=>"row","name"=>"calendar"));
     $cal=$cdiv->makeTag();
-    $key=$this->tableKey();
     $buttons=$this->nextMonthButton($monthoffset);
-    return $cal . $key . $buttons;
+    $key=$this->tableKey();
+    return $buttons . $cal . $key;
   }/*}}}*/
   public function singleCalendar($month, $year,$day=0,$showyear=false)/*{{{*/
   {
@@ -117,17 +117,20 @@ class Calendar extends Base
   }/*}}}*/
   private function tableKey()/*{{{*/
   {
-    $cells="";
+    $today=date("j");
+    if($today<10){
+      $today="&nbsp;$today";
+    }
     $line="";
     $stuff=array(
-      array("class"=>"calnodeposit","txt"=>"Booked: Deposit not yet paid."),
-      array("class"=>"caldeposit","txt"=>"Booked: Deposit paid."),
-      array("class"=>"calpaid","txt"=>"Booked: Fully paid.")
+      array("class"=>"tdkey calnodeposit","txt"=>"Booked: Deposit not yet paid."),
+      array("class"=>"tdkey caldeposit","txt"=>"Booked: Deposit paid."),
+      array("class"=>"tdkey calpaid","txt"=>"Booked: Fully paid.")
     );
     foreach($stuff as $val){
-      $tag=new Tag("td","1",array("class"=>$val["class"]));
-      $cells.=$tag->makeTag();
-      $tag=new Tag("td",$val["txt"]);
+      $tag=new Tag("td",$today,array("class"=>$val["class"]));
+      $cells=$tag->makeTag();
+      $tag=new Tag("td",$val["txt"],array("class"=>"tdkey"));
       $cells.=$tag->makeTag();
       $tag=new Tag("tr",$cells);
       $row=$tag->makeTag();
