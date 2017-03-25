@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday 25 March 2017, 20:31:04
+ * Last Modified: Saturday 25 March 2017, 20:35:11
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -27,6 +27,7 @@
  */
 
 require_once "base.class.php";
+require_once "booking.class.php";
 
 class Bookings extends Base
 {
