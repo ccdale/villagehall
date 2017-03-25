@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday 25 March 2017, 20:52:54
+ * Last Modified: Saturday 25 March 2017, 20:54:30
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -46,8 +46,7 @@ class Bookings extends Base
     $this->destroyBookings();
     parent::__destruct();
   }/*}}}*/
-  /* simple iterator */
-  public function nextBooking()/*{{{*/
+  public function nextBooking()/*{{{ simple iterator */
   {
     $ret=false;
     if($this->numbookings>0){
