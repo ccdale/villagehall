@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 25 March 2017, 20:59:37
+ * Last Modified: Saturday 25 March 2017, 23:14:35
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -81,7 +81,7 @@ class Calendar extends Base
     $key=$this->tableKey();
     return $buttons . $cal . $key;
   }/*}}}*/
-  public function singleCalendar($month, $year,$day=0,$showyear=false)/*{{{*/
+  private function singleCalendar($month, $year,$day=0,$showyear=false)/*{{{*/
   {
     $months=array("padding","January","February","March","April","May","June","July","August","September","October","November","December");
     $op="";
