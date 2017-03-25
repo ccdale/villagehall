@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday 25 March 2017, 21:01:45
+ * Last Modified: Saturday 25 March 2017, 23:12:39
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -59,6 +59,12 @@ class Bookings extends Base
     }
     return $ret;
   }/*}}}*/
+  public function getRoomBookings($room,$day,$month,$year)/*{{{*/
+  {
+    $tm=mktime(0,0,0,$month,$day,$year);
+    $this->getBookings($tm,86400,$room);
+    return $this->numbookings;
+  }/*}}}*/
   public function getBookingsForDay($day,$month,$year)/*{{{*/
   {
     $tm=mktime(0,0,0,$month,$day,$year);
@@ -94,9 +100,13 @@ class Bookings extends Base
       }
     }
   }/*}}}*/
-  private function getBookings($starttm,$length=86400)/*{{{*/
+  private function getBookings($starttm,$length=86400,$room=false)/*{{{*/
   {
-    $sql="select * from booking where date>=$starttm and date<=($starttm+$length) order by date asc";
+    $sql="select * from booking where date>=$starttm and date<=($starttm+$length)";
+    if(false!==$room){
+      $sql.=" and roomid=$room";
+    }
+    $sql.=" order by date asc";
     $this->updateBookingList($sql);
   }/*}}}*/
   private function updateBookingList($sql)/*{{{*/
