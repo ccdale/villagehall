@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday 25 March 2017, 23:12:39
+ * Last Modified: Sunday 26 March 2017, 06:01:03
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -44,7 +44,7 @@ class Bookings extends Base
   }/*}}}*/
   public function __destruct()/*{{{*/
   {
-    $this->destroyBookings();
+    $this->bookings=false;
     parent::__destruct();
   }/*}}}*/
   public function nextBooking()/*{{{ simple iterator */
@@ -83,14 +83,6 @@ class Bookings extends Base
   {
     return $this->bookinglist;
   }/*}}}*/
-  private function destroyBookings()/*{{{*/
-  {
-    if(false!==$this->bookings && $this->numbookings>0){
-      for($x=$this->numbookings;$x>0;$x--){
-        $this->bookings[$x-1]=null;
-      }
-    }
-  }/*}}}*/
   private function createBookings()/*{{{*/
   {
     if($this->numbookings>0){
@@ -111,7 +103,7 @@ class Bookings extends Base
   }/*}}}*/
   private function updateBookingList($sql)/*{{{*/
   {
-    $this->destroyBookings();
+    $this->bookings=false;
     $this->bookinglist=false;
     $this->numbookings=0;
     $tmp=$this->db->arrayQuery($sql);
