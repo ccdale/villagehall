@@ -30,13 +30,38 @@ require_once "data.class.php";
 
 class Hall extends Data
 {
+    private $numrooms=false;
+    private $rooms=false;
+
     public function __construct($logg=false,$db=false,$name=false)/*{{{*/
     {
         parent::__construct($logg,$db,"hall","name",$name);
+        $this->getRooms();
     }/*}}}*/
     public function __destruct()/*{{{*/
     {
         parent::__destruct();
+    }/*}}}*/
+    public function numRooms()/*{{{*/
+    {
+        return $this->numrooms;
+    }/*}}}*/
+    public function getRooms()/*{{{*/
+    {
+        return $this->rooms;
+    }/*}}}*/
+    private function getRooms()/*{{{*/
+    {
+        if(false!==$this->id){
+            $sql="select id from rooms where hallid=" . $this->id;
+            $tmp=$this->arrayQuery($sql);
+            if(false!==($this->numrooms=$this->ValidArray($tmp))){
+                $this->rooms=array();
+                foreach($tmp as $r){
+                    $this->rooms[]=new Room($this->log,$this->db,$r["id"]);
+                }
+            }
+        }
     }/*}}}*/
 }
 ?>
