@@ -15,10 +15,12 @@ td.tdkey {
   padding: 1em;
 }
 td.roomtimestrip {
+  border-right: thin solid black;
 }
 td.roombookingcell {
 }
 tr.roombookingrow {
+  border: thin solid black;
 }
 table.roombookingtable {
 }
