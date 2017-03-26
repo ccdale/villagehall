@@ -30,9 +30,9 @@ require_once "data.class.php";
 
 class Room extends Data
 {
-    public function __construct($logg=false,$db=false,$name=false)/*{{{*/
+    public function __construct($logg=false,$db=false,$id=false)/*{{{*/
     {
-        parent::__construct($logg,$db,"room","name",$name);
+        parent::__construct($logg,$db,"room","id",$id);
     }/*}}}*/
     public function __destruct()/*{{{*/
     {

@@ -163,6 +163,13 @@ class Data extends Base
             }
         }
     } /*}}}*/
+    public function getField($Field="")/*{{{*/
+    {
+        if($this->ValidStr($Field) && isset($this->data[$Field])){
+            return $this->data[$Field];
+        }
+        return false;
+    }/*}}}*/
     public function setDataA($data=false)/*{{{*/
     {
         if($this->ValidArray($data)){
