@@ -6,7 +6,7 @@
  * simple-mysql.class.php
  *
  * Started: Monday 23 July 2012, 13:41:11
- * Last Modified: Friday  3 March 2017, 10:54:52
+ * Last Modified: Sunday 26 March 2017, 17:07:55
  *
  * Copyright (c) 2014 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -181,6 +181,7 @@ class MySql extends Base
       $str=mysqli_error($this->conn);
       $this->error($str);
     }
+    return $ret;
   }/*}}}*/
   public function arrayQuery($sql="") // {{{
   {
