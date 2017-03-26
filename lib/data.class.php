@@ -178,5 +178,9 @@ class Data extends Base
     {
         return $this->dirty;
     }/*}}}*/
+    public function getId()/*{{{*/
+    {
+        return $this->id;
+    }/*}}}*/
 }
 ?>
