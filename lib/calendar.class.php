@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 25 March 2017, 23:51:19
+ * Last Modified: Sunday 26 March 2017, 05:54:24
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -25,6 +25,7 @@
 
 require_once "base.class.php";
 require_once "bookings.class.php";
+require_once "room.class.php";
 require_once "HTML/link.class.php";
 require_once "HTML/tag.class.php";
 
@@ -32,16 +33,25 @@ class Calendar extends Base
 {
   private $db=false;
   private $bookings=false;
+  private $hall=false;
+  private $rooms=false;
 
-  public function __construct($logg=false,$db=false)/*{{{*/
+  public function __construct($logg=false,$db=false,$hall=false)/*{{{*/
   {
     parent::__construct($logg);
     $this->db=$db;
     $this->bookings=new Bookings($logg,$db);
+    $this->hall=$hall;
   }/*}}}*/
   public function __destruct()/*{{{*/
   {
     $this->bookings=null;
+    if(false!==($c=$this->ValidArray($this->rooms))){
+      for($x=0;$x<$c;$x++){
+        $this->rooms[$x]=null;
+      }
+    }
+    $this->hall=null;
     parent::__destruct();
   }/*}}}*/
   public function calendarDiv($monthoffset=0,$year=0,$month=0,$day=0)/*{{{*/
@@ -81,6 +91,9 @@ class Calendar extends Base
     $buttons=$this->nextMonthButton($monthoffset);
     $key=$this->tableKey();
     return $buttons . $cal . $key;
+  }/*}}}*/
+  public function roomBookingsDiv()/*{{{*/
+  {
   }/*}}}*/
   private function singleCalendar($month, $year,$day=0,$showyear=false)/*{{{*/
   {
@@ -260,5 +273,11 @@ class Calendar extends Base
       }
     }
     return $barr;
+  }/*}}}*/
+  private function getRooms()/*{{{*/
+  {
+    if(false!==$this->hall){
+      $this->rooms=$this->hall->getRooms();
+    }
   }/*}}}*/
 }
