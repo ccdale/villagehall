@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 26 March 2017, 06:25:44
+ * Last Modified: Sunday 26 March 2017, 06:27:51
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *

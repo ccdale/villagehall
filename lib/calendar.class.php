@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Sunday 26 March 2017, 05:58:27
+ * Last Modified: Sunday 26 March 2017, 06:27:44
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -35,6 +35,7 @@ class Calendar extends Base
   private $bookings=false;
   private $hall=false;
   private $rooms=false;
+  private $numrooms=0;
 
   public function __construct($logg=false,$db=false,$hall=false)/*{{{*/
   {
@@ -89,8 +90,30 @@ class Calendar extends Base
     $key=$this->tableKey();
     return $buttons . $cal . $key;
   }/*}}}*/
-  public function roomBookingsDiv()/*{{{*/
+  public function roomBookingsDiv($midnight,$start=8,$length=4)/*{{{*/
   {
+    $table="";
+    while($start<(25-$length)){
+      $row="";
+      $dtime=$start<10?"0" . $start:$start;
+      $dtime.=":00";
+      $tag=new Tag("td",$dtime,array("class"=>"roomtimestrip"));
+      $row.=$tag->makeTag();
+      $tm=$midnight+($start*3600);
+      $tme=$tm+($length*3600);
+      for($x=0;$x<$this->numrooms;$x++){
+        $cn=$this->bookings->getRoomBookings($this->rooms[$x]->getId,$tm,$length*3600);
+        $tag=new Tag("td","&nbsp;",array("class"=>"roombookingcell"));
+        $row.=$tag->makeTag();
+      }
+      $tag=new Tag("tr",$row,array("class"=>"roombookingrow"));
+      $table.=$tag->makeTag();
+      $start+=$length;
+    }
+    $tag=new Tag("table",$table,array("class"=>"roombookingtable"));
+    $table=$tag->makeTag();
+    $tag=new Tag("div",$table,array("class"=>"col-sm-12"));
+    return $tag->makeTag();
   }/*}}}*/
   private function singleCalendar($month, $year,$day=0,$showyear=false)/*{{{*/
   {
@@ -275,6 +298,7 @@ class Calendar extends Base
   {
     if(false!==$this->hall){
       $this->rooms=$this->hall->getRooms();
+      $this->numrooms=$this->hall->numRooms();
     }
   }/*}}}*/
 }
