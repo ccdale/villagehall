@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 26 March 2017, 06:01:03
+ * Last Modified: Sunday 26 March 2017, 06:25:44
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -59,10 +59,9 @@ class Bookings extends Base
     }
     return $ret;
   }/*}}}*/
-  public function getRoomBookings($room,$day,$month,$year)/*{{{*/
+  public function getRoomBookings($room,$starttime,$length)/*{{{*/
   {
-    $tm=mktime(0,0,0,$month,$day,$year);
-    $this->getBookings($tm,86400,$room);
+    $this->getBookings($starttime,$length,$room);
     return $this->numbookings;
   }/*}}}*/
   public function getBookingsForDay($day,$month,$year)/*{{{*/
