@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday 25 March 2017, 20:48:04
+ * Last Modified: Sunday 26 March 2017, 06:33:23
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -30,10 +30,6 @@ require_once "data.class.php";
 
 class Booking extends Data
 {
-  private $fields=false;
-  private $bookinglist=false;
-  private $numbookings=0;
-  private $currentbooking=0;
 
   public function __construct($logg=false,$db=false,$data=false)/*{{{*/
   {
@@ -45,48 +41,6 @@ class Booking extends Data
   public function __destruct()/*{{{*/
   {
     parent::__destruct();
-  }/*}}}*/
-  public function nextBooking()/*{{{*/
-  {
-    $this->currentbooking++;
-    if($this->numbookings>0 && $this->currentbooking>$this->numbookings){
-      $this->currentbooking=1;
-    }
-    $index=$this->currentbooking-1;
-  }/*}}}*/
-  public function getBookingsForDay($day,$month,$year)/*{{{*/
-  {
-    $tm=mktime(0,0,0,$month,$day,$year);
-    $this->getBookings($tm);
-    return $this->numbookings;
-  }/*}}}*/
-  public function getBookingsForMonth($month,$year)/*{{{*/
-  {
-    $tm=mktime(0,0,0,$month,1,$year);
-    $d=cal_days_in_month(CAL_GREGORIAN,$month,$year);
-    $d*=86400; /* number of seconds in month */
-    $this->getBookings($tm,$d);
-    return $this->numbookings;
-  }/*}}}*/
-  public function getBookingList()/*{{{*/
-  {
-    return $this->bookinglist;
-  }/*}}}*/
-  private function getBookings($starttm,$length=86400)/*{{{*/
-  {
-    $sql="select * from booking where date>=$starttm and date<=($starttm+$length) order by date asc";
-    $this->updateBookingList($sql);
-  }/*}}}*/
-  private function updateBookingList($sql)/*{{{*/
-  {
-    $tmp=$this->db->arrayQuery($sql);
-    if(false!==($tcn=$this->ValidArray($tmp))){
-      $this->bookinglist=$tmp;
-      $this->numbookings=$tcn;
-    }else{
-      $this->bookinglist=false;
-      $this->numbookings=0;
-    }
   }/*}}}*/
 }
 ?>
