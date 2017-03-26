@@ -38,5 +38,13 @@ class Room extends Data
     {
         parent::__destruct();
     }/*}}}*/
+    public function getName()/*{{{*/
+    {
+        return $this->getField("name");
+    }/*}}}*/
+    public function getSize()/*{{{*/
+    {
+        return $this->getField("size");
+    }/*}}}*/
 }
 ?>
