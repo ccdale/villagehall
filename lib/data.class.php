@@ -189,5 +189,16 @@ class Data extends Base
     {
         return $this->id;
     }/*}}}*/
+    public function deleteMe()/*{{{*/
+    {
+        $numrows=false;
+        if($this->id){
+            $sql="delete from " . $this->table . " where id=" . $this->id;
+            if(false==($numrows=$this->db->deleteQuery($sql))){
+                $this->error("Failed to delete row from " . $this->table . ": rowid: " . $this->id);
+            }
+        }
+        return $numrows;
+    }/*}}}*/
 }
 ?>

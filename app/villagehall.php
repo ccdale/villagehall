@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Sunday 26 March 2017, 06:28:00
+ * Last Modified: Sunday 26 March 2017, 17:34:09
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -26,8 +26,44 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 require_once "www.php";
+require_once "session.class.php";
 require_once "calendar.class.php";
+
+session_start();
+$session=false;
+$user=false;
+if(isset($_SESSION["sessionid"])){
+  $session=new Session($logg,$db,$_SESSION["sessionid"]);
+  if(false==$session->amOK()){
+    $session->deleteMe();
+    $session=false;
+    session_unset();
+    session_destroy();
+    session_start();
+  }else{
+    $user=new User($logg,$db,$session->getField("userid"));
+  }
+}
+if(false!==($uuid=GP("uuid"))){
+  $sql="select id,userid,expires from session where uuid='$uuid'";
+  if(false!==($arr=$db->arrayQuery($sql))){
+    if(isset($arr[0]) && isset($arr[0]["userid"]) && isset($arr[0]["expires"])){
+      $session->deleteMe();
+      $session=new Session($logg,$db);
+      $session->setDataA(array("userid"=>$arr[0]["userid"],"expires"=>time(),"uuid"=>$uuid));
+      $session->update();
+      session_unset();
+      session_destroy();
+      session_start();
+      if(false!==$session->getId()){
+        $_SESSION["sessionid"]=$session->getId();
+      }
+      $user=new User($logg,$db,$arr[0]["userid"]);
+    }
+  }
+}
 
 $mo=getDefaultInt("monthoffset",0);
 $day=getDefaultInt("day",0);

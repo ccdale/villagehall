@@ -31,10 +31,9 @@ require_once "data.class.php";
 
 class User extends Data
 {
-    public function __construct($logg=false,$db=false,$email=false,$password=false)/*{{{*/
+    public function __construct($logg=false,$db=false,$id=false)/*{{{*/
     {
-        parent::__construct($logg,$db,"user","email",$email);
-        $this->validate($password);
+        parent::__construct($logg,$db,"user","id",$id);
     }/*}}}*/
     public function __destruct()/*{{{*/
     {
@@ -61,6 +60,17 @@ class User extends Data
             $this->debug("User class validate: incoming password is not set");
         }
         return $ret;
+    }/*}}}*/
+    private function createGuid()/*{{{*/
+    {
+      /* function from http://php.net/manual/en/function.com-create-guid.php
+       * only works on linux
+       */ 
+      $data = openssl_random_pseudo_bytes(16);
+      $data[6] = chr(ord($data[6]) & 0x0f | 0x40);    // set version to 0100
+      $data[8] = chr(ord($data[8]) & 0x3f | 0x80);    // set bits 6-7 to 10
+      return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+      return false;
     }/*}}}*/
 }
 ?>
