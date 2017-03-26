@@ -55,7 +55,7 @@ class Hall extends Data
     {
         if(false!==$this->id){
             $sql="select id from rooms where hallid=" . $this->id;
-            $tmp=$this->arrayQuery($sql);
+            $tmp=$this->db->arrayQuery($sql);
             if(false!==($this->numrooms=$this->ValidArray($tmp))){
                 $this->rooms=array();
                 foreach($tmp as $r){
