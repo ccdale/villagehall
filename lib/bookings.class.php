@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 26 March 2017, 06:27:51
+ * Last Modified: Sunday 26 March 2017, 06:30:29
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -105,6 +105,7 @@ class Bookings extends Base
     $this->bookings=false;
     $this->bookinglist=false;
     $this->numbookings=0;
+    $this->currentbooking=0;
     $tmp=$this->db->arrayQuery($sql);
     if(false!==($tcn=$this->ValidArray($tmp))){
       $this->bookinglist=$tmp;
