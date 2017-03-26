@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Saturday 25 March 2017, 23:12:00
+ * Last Modified: Sunday 26 March 2017, 05:25:20
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -26,30 +26,23 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function importLib($libfn,$desc,$log)/*{{{*/
-{
-    $log->debug("Importing $desc from $libfn");
-    require_once $libfn;
-}/*}}}*/
-
-importLib("www.php","GP funcs",$logg);
-importLib("calendar.class.php","Calendar class",$logg);
-importLib("HTML/form.class.php","Form Class",$logg);
-importLib("HTML/tag.class.php","TAG class",$logg);
-importLib("HTML/link.class.php","Link class",$logg);
-importLib("HTML/input_field.class.php","Inputfield class",$logg);
+require_once "www.php";
+require_once "calendar.class.php";
 
 $mo=getDefaultInt("monthoffset",0);
 $day=getDefaultInt("day",0);
 $month=getDefaultInt("month",0);
 $year=getDefaultInt("year",0);
-$cal=new Calendar($logg,$db);
+
+$hall=new Hall($logg,$db,$hallname);
+
+$cal=new Calendar($logg,$db,$hall->getId());
 $content=$cal->calendarDiv($mo,$year,$month,$day);
 
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
 $footfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-footer.php";
 
-$pagetitle="Lidlington Village Hall";
+$pagetitle=$hallname . " " . $displayname;
 
 include $headfn;
 include $footfn;
