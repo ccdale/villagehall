@@ -32,7 +32,7 @@ class Room extends Data
 {
     public function __construct($logg=false,$db=false,$id=false)/*{{{*/
     {
-        parent::__construct($logg,$db,"room","id",$id);
+        parent::__construct($logg,$db,"rooms","id",$id);
     }/*}}}*/
     public function __destruct()/*{{{*/
     {
