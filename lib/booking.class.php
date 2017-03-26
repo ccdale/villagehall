@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 26 March 2017, 06:33:23
+ * Last Modified: Sunday 26 March 2017, 07:59:11
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -35,8 +35,9 @@ class Booking extends Data
   {
     if(false!==($junk=$this->ValidArray($data)) && isset($data["id"])){
       parent::__construct($logg,$db,"booking","id",$data["id"]);
+    }else{
+      parent::__construct($logg,$db,"booking");
     }
-    parent::__construct($logg,$db,"booking");
   }/*}}}*/
   public function __destruct()/*{{{*/
   {

@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Sunday 26 March 2017, 07:00:32
+ * Last Modified: Sunday 26 March 2017, 09:23:06
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -77,7 +77,7 @@ class Calendar extends Base
         $xday=0;
       }
       $showyear=$year>$thisyear?true:false;
-      $tag=new Tag("div",$this->singleCalendar($month,$year,$xday,$showyear),array("class"=>"col-sm-4"));
+      $tag=new Tag("div",$this->singleCalendar($month,$year,$xday,$showyear),array("class"=>"col-md-4"));
       $row.=$tag->makeTag();
       $month++;
       if($month>12){
@@ -95,6 +95,14 @@ class Calendar extends Base
   public function roomBookingsDiv($midnight,$start=8,$length=4)/*{{{*/
   {
     $table="";
+    $tag=new Tag("th","");
+    $row=$tag->makeTag();
+    for($x=0;$x<$this->numrooms;$x++){
+      $tag=new Tag("th",$this->rooms[$x]->getField("name"));
+      $row.=$tag->makeTag();
+    }
+    $tag=new Tag("tr",$row);
+    $table.=$tag->makeTag();
     while($start<(25-$length)){
       $row="";
       $dtime=$start<10?"0" . $start:$start;
@@ -106,8 +114,13 @@ class Calendar extends Base
       for($x=0;$x<$this->numrooms;$x++){
         $class="roombookingcell";
         $cn=$this->bookings->getRoomBookings($this->rooms[$x]->getId(),$tm,$length*3600);
+        $txt="&nbsp;";
         if($cn){
           $booking=$this->bookings->nextBooking();
+          $starttime=$booking->getField("date");
+          $shour=date("H",$starttime);
+          $smin=date("i",$starttime);
+          $txt=$shour . ":" . $smin . " - " . $this->secToHMSString($booking->getField("length"));
           $status=$booking->getField("status");
           switch($status){
           case 3:
@@ -121,16 +134,24 @@ class Calendar extends Base
             break;
           }
         }
-        $tag=new Tag("td","&nbsp;",array("class"=>$class));
+        $tag=new Tag("td",$txt,array("class"=>$class));
         $row.=$tag->makeTag();
       }
       $tag=new Tag("tr",$row,array("class"=>"roombookingrow"));
       $table.=$tag->makeTag();
       $start+=$length;
     }
-    $tag=new Tag("table",$table,array("class"=>"roombookingtable"));
+    $tag=new Tag("table",$table,array("class"=>"table roombookingtable"));
     $table=$tag->makeTag();
-    $tag=new Tag("div",$table,array("class"=>"col-sm-12"));
+    $tag=new Tag("div",$table,array("class"=>"table.responsive"));
+    $table=$tag->makeTag();
+    $tag=new Tag("div",$table,array("class"=>"col-md-12 gap"));
+    /*
+    $table=$tag->makeTag();
+    $tag=new Tag("div","Bookings",array("class"=>"panel-heading"));
+    $tmp=$tag->makeTag();
+    $tag=new Tag("div",$tmp . $table,array("class"=>"panel panel-primary"));
+     */
     return $tag->makeTag();
   }/*}}}*/
   private function singleCalendar($month, $year,$day=0,$showyear=false)/*{{{*/
@@ -164,7 +185,7 @@ class Calendar extends Base
     $tag=new ALink(array("monthoffset"=>$monthoffset+3),$chevr->makeTag(),"","btn btn-default");
     $rightb=$tag->makeLink();
     $buttons=$leftb . $middleb . $rightb;
-    $tag=new Tag("div",$buttons,array("class"=>"col-sm-12 text-center"));
+    $tag=new Tag("div",$buttons,array("class"=>"col-md-12 text-center gap"));
     return $tag->makeTag();
   }/*}}}*/
   private function tableKey()/*{{{*/
@@ -190,9 +211,11 @@ class Calendar extends Base
       $tbody=$tag->makeTag();
       $tag=new Tag("table",$tbody);
       $table=$tag->makeTag();
-      $tag=new Tag("div",$table,array("class"=>"col-sm-4"));
+      $tag=new Tag("div",$table,array("class"=>"col-md-4 gap text-center"));
       $line.=$tag->makeTag();
     }
+    $tag=new Tag("div",$line,array("class"=>"col-md-12 gap"));
+    $line=$tag->makeTag();
     return $line;
   }/*}}}*/
   private function calDays($month,$year,$day)/*{{{*/

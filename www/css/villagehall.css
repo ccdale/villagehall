@@ -16,11 +16,18 @@ td.tdkey {
 }
 td.roomtimestrip {
   border-right: thin solid black;
+  padding: 1em;
 }
 td.roombookingcell {
+  border-right: thin solid black;
+  padding: 1em;
 }
 tr.roombookingrow {
   border: thin solid black;
 }
 table.roombookingtable {
+}
+.gap {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }

@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Saturday 25 March 2017, 20:25:53
+ * Last Modified: Sunday 26 March 2017, 08:57:52
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -124,6 +124,48 @@ class Base
     }
     return $tmp;
   } // }}}
+  public function secToHMSString($sec)/*{{{*/
+  {
+    $txt="";
+    $hrs=intval($sec/3600);
+    if($hrs>0){
+      if($hrs>1){
+        $txt=$hrs . " hours";
+      }else{
+        $txt=$hrs . " hour";
+      }
+    }
+    $rem=$sec%3600;
+    $mins=intval($rem/60);
+    if($mins>0){
+      $and=strlen($txt)?" and ":"";
+      if($mins>1){
+        $txt.=$and . $mins . " minutes";
+      }else{
+        $txt.=$and . $mins . " minute";
+      }
+    }
+    return $txt;
+    /*
+    $txt="";
+    $tstr=$this->secToHMS($sec,$showdays);
+    if($showdays){
+      $arr=explode(",",$tstr);
+      $txt.=$arr[0] . ", ";
+      $tstr=$arr[1];
+    }
+    $arr=explode(":",$tstr);
+    $num=intval($arr[0]);
+    $xtra=$num>1?"s":"";
+    $txt.=$num . " hour" . $xtra;
+    $num=intval($arr[1]);
+    if($num>0){
+      $xtra=$num>1?"s":"";
+      $txt.=" and " . $num . " minute" . $xtra;
+    }
+    return $txt;
+     */
+  }/*}}}*/
   private function loghelper($msg,$level)/*{{{*/
   {
     if($level==LOG_DEBUG){
