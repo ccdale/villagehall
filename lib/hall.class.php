@@ -36,7 +36,7 @@ class Hall extends Data
     public function __construct($logg=false,$db=false,$name=false)/*{{{*/
     {
         parent::__construct($logg,$db,"hall","name",$name);
-        $this->getRooms();
+        $this->readRooms();
     }/*}}}*/
     public function __destruct()/*{{{*/
     {
@@ -50,7 +50,7 @@ class Hall extends Data
     {
         return $this->rooms;
     }/*}}}*/
-    private function getRooms()/*{{{*/
+    private function readRooms()/*{{{*/
     {
         if(false!==$this->id){
             $sql="select id from rooms where hallid=" . $this->id;
