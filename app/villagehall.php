@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Sunday 26 March 2017, 05:25:20
+ * Last Modified: Sunday 26 March 2017, 05:51:05
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -36,7 +36,7 @@ $year=getDefaultInt("year",0);
 
 $hall=new Hall($logg,$db,$hallname);
 
-$cal=new Calendar($logg,$db,$hall->getId());
+$cal=new Calendar($logg,$db,$hall);
 $content=$cal->calendarDiv($mo,$year,$month,$day);
 
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
