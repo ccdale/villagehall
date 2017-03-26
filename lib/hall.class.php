@@ -40,6 +40,7 @@ class Hall extends Data
     }/*}}}*/
     public function __destruct()/*{{{*/
     {
+        $this->rooms=false;
         parent::__destruct();
     }/*}}}*/
     public function numRooms()/*{{{*/
