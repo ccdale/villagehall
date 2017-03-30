@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Sunday 26 March 2017, 09:23:06
+ * Last Modified: Thursday 30 March 2017, 03:04:08
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -324,6 +324,7 @@ class Calendar extends Base
   }/*}}}*/
   private function transformDayBookingsArray($day,$month,$year)/*{{{*/
   {
+    /* TODO: this function needs finishing, or deleting */
     $barr=array();
     $numbookings=$this->bookings->getBookingsForDay($day,$month,$year);
     if($numbookings>0){

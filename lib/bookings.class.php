@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 26 March 2017, 07:55:12
+ * Last Modified: Thursday 30 March 2017, 03:18:11
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -112,6 +112,33 @@ class Bookings extends Base
       $this->numbookings=$tcn;
       $this->createBookings();
     }
+  }/*}}}*/
+  public function dayBookingsTable($day,$month,$year,$rooms,$start=8,$length=4)/*{{{*/
+  {
+    /* TODO: this function will replace calendar->roomBookingsDiv() */
+    $table="";
+    if(false!==($numrooms=$this->ValidArray($rooms))){
+      $tag=new Tag("th","Bookings",array("colspan"=>$numrooms));
+      $tmp=$tag->makeTag();
+      $tag=new Tag("tr",$tmp);
+      $table=$tag->makeTag();
+      $tag=new Tag("th","");
+      $row=$tag->makeTag();
+      for($x=0;$x<$numrooms;$x++){
+        $tag=new Tag("th",$rooms[$x]->getField("name"));
+        $row.=$tag->makeTag();
+      }
+      $tag=new Tag("tr",$row);
+      $table.=$tag->makeTag();
+      while($start<(25-$length)){ /*{{{*/
+        $row="";
+        $dtime=$start<10?"0" . $start:$start;
+        $dtime.=":00";
+        $tag=new Tag("td",$dtime,array("class"=>"roomtimestrip"));
+        $row.=$tag->makeTag();
+      } /*}}}*/
+    }
+    return $table;
   }/*}}}*/
 }
 ?>
