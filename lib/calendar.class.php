@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Thursday 30 March 2017, 03:04:08
+ * Last Modified: Monday  3 April 2017, 13:16:19
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -242,7 +242,7 @@ class Calendar extends Base
               $tag=new Tag("td",$xdays,array("class"=>"todaymark"));
             }else{
               $class=isset($barr[$days])?$barr[$days]["class"]:"";
-              $link=new ALink(array("year"=>$year,"month"=>$month,"day"=>$days),$xdays,"","caldaylink");
+              $link=new ALink(array("a"=>1,"year"=>$year,"month"=>$month,"day"=>$days),$xdays,"","caldaylink");
               $tag=new Tag("td",$link->makeLink(),array("class"=>$class));
             }
             $sop.=$tag->makeTag();
