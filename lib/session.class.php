@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 26 March 2017, 16:51:58
- * Last Modified: Sunday 26 March 2017, 17:34:22
+ * Last Modified: Monday  3 April 2017, 13:45:12
  *
  * session.class.php
  *
@@ -30,6 +30,7 @@ require_once "data.class.php";
 class Session extends Data
 {
   private $expired=true;
+  private $sesslen=1200;
 
   public function __construct($logg=false,$db=false,$id=false)/*{{{*/
   {
@@ -38,6 +39,9 @@ class Session extends Data
       $now=time();
       $then=intval($this->getField("expires"));
       $this->expired=$now>$then?true:false;
+      if(! $this->expired){
+        $this->updateExpires();
+      }
     }
   }/*}}}*/
   public function __destruct()/*{{{*/
@@ -47,5 +51,18 @@ class Session extends Data
   public function amOK()/*{{{*/
   {
     return ! $this->expired;
+  }/*}}}*/
+  public function setUser($userid,$uuid)/*{{{*/
+  {
+    if(false!==($tmp=$this->ValidString($userid))){
+      if(false!==($tmp=$this->ValidString($uuid))){
+        $this->setDataA(array("userid"=>$userid,"uuid"=>$uuid));
+      }
+    }
+  }/*}}}*/
+  private function updateExpires()/*{{{*/
+  {
+    $then=$this->sesslen+time();
+    $this->setData("expires",$then);
   }/*}}}*/
 }
