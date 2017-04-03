@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday  1 April 2017, 05:01:54
+ * Last Modified: Monday  3 April 2017, 12:25:37
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -75,7 +75,7 @@ class Booking extends Data
       $smin=date("i",$this->data["date"]);
       $txt=$shour . ":" . $smin . " - " . $this->secToHMSString($this->data["length"]);
       $tag=new Tag("td",$txt,$atts);
-      $ret=array("rows"=>$rows,"cell"=>$tag->makeTag());
+      $ret=array("rows"=>$rows,"status"=>$this->data["status"],"cell"=>$tag->makeTag());
     }
     return $ret;
   }/*}}}*/
