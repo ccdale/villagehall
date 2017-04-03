@@ -160,6 +160,7 @@ class Data extends Base
             if($this->ValidStr($val)){
                 $this->data[$Field]=$val;
                 $this->dirty=true;
+                $this->update();
             }
         }
     } /*}}}*/
@@ -175,6 +176,7 @@ class Data extends Base
         if($this->ValidArray($data)){
             $this->data=$data;
             $this->dirty=true;
+            $this->update();
         }
     }/*}}}*/
     public function getDataA() /*{{{*/
