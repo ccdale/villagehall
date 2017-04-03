@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Sunday 26 March 2017, 17:34:09
+ * Last Modified: Monday  3 April 2017, 13:14:54
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -69,11 +69,19 @@ $mo=getDefaultInt("monthoffset",0);
 $day=getDefaultInt("day",0);
 $month=getDefaultInt("month",0);
 $year=getDefaultInt("year",0);
+$action=getDefaultInt("a",0);
 
 $hall=new Hall($logg,$db,$hallname);
 
-$cal=new Calendar($logg,$db,$hall);
-$content=$cal->calendarDiv($mo,$year,$month,$day);
+switch($action){
+case 0:
+  $cal=new Calendar($logg,$db,$hall);
+  $content=$cal->calendarDiv($mo,$year,$month,$day);
+  break;
+case 1:
+  $b=new Bookings($logg,$db);
+  $content=$b->addBookingForm($day,$month,$year);
+}
 
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
 $footfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-footer.php";
