@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Thursday 30 March 2017, 03:18:11
+ * Last Modified: Monday  3 April 2017, 12:26:34
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -28,14 +28,18 @@
 
 require_once "base.class.php";
 require_once "booking.class.php";
+require_once "HTML/link.class.php";
+require_once "HTML/tag.class.php";
 
 class Bookings extends Base
 {
   private $db=false;
   private $bookinglist=false;
   private $bookings=false;
+  private $rbookings=false;
   private $numbookings=0;
   private $currentbooking=0;
+  private $bookingstable=false;
 
   public function __construct($logg=false,$db=false)/*{{{*/
   {
@@ -86,7 +90,10 @@ class Bookings extends Base
   {
     if($this->numbookings>0){
       $this->bookings=array();
+      $this->rbookings=array();
       foreach($this->bookinglist as $b){
+        $booking=new Booking($this->log,$this->db,$b);
+        $this->rbookings[$booking->getField("roomid")][]=$booking;
         $this->bookings[]=new Booking($this->log,$this->db,$b);
       }
     }
@@ -103,6 +110,7 @@ class Bookings extends Base
   private function updateBookingList($sql)/*{{{*/
   {
     $this->bookings=false;
+    $this->rbookings=false;
     $this->bookinglist=false;
     $this->numbookings=0;
     $this->currentbooking=0;
@@ -113,16 +121,15 @@ class Bookings extends Base
       $this->createBookings();
     }
   }/*}}}*/
-  public function dayBookingsTable($day,$month,$year,$rooms,$start=8,$length=4)/*{{{*/
+  private function dayBookingsTableHead($rooms)/*{{{*/
   {
-    /* TODO: this function will replace calendar->roomBookingsDiv() */
-    $table="";
+    $table=false;
     if(false!==($numrooms=$this->ValidArray($rooms))){
-      $tag=new Tag("th","Bookings",array("colspan"=>$numrooms));
-      $tmp=$tag->makeTag();
-      $tag=new Tag("tr",$tmp);
+      $tag=new Tag("th","Bookings",array("colspan"=>$numrooms+1));
+      $row=$tag->makeTag();
+      $tag=new Tag("tr",$row);
       $table=$tag->makeTag();
-      $tag=new Tag("th","");
+      $tag=new Tag("th","Time");
       $row=$tag->makeTag();
       for($x=0;$x<$numrooms;$x++){
         $tag=new Tag("th",$rooms[$x]->getField("name"));
@@ -130,12 +137,50 @@ class Bookings extends Base
       }
       $tag=new Tag("tr",$row);
       $table.=$tag->makeTag();
-      while($start<(25-$length)){ /*{{{*/
-        $row="";
-        $dtime=$start<10?"0" . $start:$start;
-        $dtime.=":00";
-        $tag=new Tag("td",$dtime,array("class"=>"roomtimestrip"));
-        $row.=$tag->makeTag();
+    }
+    return $table;
+  }/*}}}*/
+  private function bookingsTimeCell($start)/*{{{*/
+  {
+    $dtime=$start<10?"0" . $start:$start;
+    $dtime.=":00";
+    $tag=new Tag("td",$dtime,array("class"=>"roomtimestrip"));
+    return $tag->makeTag();
+  }/*}}}*/
+  private function blankCell($timecell=false)/*{{{*/
+  {
+    $atts=array("class"=>"roombookingcell");
+    if($timecell){
+      $atts["class"]="roomtimestrip";
+    }
+    // $tag=new Tag("td","&nbsp;",$atts);
+    $tag=new Tag("td","",$atts);
+    return $tag->makeTag();
+  }/*}}}*/
+  private function dayBookingsArray($day,$month,$year,$rooms,$start)/*{{{*/
+  {
+    $todaytm=mktime(0,0,0,$month,$day,$year);
+    $sql="select * from bookings where date>=$todaytm and date<=" . $todaytm+(24*3600) . " order by date asc";
+  }/*}}}*/
+  public function dayBookingsTable($day,$month,$year,$rooms,$start=8)/*{{{*/
+  {
+    /* TODO: this function will replace calendar->roomBookingsDiv() */
+    $table=false;
+    if(false!==($table=$this->dayBookingsTableHead($rooms))){
+      while($start<(24)){ /*{{{*/
+        $row=$this->bookingsTimeCell($start);
+        $c=count($rooms);
+        for($x=0;$x<$c;$x++){
+          $id=$rooms[$x]->getId();
+          $sql="select * from bookings where roomid=$id and date>=$start and date<=$start+(" . $length*3600 . ") order by date asc";
+          if(false!==($rarr=$this->db->arrayQuery($sql))){
+
+          }else{
+            $row.=$this->blankCell();
+          }
+        }
+
+        $start+=$length;
       } /*}}}*/
     }
     return $table;
