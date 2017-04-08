@@ -154,6 +154,18 @@ class Data extends Base
         }
         return $ret;
     }/*}}}*/
+    public function setFromField($field,$val)/*{{{*/
+    {
+        $ret=false;
+        $sql="select * from " . $this->table . " where $field=" . $this->db->makeFieldString($val);
+        if(false!==($rarr=$this->db->arrayQuery($sql))){
+            $this->data=$rarr[0];
+            unset($this->data["id"]);
+            $this->id=$rarr[0]["id"];
+            $ret=$this->id;
+        }
+        return $ret;
+    }/*}}}*/
     public function update()/*{{{*/
     {
         if($this->dirty){
