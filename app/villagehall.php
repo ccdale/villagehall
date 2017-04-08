@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Monday  3 April 2017, 13:14:54
+ * Last Modified: Saturday  8 April 2017, 08:09:35
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -33,35 +33,19 @@ require_once "calendar.class.php";
 
 session_start();
 $session=false;
-$user=false;
 if(isset($_SESSION["sessionid"])){
   $session=new Session($logg,$db,$_SESSION["sessionid"]);
   if(false==$session->amOK()){
     $session->deleteMe();
     $session=false;
-    session_unset();
-    session_destroy();
-    session_start();
-  }else{
-    $user=new User($logg,$db,$session->getField("userid"));
+    resetPHPSession();
   }
 }
 if(false!==($uuid=GP("uuid"))){
-  $sql="select id,userid,expires from session where uuid='$uuid'";
-  if(false!==($arr=$db->arrayQuery($sql))){
-    if(isset($arr[0]) && isset($arr[0]["userid"]) && isset($arr[0]["expires"])){
-      $session->deleteMe();
-      $session=new Session($logg,$db);
-      $session->setDataA(array("userid"=>$arr[0]["userid"],"expires"=>time(),"uuid"=>$uuid));
-      $session->update();
-      session_unset();
-      session_destroy();
-      session_start();
-      if(false!==$session->getId()){
-        $_SESSION["sessionid"]=$session->getId();
-      }
-      $user=new User($logg,$db,$arr[0]["userid"]);
-    }
+  resetPHPSession();
+  $session=new Session($logg,$db);
+  if(false!==($id=$session->setFromUUID($uuid))){
+    $_SESSION["sessionid"]=$id;
   }
 }
 
@@ -80,7 +64,7 @@ case 0:
   break;
 case 1:
   $b=new Bookings($logg,$db);
-  $content=$b->addBookingForm($day,$month,$year);
+  $content=$b->addBookingForm($session,$day,$month,$year);
 }
 
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
