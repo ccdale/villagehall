@@ -6,7 +6,7 @@
  * simple-mysql.class.php
  *
  * Started: Monday 23 July 2012, 13:41:11
- * Last Modified: Sunday 26 March 2017, 17:07:55
+ * Last Modified: Saturday  8 April 2017, 07:50:23
  *
  * Copyright (c) 2014 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -212,7 +212,7 @@ class MySql extends Base
     }
     return $op;
   }/*}}}*/
-  public function insertCheck($table,$fields)/*{{{*/
+  public function insertCheck($table,$fields,$extrainsert=false)/*{{{*/
   {
     $ret=false;
     $carr=$farr=$varr=array();
@@ -227,7 +227,6 @@ class MySql extends Base
     $fs=substr($fs,0,-1);
     $vs=substr($vs,0,-1);
     $sql="select * from $table where $ssql";
-    $sqli="insert into $table ($fs) values ($vs)";
     $rarr=$this->arrayQuery($sql);
     if(false!==($cn=$this->ValidArray($rarr)) && $cn>0){
       // record already exists
@@ -235,6 +234,16 @@ class MySql extends Base
       $ret=true;
     }else{
       $this->debug("record doesn't exist, inserting :$sqli:");
+      if(false!==$extrainsert){
+        if(is_array($extrainsert)){
+          foreach($extrainsert as $field=>$value){
+            $tmp=$this->makeFieldString($value);
+            $fs.="," . $field;
+            $vs.="," . $tmp;
+          }
+        }
+      }
+      $sqli="insert into $table ($fs) values ($vs)";
       $iid=$this->insertQuery($sqli);
       $ret=$iid;
     }
