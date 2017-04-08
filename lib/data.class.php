@@ -36,6 +36,7 @@ class Data extends Base
     protected $id=false;
     protected $table=false;
     protected $data=false;
+    private $xfields=false;
 
     public function __construct($logg=false,$db=false,$table=false,$field=false,$data=false)/*{{{*/
     {
@@ -74,8 +75,12 @@ class Data extends Base
         $sql="show columns from " . $this->table;
         if(false!==($colsarr=$this->db->arrayQuery($sql))){
             $this->data=array();
+            $this->xfields=array();
             foreach($colsarr as $val){
                 $this->data[$val["Field"]]=false;
+                if($val["Field"]!=="id"){
+                    $this->xfields[]=$val["Field"];
+                }
             }
             unset($this->data["id"]);
         }
@@ -85,8 +90,12 @@ class Data extends Base
         $sql="PRAGMA table_info(" . $this->table . ")";
         if(false!==($colsarr=$this->db->arrayQuery($sql))){
             $this->data=array();
+            $this->xfields=array();
             foreach($colsarr as $val){
                 $this->data[$val["name"]]=false;
+                if($val["Field"]!=="id"){
+                    $this->xfields[]=$val["Field"];
+                }
             }
             unset($this->data["id"]);
         }
