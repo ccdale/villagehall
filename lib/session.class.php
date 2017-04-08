@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 26 March 2017, 16:51:58
- * Last Modified: Saturday  8 April 2017, 08:10:41
+ * Last Modified: Saturday  8 April 2017, 08:14:41
  *
  * session.class.php
  *
@@ -62,6 +62,11 @@ class Session extends Data
     $ret=false;
     if(false!==($tmp=$this->ValidString($uuid))){
       $ret=$this->setFromField("uuid",$uuid);
+      $now=time();
+      $exp=$this->getField("expires");
+      if($now>$exp){
+        $ret=false;
+      }
     }
     return $ret;
   }/*}}}*/
