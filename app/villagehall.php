@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Saturday  8 April 2017, 08:09:35
+ * Last Modified: Saturday  8 April 2017, 08:21:19
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -46,6 +46,8 @@ if(false!==($uuid=GP("uuid"))){
   $session=new Session($logg,$db);
   if(false!==($id=$session->setFromUUID($uuid))){
     $_SESSION["sessionid"]=$id;
+  }else{
+    $session=false;
   }
 }
 
