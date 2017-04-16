@@ -175,6 +175,10 @@ class Data extends Base
             }
         }
     }/*}}}*/
+    public function getFieldList()/*{{{*/
+    {
+        return $this->xfields;
+    }/*}}}*/
     public function setField($Field="",$val="") /*{{{*/
     {
         if($this->ValidStr($Field)){

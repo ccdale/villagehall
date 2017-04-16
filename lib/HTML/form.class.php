@@ -5,7 +5,7 @@
  * form.class.php
  *
  * Started: Sunday 19 February 2017, 08:29:43
- * Last Modified: Sunday 19 February 2017, 08:51:50
+ * Last Modified: Sunday 16 April 2017, 09:50:37
  *
  *
  * This file is part of villagehall.
@@ -172,11 +172,8 @@ class Form extends Base
   }/*}}}*/
   public function addHidA($hid_arr="")/*{{{*/
   {
-    if(is_array($hid_arr))
-    {
-      reset($hid_arr);
-      while(list($k,$v)=each($hid_arr))
-      {
+    if(false!==($cn=$this->ValidArray($hid_arr))){
+      foreach($hid_arr as $k=>$v){
         $this->addHid($k,$v);
       }
     }
@@ -227,6 +224,10 @@ class Form extends Base
         }
       }
     }
+  }/*}}}*/
+  public function addSubmit($submitname="submit",$submitvalue="Submit")/*{{{*/
+  {
+    $this->addRow("","submit",$submitname,$submitvalue);
   }/*}}}*/
   public function fileUploadForm($maxfilesize=1000000000,$label="Choose a file to upload",$button="Upload File",$withname=false,$withdesc=false)/*{{{*/
   {
