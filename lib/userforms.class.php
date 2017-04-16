@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 16 April 2017, 09:32:28
- * Last Modified: Sunday 16 April 2017, 09:45:37
+ * Last Modified: Sunday 16 April 2017, 10:04:12
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -39,9 +39,26 @@ class UForms extends Base
   public function userLoginForm($atts=false)/*{{{*/
   {
     $f=new Form();
+    $f->addHidA($atts);
     $f->addRow("Email Address","text","emailaddress");
     $f->addSubmit("submitemail","Send Email");
     $tag=new Tag("p","Please type your email address.  We will send you a link to log you into the site.",array("class"=>"bodypara"));
+    $p=$tag->makeTag();
+    $tag=new Tag("div",$p . $f->makeForm(),array("class"=>"formdiv"));
+    return $tag->makeTag();
+  }/*}}}*/
+  public function userRegisterForm($fields,$atts=false)/*{{{*/
+  {
+    $tfields=array();
+    /* uppercase the first letter of each field name
+     * and set an empty value */
+    foreach($fields as $k){
+      $tfields[ucfirst($k)]="";
+    }
+    $f=new Form();
+    $f->addHidA($atts);
+    $f->arrayToForm($tfields,true,"Register","register");
+    $tag=new Tag("p","Please fill in the form.  We will email you a link to log you into the site.",array("class"=>"bodypara"));
     $p=$tag->makeTag();
     $tag=new Tag("div",$p . $f->makeForm(),array("class"=>"formdiv"));
     return $tag->makeTag();
