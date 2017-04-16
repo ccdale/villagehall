@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Saturday  8 April 2017, 08:21:19
+ * Last Modified: Sunday 16 April 2017, 09:16:09
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -61,12 +61,15 @@ $hall=new Hall($logg,$db,$hallname);
 
 switch($action){
 case 0:
-  $cal=new Calendar($logg,$db,$hall);
+  $cal=new Calendar($logg,$db,$hall,$session);
   $content=$cal->calendarDiv($mo,$year,$month,$day);
   break;
 case 1:
   $b=new Bookings($logg,$db);
   $content=$b->addBookingForm($session,$day,$month,$year);
+case 2:
+  $b=new Bookings($logg,$db);
+  $content=$b->processBookingForm();
 }
 
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
