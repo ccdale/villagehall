@@ -2,6 +2,9 @@ td.todaymark {
   color: white;
   background-color: #337AB7;
 }
+td.disabledday {
+  color: grey;
+}
 td.calnodeposit {
   background-color: #F08080;
 }
