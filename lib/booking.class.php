@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Monday  3 April 2017, 12:58:32
+ * Last Modified: Friday 21 July 2017, 09:45:14
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -72,7 +72,7 @@ class Booking extends Data
       $rows=intval($this->data["length"] / $rowheight);
       $rem=$this->data["length"] % $rowheight;
       if($rem>0){
-        $rows+=1;
+        $rows++;
       }
       if($rows>1){
         $atts["rowspan"]=$rows;
