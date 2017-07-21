@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Sunday 16 April 2017, 09:16:09
+ * Last Modified: Friday 21 July 2017, 09:41:06
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -85,6 +85,6 @@ $bodytag=$tag->makeTag();
 $tag=new Tag("body",$bheader . $bodytag . $bfooter);
 $body=$tag->makeTag();
 $tag=new Tag("html",$head . $body,array("lang"=>"en"));
-$html=" <!DOCTYPE html>\n" . $tag->makeTag();
+$html="<!DOCTYPE html>" . $tag->makeTag();
 echo $html;
 ?>
