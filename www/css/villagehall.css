@@ -29,6 +29,7 @@ tr.roombookingrow {
   border: thin solid black;
 }
 table.roombookingtable {
+  width: 70%;
 }
 .gap {
   margin-top: 20px;
@@ -37,6 +38,8 @@ table.roombookingtable {
 a.roomcelllink {
   display: block;
   width: 100%;
+  color: white;
+  background-color: white;
 }
 a.roomcelllink:hover {
   background-color: #337AB7;
