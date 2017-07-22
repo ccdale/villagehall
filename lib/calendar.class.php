@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 22 July 2017, 11:00:31
+ * Last Modified: Saturday 22 July 2017, 11:06:24
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -193,7 +193,7 @@ class Calendar extends Base
       $tag=new ALink(array("monthoffset"=>$monthoffset-3),$chevl->makeTag(),"","btn btn-default");
     }
     $leftb=$tag->makeLink();
-    $tag=new ALink(array("monthoffset"=>0),"Today","","btn bth-primary");
+    $tag=new ALink(array("monthoffset"=>0),"Today","","btn btn-primary");
     $middleb=$tag->makeLink();
     $chevr=new Tag("span","",array("class"=>"glyphicon glyphicon-chevron-right"));
     $tag=new ALink(array("monthoffset"=>$monthoffset+3),$chevr->makeTag(),"","btn btn-default");
