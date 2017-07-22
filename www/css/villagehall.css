@@ -20,27 +20,31 @@ td.tdkey {
 td.roomtimestrip {
   border-right: thin solid black;
   padding: 1em;
+  text-align: right;
 }
 td.roombookingcell {
   border-right: thin solid black;
   padding: 1em;
-}
-tr.roombookingrow {
-  border: thin solid black;
-}
-table.roombookingtable {
-  width: 70%;
-}
-.gap {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  text-align: center;
 }
 a.roomcelllink {
   display: block;
   width: 100%;
   color: white;
   background-color: white;
+  text-decoration: none;
 }
 a.roomcelllink:hover {
   background-color: #337AB7;
+  text-decoration: none;
+}
+tr.roombookingrow {
+  border: thin solid black;
+}
+table.roombookingtable {
+  width: 100%;
+}
+.gap {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
