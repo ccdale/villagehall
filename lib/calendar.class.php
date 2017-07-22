@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 22 July 2017, 11:06:24
+ * Last Modified: Saturday 22 July 2017, 11:11:31
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -188,15 +188,15 @@ class Calendar extends Base
   {
     $chevl=new Tag("span","",array("class"=>"glyphicon glyphicon-chevron-left"));
     if($monthoffset==0){
-      $tag=new ALink("",$chevl->makeTag(),"","btn btn-default disabled");
+      $tag=new ALink("",$chevl->makeTag(),"","btn btn-space btn-default disabled");
     }else{
-      $tag=new ALink(array("monthoffset"=>$monthoffset-3),$chevl->makeTag(),"","btn btn-default");
+      $tag=new ALink(array("monthoffset"=>$monthoffset-3),$chevl->makeTag(),"","btn btn-space btn-default");
     }
     $leftb=$tag->makeLink();
-    $tag=new ALink(array("monthoffset"=>0),"Today","","btn btn-primary");
+    $tag=new ALink(array("monthoffset"=>0),"Today","","btn btn-space btn-default");
     $middleb=$tag->makeLink();
     $chevr=new Tag("span","",array("class"=>"glyphicon glyphicon-chevron-right"));
-    $tag=new ALink(array("monthoffset"=>$monthoffset+3),$chevr->makeTag(),"","btn btn-default");
+    $tag=new ALink(array("monthoffset"=>$monthoffset+3),$chevr->makeTag(),"","btn btn-space btn-default");
     $rightb=$tag->makeLink();
     $buttons=$leftb . $middleb . $rightb;
     $tag=new Tag("div",$buttons,array("class"=>"col-md-12 text-center gap"));
