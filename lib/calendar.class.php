@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 22 July 2017, 10:56:51
+ * Last Modified: Saturday 22 July 2017, 11:00:31
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -74,6 +74,7 @@ class Calendar extends Base
       $xday=$thismonth==$month && $thisyear==$year?$day:0;
     }
     $midnight=mktime(0,0,0,$month,$day,$year);
+    $strip=$this->roomBookingsDiv($midnight,$year,$month,$day);
     for($x=0;$x<3;$x++){
       if($x>0){
         $xday=0;
@@ -91,7 +92,6 @@ class Calendar extends Base
     $cal=$cdiv->makeTag();
     $buttons=$this->nextMonthButton($monthoffset);
     $key=$this->tableKey();
-    $strip=$this->roomBookingsDiv($midnight,$year,$month,$day);
     return $buttons . $cal . $key . $strip;
   }/*}}}*/
   public function roomBookingsDiv($midnight,$year,$month,$day,$start=8,$length=4)/*{{{*/
