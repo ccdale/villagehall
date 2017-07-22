@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 22 July 2017, 10:34:09
+ * Last Modified: Saturday 22 July 2017, 10:45:47
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -91,10 +91,10 @@ class Calendar extends Base
     $cal=$cdiv->makeTag();
     $buttons=$this->nextMonthButton($monthoffset);
     $key=$this->tableKey();
-    $strip=$this->roomBookingsDiv($midnight);
+    $strip=$this->roomBookingsDiv($midnight,$year,$month,$day);
     return $buttons . $cal . $key . $strip;
   }/*}}}*/
-  public function roomBookingsDiv($midnight,$start=8,$length=4)/*{{{*/
+  public function roomBookingsDiv($midnight,$year,$month,$day,$start=8,$length=4)/*{{{*/
   {
     $table="";
     $tag=new Tag("th","");
@@ -139,7 +139,13 @@ class Calendar extends Base
           }
         }else{
           /* make the unbooked time cell clickable */
-          $linkcell=new ALink(array("roomid"=>$this->rooms[$x]->getId(),"start"=>$start),"&nbsp;","","roomcelllink");
+          $atts=array("a"=>1,
+            "roomid"=>$this->rooms[$x]->getId(),
+            "start"=>$start,
+            "year"=>$year,
+            "month"=>$month,
+            "day"=>$day);
+          $linkcell=new ALink($atts,"&nbsp;","","roomcelllink");
           $txt=$linkcell->makeLink();
         }
         $tag=new Tag("td",$txt,array("class"=>$class));
