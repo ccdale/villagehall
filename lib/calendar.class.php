@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 22 July 2017, 11:11:31
+ * Last Modified: Saturday 22 July 2017, 13:14:45
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -242,6 +242,7 @@ class Calendar extends Base
     $dow=jddayofweek($jd,0);
     $days=1;
     $firstrow=true;
+    $thismonth=date("n");
     while($days<=$d){
       $sop="";
       $idx=0;
@@ -255,7 +256,7 @@ class Calendar extends Base
             if($days==$day){
               /* show today */
               $tag=new Tag("td",$xdays,array("class"=>"todaymark"));
-            }elseif($days<$day){
+            }elseif($days<$day && $month>$thismont){
               /* disable days previous to today */
               $tag=new Tag("td",$xdays,array("class"=>"disabledday"));
             }else{
