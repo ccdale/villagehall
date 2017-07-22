@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 22 July 2017, 10:22:42
+ * Last Modified: Saturday 22 July 2017, 10:34:09
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -137,17 +137,13 @@ class Calendar extends Base
             $class.=" calpaid";
             break;
           }
+        }else{
+          /* make the unbooked time cell clickable */
+          $linkcell=new ALink(array("roomid"=>$this->rooms[$x]->getId(),"start"=>$start),"&nbsp;","","roomcelllink");
+          $txt=$linkcell->makeLink();
         }
         $tag=new Tag("td",$txt,array("class"=>$class));
-        if($link){
-          /*
-      $tag=new ALink("",$chevl->makeTag(),"","btn btn-default disabled");
-           */
-          $tmpcell=new ALink("",$tag->makeTag(),"","roomcelllink");
-          $row.=$tmpcell->makeLink();
-        }else{
-          $row.=$tag->makeTag();
-        }
+        $row.=$tag->makeTag();
       }
       $tag=new Tag("tr",$row,array("class"=>"roombookingrow"));
       $table.=$tag->makeTag();
