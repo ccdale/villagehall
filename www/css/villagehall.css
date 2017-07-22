@@ -34,3 +34,6 @@ table.roombookingtable {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+a.roomcelllink:hover {
+  background-color: #337AB7;
+}

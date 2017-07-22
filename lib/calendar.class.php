@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Friday 21 July 2017, 09:38:13
+ * Last Modified: Saturday 22 July 2017, 10:22:42
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -114,10 +114,12 @@ class Calendar extends Base
       $tm=$midnight+($start*3600);
       $tme=$tm+($length*3600);
       for($x=0;$x<$this->numrooms;$x++){
+        $link=true;
         $class="roombookingcell";
         $cn=$this->bookings->getRoomBookings($this->rooms[$x]->getId(),$tm,$length*3600);
         $txt="&nbsp;";
         if($cn){
+          $link=false;
           $booking=$this->bookings->nextBooking();
           $starttime=$booking->getField("date");
           $shour=date("H",$starttime);
@@ -137,7 +139,15 @@ class Calendar extends Base
           }
         }
         $tag=new Tag("td",$txt,array("class"=>$class));
-        $row.=$tag->makeTag();
+        if($link){
+          /*
+      $tag=new ALink("",$chevl->makeTag(),"","btn btn-default disabled");
+           */
+          $tmpcell=new ALink("",$tag->makeTag(),"","roomcelllink");
+          $row.=$tmpcell->makeLink();
+        }else{
+          $row.=$tag->makeTag();
+        }
       }
       $tag=new Tag("tr",$row,array("class"=>"roombookingrow"));
       $table.=$tag->makeTag();
