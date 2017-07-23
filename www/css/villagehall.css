@@ -27,6 +27,12 @@ td.roombookingcell {
   padding: 1em;
   text-align: center;
 }
+th.roomname {
+  text-align: center;
+}
+th.bookingdate {
+  text-align: left;
+}
 a.roomcelllink {
   display: block;
   width: 100%;
