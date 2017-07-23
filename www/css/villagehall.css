@@ -1,3 +1,13 @@
+table.roombookingtable th {
+  background-color: lightgrey;
+  border: thin solid black;
+}
+th.roomname {
+  text-align: center;
+}
+th.bookingdate {
+  text-align: right;
+}
 td.todaymark {
   color: white;
   background-color: #337AB7;
@@ -26,12 +36,6 @@ td.roombookingcell {
   border-right: thin solid black;
   padding: 1em;
   text-align: center;
-}
-th.roomname {
-  text-align: center;
-}
-th.bookingdate {
-  text-align: left;
 }
 a.roomcelllink {
   display: block;
