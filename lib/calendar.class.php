@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 22 July 2017, 13:18:46
+ * Last Modified: Sunday 23 July 2017, 10:28:33
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -97,6 +97,11 @@ class Calendar extends Base
   public function roomBookingsDiv($midnight,$year,$month,$day,$start=8,$length=4)/*{{{*/
   {
     $table="";
+    $dayheader=date("l jS F Y",$midnight);
+    $tag=new Tag("th",$dayheader,array("colspan"=>3));
+    $row=$tag->makeTag();
+    $tag=new Tag("tr",$row);
+    $table.=$tag->makeTag();
     $tag=new Tag("th","");
     $row=$tag->makeTag();
     for($x=0;$x<$this->numrooms;$x++){
