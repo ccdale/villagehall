@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 16 April 2017, 09:11:16
+ * Last Modified: Sunday 16 April 2017, 10:44:24
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -205,8 +205,14 @@ class Bookings extends Base
   }/*}}}*/
   public function addBookingForm($session,$day,$month,$year)/*{{{*/
   {
-    $f=new Form();
-    $f->addHid("a",2);
+    $op="";
+    if(false!==$session && $session->amOK()){
+      $f=new Form();
+      $f->addHid("a",2);
+    }else{
+      $op=$this->loginForm();
+    }
+    return $op;
   }/*}}}*/
   public function processBookingForm()/*{{{*/
   {

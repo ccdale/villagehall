@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Friday 21 July 2017, 09:41:06
+ * Last Modified: Sunday 23 July 2017, 11:00:15
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -62,7 +62,7 @@ $hall=new Hall($logg,$db,$hallname);
 switch($action){
 case 0:
   $cal=new Calendar($logg,$db,$hall,$session);
-  $content=$cal->calendarDiv($mo,$year,$month,$day);
+  $content=$cal->calendarDiv($mo,$year,$month,$day,8,2);
   break;
 case 1:
   $b=new Bookings($logg,$db);

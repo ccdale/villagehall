@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Sunday 23 July 2017, 10:58:54
+ * Last Modified: Sunday 23 July 2017, 12:14:42
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -94,6 +94,15 @@ class Calendar extends Base
     $key=$this->tableKey();
     return $buttons . $cal . $key . $strip;
   }/*}}}*/
+  private function fitBooking($midnight,$start,$length,$bstartsec,$blensec)/*{{{*/
+  {
+    $shour=date("G",$bstartsec);
+    $smin=date("i",$bstartsec);
+    $blenhours=intval($blensec/3600);
+    if($blenhours==0){
+      $blenhours=1;
+    }
+  }/*}}}*/
   public function roomBookingsDiv($midnight,$year,$month,$day,$start=8,$length=4)/*{{{*/
   {
     $table="<col style='width:20%'>\n";
@@ -114,7 +123,7 @@ class Calendar extends Base
       $row="";
       $dtime=$start<10?"0" . $start:$start;
       $dtime.=":00";
-      $tag=new Tag("td",$dtime,array("class"=>"roomtimestrip"));
+      $tag=new Tag("th",$dtime,array("class"=>"roomtimestrip"));
       $row.=$tag->makeTag();
       $tm=$midnight+($start*3600);
       $tme=$tm+($length*3600);
@@ -127,9 +136,14 @@ class Calendar extends Base
           $link=false;
           $booking=$this->bookings->nextBooking();
           $starttime=$booking->getField("date");
+          $bookinglength=$booking->getField("length");
+          $blenhours=intval($bookinglength/3600);
+          if($blenhours==0){
+            $blenhours=1;
+          }
           $shour=date("H",$starttime);
           $smin=date("i",$starttime);
-          $txt=$shour . ":" . $smin . " - " . $this->secToHMSString($booking->getField("length"));
+          $txt=$shour . ":" . $smin . " - " . $this->secToHMSString($bookinglength);
           $status=$booking->getField("status");
           switch($status){
           case 3:

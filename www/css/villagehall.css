@@ -1,3 +1,6 @@
+table.roombookingtable {
+  border: thin solid black;
+}
 table.roombookingtable th {
   background-color: lightgrey;
   border: thin solid black;
@@ -6,6 +9,11 @@ th.roomname {
   text-align: center;
 }
 th.bookingdate {
+  text-align: right;
+}
+th.roomtimestrip {
+  border-right: thin solid black;
+  padding: 1em;
   text-align: right;
 }
 td.todaymark {
@@ -26,11 +34,6 @@ td.calpaid {
 }
 td.tdkey {
   padding: 1em;
-}
-td.roomtimestrip {
-  border-right: thin solid black;
-  padding: 1em;
-  text-align: right;
 }
 td.roombookingcell {
   border-right: thin solid black;
