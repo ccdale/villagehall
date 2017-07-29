@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 16 April 2017, 09:32:28
- * Last Modified: Saturday 29 July 2017, 19:00:03
+ * Last Modified: Saturday 29 July 2017, 19:05:17
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -83,8 +83,8 @@ class UForms extends Base
     $htag=new Tag("h3","Booking " . $room->getName() . " on " . $this->stringDate($tm));
     $heading=$htag->makeTag();
     $f=new Form();
-    $f->addRow("","direct",$this->timeSelector("Booking Start Time",true,$hour);
-    $f->addRow("","direct",$this->timeSelector("Booking Length",false,1);
+    $f->addRow("","direct",$this->timeSelector("Booking Start Time",true,$hour));
+    $f->addRow("","direct",$this->timeSelector("Booking Length",false,1));
     $div=new Tag("div",$heading . $f->makeForm(),array("class"=>"prebookingformdiv"));
     return $div->makeTag();
   }/*}}}*/
@@ -111,7 +111,7 @@ class UForms extends Base
     $how=new tag("tr",$row,array("class"=>"timeselectorrow"));
     $rows.=$how->makeTag();
     $tab=new Tag("table",$rows,array("class"=>"timeselectortable"));
-    return $tab->makeTag():
+    return $tab->makeTag();
   }/*}}}*/
 }
 ?>
