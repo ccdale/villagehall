@@ -1,7 +1,7 @@
 <?php
 /*
 * select_field.class.php
-* Last Modified: Saturday 29 July 2017, 19:08:45
+* Last Modified: Saturday 29 July 2017, 19:11:05
 */
 require_once "HTML/option_field.class.php";
 
@@ -53,7 +53,7 @@ class SelectField
   }/*}}}*/
   public function minuteSelector($selected=0,$minskip=30,$withzero=true)/*{{{*/
   {
-    for($min=0;$min<60;$min+=$minskip){
+    for($min=0;$min<60;$min=$min+$minskip){
       $smin=$withzero && $min<10?"0".$min:$min;
       $s=$selected==$min?true:false;
       $this->addOption($smin,$min,$s,false);
