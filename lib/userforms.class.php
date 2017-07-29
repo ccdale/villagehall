@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 16 April 2017, 09:32:28
- * Last Modified: Sunday 16 April 2017, 10:04:12
+ * Last Modified: Saturday 29 July 2017, 18:35:30
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -25,6 +25,8 @@
 require_once "base.class.php";
 require_once "HTML/form.class.php";
 require_once "HTML/tag.class.php";
+require_once "HTML/select_field.class.php";
+require_once "HTML/option_field.class.php";
 
 class UForms extends Base
 {
@@ -62,6 +64,39 @@ class UForms extends Base
     $p=$tag->makeTag();
     $tag=new Tag("div",$p . $f->makeForm(),array("class"=>"formdiv"));
     return $tag->makeTag();
+  }/*}}}*/
+  public function bookingForm($year,$month,$day,$hour,$roomid,$db)/*{{{*/
+  {
+    $sql="select * from rooms where roomid=$roomid";
+    $rooms=$this->db->arrayQuery($sql);
+  }/*}}}*/
+  public function preBookingForm($year,$month,$day,$hour,$roomid)/*{{{*/
+  {
+  }/*}}}*/
+  private function timeSelector($heading="Booking Start Time",$withzero=true,$hour=8)/*{{{*/
+  {
+    $rows="";
+    $cell=new Tag("th",$heading,array("colspan"=>2,"class"=>"timeselectorheadcell"));
+    $row=new Tag("tr",$cell->makeTag(),array("class"=>"timeselectorheadrow"));
+    $rows.=$row->makeTag();
+    $cell=new Tag("th","Hour",array("class"=>"timeselectorheadcell"));
+    $row=$cell->makeTag();
+    $cell=new Tag("th","Min.",array("class"=>"timeselectorheadcell"));
+    $row.=$cell->makeTag();
+    $how=new Tag("tr",$row,array("class"=>"timeselectorheadrow"));
+    $rows.=$how->makeTag();
+    $hsel=new SelectField("starthour");
+    $ctxt=$hsel->hourSelector($hour,$withzero);
+    $cell=new Tag("td",$ctxt,array("class"=>"timeselectorcell"));
+    $row=$cell->makeTag();
+    $msel=new SelectField("startmin");
+    $ctxt=$msel->minuteSelector(0,$withzero);
+    $cell=new Tag("td",$ctxt,array("class"=>"timeselectorcell"));
+    $row.=$cell->makeTag();
+    $how=new tag("tr",$row,array("class"=>"timeselectorrow"));
+    $rows.=$how->makeTag();
+    $tab=new Tag("table",$rows,array("class"=>"timeselectortable"));
+    return $tab->makeTag():
   }/*}}}*/
 }
 ?>
