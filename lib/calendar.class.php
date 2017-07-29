@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Sunday 23 July 2017, 12:34:45
+ * Last Modified: Saturday 29 July 2017, 16:49:22
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -102,6 +102,18 @@ class Calendar extends Base
     if($blenhours==0){
       $blenhours=1;
     }
+    if(($blensec%3600)>0){
+      $blenhours++;
+    }
+    $adjhour=$shour-$start;
+    $adjlen=$blenhours+$adjhour;
+    $slots=intval($adjlen/$length);
+    if(($adjlen%$length)>0){
+      $slots++;
+    }
+    $this->info("start: $start, length: $length, bstartsec: $bstartsec, blensec: $blensec");
+    $this->info("adjhour: $adjhour, adjlen: $adjlen, slots: $slots");
+    return $slots;
   }/*}}}*/
   public function roomBookingsDiv($midnight,$year,$month,$day,$start=8,$length=4)/*{{{*/
   {
@@ -119,6 +131,7 @@ class Calendar extends Base
     }
     $tag=new Tag("tr",$row);
     $table.=$tag->makeTag();
+    $skip=array();
     while($start<(25-$length)){
       $row="";
       $dtime=$start<10?"0" . $start:$start;
@@ -128,6 +141,16 @@ class Calendar extends Base
       $tm=$midnight+($start*3600);
       $tme=$tm+($length*3600);
       for($x=0;$x<$this->numrooms;$x++){
+        if(!isset($skip[$x])){
+          $skip[$x]=1;
+        }
+        $this->info("before skip: " . $skip[$x] . " x: $x");
+        if($skip[$x]>1){
+          $skip[$x]--;
+          $this->info("skipping 1, skip is now: " . $skip[$x] . " x: $x");
+          continue;
+        }
+        $this->info("after skip: " . $skip[$x] . " x: $x");
         $link=true;
         $class="roombookingcell";
         $cn=$this->bookings->getRoomBookings($this->rooms[$x]->getId(),$tm,$length*3600);
@@ -156,6 +179,10 @@ class Calendar extends Base
             $class.=" calpaid";
             break;
           }
+          $slots=$this->fitBooking($midnight,$start,$length,$starttime,$bookinglength);
+          if($slots>1){
+            $skip[$x]=$slots;
+          }
         }else{
           /* make the unbooked time cell clickable */
           $atts=array("a"=>1,
@@ -167,7 +194,11 @@ class Calendar extends Base
           $linkcell=new ALink($atts,"click to book","","roomcelllink");
           $txt=$linkcell->makeLink();
         }
-        $tag=new Tag("td",$txt,array("class"=>$class));
+        if($skip[$x]>1){
+          $tag=new Tag("td",$txt,array("class"=>$class,"rowspan"=>$skip[$x]));
+        }else{
+          $tag=new Tag("td",$txt,array("class"=>$class));
+        }
         $row.=$tag->makeTag();
       }
       $tag=new Tag("tr",$row,array("class"=>"roombookingrow"));
