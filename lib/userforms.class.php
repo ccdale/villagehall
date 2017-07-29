@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 16 April 2017, 09:32:28
- * Last Modified: Saturday 29 July 2017, 18:35:30
+ * Last Modified: Saturday 29 July 2017, 19:00:03
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -27,12 +27,18 @@ require_once "HTML/form.class.php";
 require_once "HTML/tag.class.php";
 require_once "HTML/select_field.class.php";
 require_once "HTML/option_field.class.php";
+require_once "room.class.php";
 
 class UForms extends Base
 {
-  public function __construct($logg=false)/*{{{*/
+  private $logg=false;
+  private $db=false;
+
+  public function __construct($logg=false,$db=false)/*{{{*/
   {
     parent::__construct($logg);
+    $this->logg=$logg;
+    $this->db=$db;
   }/*}}}*/
   public function __destruct()/*{{{*/
   {
@@ -65,13 +71,22 @@ class UForms extends Base
     $tag=new Tag("div",$p . $f->makeForm(),array("class"=>"formdiv"));
     return $tag->makeTag();
   }/*}}}*/
-  public function bookingForm($year,$month,$day,$hour,$roomid,$db)/*{{{*/
+  public function bookingForm($year,$month,$day,$hour,$roomid)/*{{{*/
   {
     $sql="select * from rooms where roomid=$roomid";
     $rooms=$this->db->arrayQuery($sql);
   }/*}}}*/
   public function preBookingForm($year,$month,$day,$hour,$roomid)/*{{{*/
   {
+    $room=new Room($this->logg,$this->db,$roomid);
+    $tm=mktime(0,0,0,$month,$day,$year);
+    $htag=new Tag("h3","Booking " . $room->getName() . " on " . $this->stringDate($tm));
+    $heading=$htag->makeTag();
+    $f=new Form();
+    $f->addRow("","direct",$this->timeSelector("Booking Start Time",true,$hour);
+    $f->addRow("","direct",$this->timeSelector("Booking Length",false,1);
+    $div=new Tag("div",$heading . $f->makeForm(),array("class"=>"prebookingformdiv"));
+    return $div->makeTag();
   }/*}}}*/
   private function timeSelector($heading="Booking Start Time",$withzero=true,$hour=8)/*{{{*/
   {
