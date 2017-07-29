@@ -1,7 +1,7 @@
 <?php
 /*
 * select_field.class.php
-* Last Modified: Saturday 29 July 2017, 18:15:01
+* Last Modified: Saturday 29 July 2017, 19:08:45
 */
 require_once "HTML/option_field.class.php";
 
@@ -45,9 +45,7 @@ class SelectField
   public function hourSelector($selected=8,$withzero=true)/*{{{*/
   {
     for($hour=0; $hour<24; $hour++){
-      if($withzero){
-        $shour=$hour<10?"0" . $hour:$hour;
-      }
+      $shour=$withzero && $hour<10?"0".$hour:$hour;
       $s=$selected==$hour?true:false;
       $this->addOption($shour,$hour,$s,false);
     }
@@ -56,9 +54,7 @@ class SelectField
   public function minuteSelector($selected=0,$minskip=30,$withzero=true)/*{{{*/
   {
     for($min=0;$min<60;$min+=$minskip){
-      if($withzero){
-        $smin=$min<10?"0".$min:$min;
-      }
+      $smin=$withzero && $min<10?"0".$min:$min;
       $s=$selected==$min?true:false;
       $this->addOption($smin,$min,$s,false);
     }
