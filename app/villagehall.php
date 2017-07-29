@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Sunday 23 July 2017, 11:00:15
+ * Last Modified: Saturday 29 July 2017, 19:03:41
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -30,6 +30,7 @@
 require_once "www.php";
 require_once "session.class.php";
 require_once "calendar.class.php";
+require_once "userforms.class.php";
 
 session_start();
 $session=false;
@@ -55,6 +56,8 @@ $mo=getDefaultInt("monthoffset",0);
 $day=getDefaultInt("day",0);
 $month=getDefaultInt("month",0);
 $year=getDefaultInt("year",0);
+$starttime=getDefaultInt("start",0);
+$roomid=getDefaultInt("roomid",0);
 $action=getDefaultInt("a",0);
 
 $hall=new Hall($logg,$db,$hallname);
@@ -65,8 +68,8 @@ case 0:
   $content=$cal->calendarDiv($mo,$year,$month,$day,8,2);
   break;
 case 1:
-  $b=new Bookings($logg,$db);
-  $content=$b->addBookingForm($session,$day,$month,$year);
+  $u=new UForms($logg,$db);
+  $content=$u->preBookingForm($year,$month,$day,$starttime,$roomid);
 case 2:
   $b=new Bookings($logg,$db);
   $content=$b->processBookingForm();
