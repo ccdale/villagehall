@@ -36,6 +36,7 @@ class Data extends Base
     protected $id=false;
     protected $table=false;
     protected $data=false;
+    private $xfields=false;
 
     public function __construct($logg=false,$db=false,$table=false,$field=false,$data=false)/*{{{*/
     {
@@ -54,12 +55,16 @@ class Data extends Base
             $class=get_class($this->db);
             if($class=="SSql"){
                 $this->getSSqlFields();
+                $this->debug("data class: db object is sqlite");
             }elseif($class=="MySql"){
                 $this->getMysqlFields();
+                $this->debug("data class: db object is mysql");
             }else{
                 $this->error("DB class is neither MySql nor SSql");
                 return false;
             }
+        }else{
+            $this->warn("data class: db is not an object");
         }
         if($this->ValidStr($field) && $this->ValidStr($data)){
             $sql="select * from $this->table where $field='" . $this->db->escape($data) . "'";
@@ -67,6 +72,12 @@ class Data extends Base
             $this->data=$tmp[0];
             $this->id=$this->data["id"];
             unset($this->data["id"]);
+        }else{
+            if($this->ValidStr($field)){
+                $this->warn("data class: \$data '$data' is not a valid string");
+            }else{
+                $this->warn("data class: \$field: '$field' is not a valid string");
+            }
         }
     }/*}}}*/
     private function getMysqlFields()/*{{{*/
@@ -74,8 +85,12 @@ class Data extends Base
         $sql="show columns from " . $this->table;
         if(false!==($colsarr=$this->db->arrayQuery($sql))){
             $this->data=array();
+            $this->xfields=array();
             foreach($colsarr as $val){
                 $this->data[$val["Field"]]=false;
+                if($val["Field"]!=="id"){
+                    $this->xfields[]=$val["Field"];
+                }
             }
             unset($this->data["id"]);
         }
@@ -85,8 +100,12 @@ class Data extends Base
         $sql="PRAGMA table_info(" . $this->table . ")";
         if(false!==($colsarr=$this->db->arrayQuery($sql))){
             $this->data=array();
+            $this->xfields=array();
             foreach($colsarr as $val){
                 $this->data[$val["name"]]=false;
+                if($val["Field"]!=="id"){
+                    $this->xfields[]=$val["Field"];
+                }
             }
             unset($this->data["id"]);
         }
@@ -145,6 +164,18 @@ class Data extends Base
         }
         return $ret;
     }/*}}}*/
+    public function setFromField($field,$val)/*{{{*/
+    {
+        $ret=false;
+        $sql="select * from " . $this->table . " where $field=" . $this->db->makeFieldString($val);
+        if(false!==($rarr=$this->db->arrayQuery($sql))){
+            $this->data=$rarr[0];
+            unset($this->data["id"]);
+            $this->id=$rarr[0]["id"];
+            $ret=$this->id;
+        }
+        return $ret;
+    }/*}}}*/
     public function update()/*{{{*/
     {
         if($this->dirty){
@@ -154,12 +185,17 @@ class Data extends Base
             }
         }
     }/*}}}*/
+    public function getFieldList()/*{{{*/
+    {
+        return $this->xfields;
+    }/*}}}*/
     public function setField($Field="",$val="") /*{{{*/
     {
         if($this->ValidStr($Field)){
             if($this->ValidStr($val)){
                 $this->data[$Field]=$val;
                 $this->dirty=true;
+                $this->update();
             }
         }
     } /*}}}*/
@@ -175,6 +211,7 @@ class Data extends Base
         if($this->ValidArray($data)){
             $this->data=$data;
             $this->dirty=true;
+            $this->update();
         }
     }/*}}}*/
     public function getDataA() /*{{{*/

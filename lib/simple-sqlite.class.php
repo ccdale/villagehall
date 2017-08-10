@@ -6,7 +6,7 @@
  * simple-sqlite.class.php
  *
  * Started: Sunday  2 August 2015, 12:29:49
- * Last Modified: Tuesday 27 December 2016, 12:46:08
+ * Last Modified: Saturday  8 April 2017, 07:50:15
  * 
  * Copyright (c) 2015 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -168,7 +168,7 @@ class SSql extends Base
     }
     return $op;
   }/*}}}*/
-  public function insertCheck($table,$fields)/*{{{*/
+  public function insertCheck($table,$fields,$extrainsert=false)/*{{{*/
   {
     $ret=false;
     $carr=$farr=$varr=array();
@@ -183,7 +183,6 @@ class SSql extends Base
     $fs=substr($fs,0,-1);
     $vs=substr($vs,0,-1);
     $sql="select * from $table where $ssql";
-    $sqli="insert into $table ($fs) values ($vs)";
     $rarr=$this->arrayQuery($sql);
     if(false!==($cn=$this->ValidArray($rarr)) && $cn>0){
       // record already exists
@@ -191,6 +190,16 @@ class SSql extends Base
       $ret=true;
     }else{
       $this->debug("record doesn't exist, inserting :$sqli:");
+      if(false!==$extrainsert){
+        if(is_array($extrainsert)){
+          foreach($extrainsert as $field=>$value){
+            $tmp=$this->makeFieldString($value);
+            $fs.="," . $field;
+            $vs.="," . $tmp;
+          }
+        }
+      }
+      $sqli="insert into $table ($fs) values ($vs)";
       $iid=$this->insertQuery($sqli);
       $ret=$iid;
     }

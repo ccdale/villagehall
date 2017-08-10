@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Sunday 26 March 2017, 17:34:09
+ * Last Modified: Thursday 10 August 2017, 09:12:51
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -30,38 +30,26 @@
 require_once "www.php";
 require_once "session.class.php";
 require_once "calendar.class.php";
+require_once "userforms.class.php";
+require_once "room.class.php";
 
 session_start();
 $session=false;
-$user=false;
 if(isset($_SESSION["sessionid"])){
   $session=new Session($logg,$db,$_SESSION["sessionid"]);
   if(false==$session->amOK()){
     $session->deleteMe();
     $session=false;
-    session_unset();
-    session_destroy();
-    session_start();
-  }else{
-    $user=new User($logg,$db,$session->getField("userid"));
+    resetPHPSession();
   }
 }
 if(false!==($uuid=GP("uuid"))){
-  $sql="select id,userid,expires from session where uuid='$uuid'";
-  if(false!==($arr=$db->arrayQuery($sql))){
-    if(isset($arr[0]) && isset($arr[0]["userid"]) && isset($arr[0]["expires"])){
-      $session->deleteMe();
-      $session=new Session($logg,$db);
-      $session->setDataA(array("userid"=>$arr[0]["userid"],"expires"=>time(),"uuid"=>$uuid));
-      $session->update();
-      session_unset();
-      session_destroy();
-      session_start();
-      if(false!==$session->getId()){
-        $_SESSION["sessionid"]=$session->getId();
-      }
-      $user=new User($logg,$db,$arr[0]["userid"]);
-    }
+  resetPHPSession();
+  $session=new Session($logg,$db);
+  if(false!==($id=$session->setFromUUID($uuid))){
+    $_SESSION["sessionid"]=$id;
+  }else{
+    $session=false;
   }
 }
 
@@ -69,11 +57,32 @@ $mo=getDefaultInt("monthoffset",0);
 $day=getDefaultInt("day",0);
 $month=getDefaultInt("month",0);
 $year=getDefaultInt("year",0);
+$starttime=getDefaultInt("start",0);
+$roomid=getDefaultInt("roomid",0);
+$action=getDefaultInt("a",0);
+/* $emailaddress=GP("useremailaddress"); */
 
 $hall=new Hall($logg,$db,$hallname);
 
-$cal=new Calendar($logg,$db,$hall);
-$content=$cal->calendarDiv($mo,$year,$month,$day);
+switch($action){
+case 0:
+  $cal=new Calendar($logg,$db,$hall,$session);
+  $content=$cal->calendarDiv($mo,$year,$month,$day,8,2);
+  break;
+case 1:
+  if($roomid>0){
+    $room=new Room($logg,$db,$roomid);
+    $u=new UForms($logg,$db);
+    $content=$u->preBookingForm();
+  }else{
+    $logg->error("Room ID not set in Get params for pre Booking");
+    $content="<div class='error'><p>An Error occurred obtaining room details</p></div>\n";
+  }
+  break;
+case 2:
+  $b=new Bookings($logg,$db);
+  $content=$b->processBookingForm();
+}
 
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
 $footfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-footer.php";
@@ -83,11 +92,13 @@ $pagetitle=$hallname . " " . $displayname;
 include $headfn;
 include $footfn;
 
+/*
 $tag=new Tag("div",$content,array("id"=>"body"));
 $bodytag=$tag->makeTag();
-$tag=new Tag("body",$bheader . $bodytag . $bfooter);
+ */
+$tag=new Tag("body",$bheader . $content . $bfooter);
 $body=$tag->makeTag();
 $tag=new Tag("html",$head . $body,array("lang"=>"en"));
-$html=" <!DOCTYPE html>\n" . $tag->makeTag();
+$html="<!DOCTYPE html>" . $tag->makeTag();
 echo $html;
 ?>

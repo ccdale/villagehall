@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Thursday 30 March 2017, 03:04:08
+ * Last Modified: Thursday 10 August 2017, 16:31:33
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -36,14 +36,26 @@ class Calendar extends Base
   private $hall=false;
   private $rooms=false;
   private $numrooms=0;
+  private $session=false;
+  private $year=0;
+  private $month=0;
+  private $day=0;
+  private $hour=0;
+  private $mo=0;
 
-  public function __construct($logg=false,$db=false,$hall=false)/*{{{*/
+  public function __construct($logg=false,$db=false,$hall=false,$session=false)/*{{{*/
   {
     parent::__construct($logg);
     $this->db=$db;
     $this->bookings=new Bookings($logg,$db);
     $this->hall=$hall;
+    $this->session=$session;
     $this->getRooms();
+    $this->mo=$this->getDefaultInt("monthoffset",0);
+    $this->year=$this->getDefaultInt("year",0);
+    $this->month=$this->getDefaultInt("month",0);
+    $this->day=$this->getDefaultInt("day",0);
+    $this->hour=$this->getDefaultInt("hour",0);
   }/*}}}*/
   public function __destruct()/*{{{*/
   {
@@ -52,7 +64,7 @@ class Calendar extends Base
     $this->hall=null;
     parent::__destruct();
   }/*}}}*/
-  public function calendarDiv($monthoffset=0,$year=0,$month=0,$day=0)/*{{{*/
+  public function calendarDiv($monthoffset=0,$year=0,$month=0,$day=0,$starthour=8,$slotlength=4)/*{{{*/
   {
     $row="";
     $thismonth=date("n");
@@ -64,7 +76,7 @@ class Calendar extends Base
       $monthoffset=(($thisyear-$year)*12)+$month-3;
     }else{
       $month=$thismonth+$monthoffset;
-      if($month>12){
+      while($month>12){
         $month=$month-12;
         $year++;
       }
@@ -72,12 +84,13 @@ class Calendar extends Base
       $xday=$thismonth==$month && $thisyear==$year?$day:0;
     }
     $midnight=mktime(0,0,0,$month,$day,$year);
+    $strip=$this->roomBookingsDiv($midnight,$year,$month,$day,$starthour,$slotlength);
     for($x=0;$x<3;$x++){
       if($x>0){
         $xday=0;
       }
       $showyear=$year>$thisyear?true:false;
-      $tag=new Tag("div",$this->singleCalendar($month,$year,$xday,$showyear),array("class"=>"col-md-4"));
+      $tag=new Tag("td",$this->singleCalendar($month,$year,$xday,$showyear),array("class"=>"wholecalendarcell","colspan"=>2));
       $row.=$tag->makeTag();
       $month++;
       if($month>12){
@@ -85,42 +98,86 @@ class Calendar extends Base
         $year++;
       }
     }
-    $cdiv=new Tag("div",$row,array("class"=>"row","name"=>"calendar"));
-    $cal=$cdiv->makeTag();
+    $tr=new Tag("tr",$row,array("class"=>"wholecalendarrow"));
+    $cal=$tr->makeTag();
     $buttons=$this->nextMonthButton($monthoffset);
-    $key=$this->tableKey();
-    $strip=$this->roomBookingsDiv($midnight);
-    return $buttons . $cal . $key . $strip;
+    $key=$this->tableKey($day);
+    $table=new Tag("table",$buttons . $cal . $key,array("class"=>"wholecalendartable"));
+    return $table->makeTag() . $strip;
   }/*}}}*/
-  public function roomBookingsDiv($midnight,$start=8,$length=4)/*{{{*/
+  private function fitBooking($midnight,$start,$length,$bstartsec,$blensec)/*{{{*/
   {
-    $table="";
-    $tag=new Tag("th","");
+    $shour=date("G",$bstartsec);
+    $smin=date("i",$bstartsec);
+    $blenhours=intval($blensec/3600);
+    if($blenhours==0){
+      $blenhours=1;
+    }
+    if(($blensec%3600)>0){
+      $blenhours++;
+    }
+    $adjhour=$shour-$start;
+    $adjlen=$blenhours+$adjhour;
+    $slots=intval($adjlen/$length);
+    if(($adjlen%$length)>0){
+      $slots++;
+    }
+    $this->info("start: $start, length: $length, bstartsec: $bstartsec, blensec: $blensec");
+    $this->info("adjhour: $adjhour, adjlen: $adjlen, slots: $slots");
+    return $slots;
+  }/*}}}*/
+  public function roomBookingsDiv($midnight,$year,$month,$day,$start=8,$length=4)/*{{{*/
+  {
+    $table="<col style='width:20%'>\n";
+    $iwidth=intval(80/$this->numrooms);
+    for($x=0;$x<$this->numrooms;$x++){
+      $table.="<col style='width:" . $iwidth . "%'>\n";
+    }
+    $dayheader=date("l jS F Y",$midnight);
+    $tag=new Tag("th",$dayheader,array("class"=>"bookingdate"));
     $row=$tag->makeTag();
     for($x=0;$x<$this->numrooms;$x++){
-      $tag=new Tag("th",$this->rooms[$x]->getField("name"));
+      $tag=new Tag("th",$this->rooms[$x]->getField("name"),array("class"=>"roomname"));
       $row.=$tag->makeTag();
     }
     $tag=new Tag("tr",$row);
     $table.=$tag->makeTag();
+    $skip=array();
     while($start<(25-$length)){
       $row="";
       $dtime=$start<10?"0" . $start:$start;
       $dtime.=":00";
-      $tag=new Tag("td",$dtime,array("class"=>"roomtimestrip"));
+      $tag=new Tag("th",$dtime,array("class"=>"roomtimestrip"));
       $row.=$tag->makeTag();
       $tm=$midnight+($start*3600);
       $tme=$tm+($length*3600);
       for($x=0;$x<$this->numrooms;$x++){
+        if(!isset($skip[$x])){
+          $skip[$x]=1;
+        }
+        $this->info("before skip: " . $skip[$x] . " x: $x");
+        if($skip[$x]>1){
+          $skip[$x]--;
+          $this->info("skipping 1, skip is now: " . $skip[$x] . " x: $x");
+          continue;
+        }
+        $this->info("after skip: " . $skip[$x] . " x: $x");
+        $link=true;
         $class="roombookingcell";
         $cn=$this->bookings->getRoomBookings($this->rooms[$x]->getId(),$tm,$length*3600);
         $txt="&nbsp;";
         if($cn){
+          $link=false;
           $booking=$this->bookings->nextBooking();
           $starttime=$booking->getField("date");
+          $bookinglength=$booking->getField("length");
+          $blenhours=intval($bookinglength/3600);
+          if($blenhours==0){
+            $blenhours=1;
+          }
           $shour=date("H",$starttime);
           $smin=date("i",$starttime);
-          $txt=$shour . ":" . $smin . " - " . $this->secToHMSString($booking->getField("length"));
+          $txt=$shour . ":" . $smin . " - " . $this->secToHMSString($bookinglength);
           $status=$booking->getField("status");
           switch($status){
           case 3:
@@ -133,8 +190,26 @@ class Calendar extends Base
             $class.=" calpaid";
             break;
           }
+          $slots=$this->fitBooking($midnight,$start,$length,$starttime,$bookinglength);
+          if($slots>1){
+            $skip[$x]=$slots;
+          }
+        }else{
+          /* make the unbooked time cell clickable */
+          $atts=array("a"=>1,
+            "roomid"=>$this->rooms[$x]->getId(),
+            "start"=>$start,
+            "year"=>$year,
+            "month"=>$month,
+            "day"=>$day);
+          $linkcell=new ALink($atts,"click to book","","roomcelllink");
+          $txt=$linkcell->makeLink();
         }
-        $tag=new Tag("td",$txt,array("class"=>$class));
+        if($skip[$x]>1){
+          $tag=new Tag("td",$txt,array("class"=>$class,"rowspan"=>$skip[$x]));
+        }else{
+          $tag=new Tag("td",$txt,array("class"=>$class));
+        }
         $row.=$tag->makeTag();
       }
       $tag=new Tag("tr",$row,array("class"=>"roombookingrow"));
@@ -172,51 +247,49 @@ class Calendar extends Base
   }/*}}}*/
   private function nextMonthButton($monthoffset)/*{{{*/
   {
-    $chevl=new Tag("span","",array("class"=>"glyphicon glyphicon-chevron-left"));
-    if($monthoffset==0){
-      $tag=new ALink("",$chevl->makeTag(),"","btn btn-default disabled");
+    if($monthoffset<3){
+      $tag=new Tag("span","<<",array("class"=>"disabled"));
+      $leftb=$tag->makeTag();
     }else{
-      $tag=new ALink(array("monthoffset"=>$monthoffset-3),$chevl->makeTag(),"","btn btn-default");
+      $tag=new ALink(array("monthoffset"=>$monthoffset-3),"<<","","monthoffset");
+      $leftb=$tag->makeLink();
     }
-    $leftb=$tag->makeLink();
-    $tag=new ALink(array("monthoffset"=>0),"Today","","btn bth-primary");
-    $middleb=$tag->makeLink();
-    $chevr=new Tag("span","",array("class"=>"glyphicon glyphicon-chevron-right"));
-    $tag=new ALink(array("monthoffset"=>$monthoffset+3),$chevr->makeTag(),"","btn btn-default");
+    $tag=new Tag("td",$leftb,array("class"=>"wholecalendarcell","colspan"=>2));
+    $chevl=$tag->makeTag();
+    $tag=new ALink(array("monthoffset"=>0),"Today","","monthoffset");
+    $todayl=$tag->makeLink();
+    $tag=new Tag("td",$todayl,array("class"=>"wholecalendarcell","colspan"=>2));
+    $middleb=$tag->makeTag();
+    $tag=new ALink(array("monthoffset"=>$monthoffset+3),">>","","monthoffset");
     $rightb=$tag->makeLink();
-    $buttons=$leftb . $middleb . $rightb;
-    $tag=new Tag("div",$buttons,array("class"=>"col-md-12 text-center gap"));
+    $tag=new Tag("td",$rightb,array("class"=>"wholecalendarcell","colspan"=>2));
+    $chevr=$tag->makeTag();
+    $buttons=$chevl . $middleb . $chevr;
+    $tag=new Tag("tr",$buttons,array("class"=>"wholecalendarrow"));
     return $tag->makeTag();
   }/*}}}*/
-  private function tableKey()/*{{{*/
+  private function tableKey($today)/*{{{*/
   {
-    $today=date("j");
+    /* $today=date("j"); */
     if($today<10){
       $today="&nbsp;$today";
     }
     $line="";
+    $cells="";
     $stuff=array(
-      array("class"=>"tdkey calnodeposit","txt"=>"Booked: Deposit not yet paid."),
-      array("class"=>"tdkey caldeposit","txt"=>"Booked: Deposit paid."),
-      array("class"=>"tdkey calpaid","txt"=>"Booked: Fully paid.")
+      array("class"=>"tdkey calnodeposit wholecalendarcell","txt"=>"Booked: Deposit not yet paid."),
+      array("class"=>"tdkey caldeposit wholecalendarcell","txt"=>"Booked: Deposit paid."),
+      array("class"=>"tdkey calpaid wholecalendarcell","txt"=>"Booked: Fully paid.")
     );
     foreach($stuff as $val){
       $tag=new Tag("td",$today,array("class"=>$val["class"]));
-      $cells=$tag->makeTag();
+      $cells.=$tag->makeTag();
       $tag=new Tag("td",$val["txt"],array("class"=>"tdkey"));
       $cells.=$tag->makeTag();
-      $tag=new Tag("tr",$cells);
-      $row=$tag->makeTag();
-      $tag=new Tag("tbody",$row);
-      $tbody=$tag->makeTag();
-      $tag=new Tag("table",$tbody);
-      $table=$tag->makeTag();
-      $tag=new Tag("div",$table,array("class"=>"col-md-4 gap text-center"));
-      $line.=$tag->makeTag();
     }
-    $tag=new Tag("div",$line,array("class"=>"col-md-12 gap"));
-    $line=$tag->makeTag();
-    return $line;
+    $tag=new Tag("tr",$cells,array("class"=>"wholecalendarrow"));
+    $row=$tag->makeTag();
+    return $row;
   }/*}}}*/
   private function calDays($month,$year,$day)/*{{{*/
   {
@@ -228,6 +301,9 @@ class Calendar extends Base
     $dow=jddayofweek($jd,0);
     $days=1;
     $firstrow=true;
+    $thismonth=date("n");
+    $thisday=date("j");
+    $thisyear=date("Y");
     while($days<=$d){
       $sop="";
       $idx=0;
@@ -239,20 +315,24 @@ class Calendar extends Base
           if($days<=$d){
             $xdays=$days<10?"&nbsp;$days":"$days";
             if($days==$day){
+              /* show today */
               $tag=new Tag("td",$xdays,array("class"=>"todaymark"));
+            }elseif($days<$thisday && $month==$thismonth && $year==$thisyear){
+              /* disable days previous to today */
+              $tag=new Tag("td",$xdays,array("class"=>"disabledday"));
             }else{
               $class=isset($barr[$days])?$barr[$days]["class"]:"";
-              $link=new ALink(array("year"=>$year,"month"=>$month,"day"=>$days),$xdays,"","caldaylink");
+              $link=new ALink(array("a"=>0,"year"=>$year,"month"=>$month,"day"=>$days),$xdays,"","caldaylink");
               $tag=new Tag("td",$link->makeLink(),array("class"=>$class));
             }
             $sop.=$tag->makeTag();
-            $days+=1;
+            $days++;
           }else{
             $tag=new Tag("td","&nbsp;");
             $sop.=$tag->makeTag();
           }
         }
-        $idx+=1;
+        $idx++;
       }
       $firstrow=false;
       $tag=new Tag("tr",$sop);

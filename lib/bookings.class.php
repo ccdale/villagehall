@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Monday  3 April 2017, 12:26:34
+ * Last Modified: Sunday 16 April 2017, 10:44:24
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -28,8 +28,10 @@
 
 require_once "base.class.php";
 require_once "booking.class.php";
+require_once "www.php";
 require_once "HTML/link.class.php";
 require_once "HTML/tag.class.php";
+require_once "HTML/form.class.php";
 
 class Bookings extends Base
 {
@@ -49,6 +51,7 @@ class Bookings extends Base
   public function __destruct()/*{{{*/
   {
     $this->bookings=false;
+    $this->db=false;
     parent::__destruct();
   }/*}}}*/
   public function nextBooking()/*{{{ simple iterator */
@@ -159,31 +162,60 @@ class Bookings extends Base
   }/*}}}*/
   private function dayBookingsArray($day,$month,$year,$rooms,$start)/*{{{*/
   {
+    $ret=0;
     $todaytm=mktime(0,0,0,$month,$day,$year);
     $sql="select * from bookings where date>=$todaytm and date<=" . $todaytm+(24*3600) . " order by date asc";
+    if(false!==($darr=$this->db->arrayQuery($sql))){
+    }
+  }/*}}}*/
+  private function noBookingsToday()/*{{{*/
+  {
+    $tag=new Tag("div","no bookings today.");
+    return $tag->makeTag();
+  }/*}}}*/
+  public function loginForm()/*{{{*/
+  {
+    $f=new Form();
   }/*}}}*/
   public function dayBookingsTable($day,$month,$year,$rooms,$start=8)/*{{{*/
   {
     /* TODO: this function will replace calendar->roomBookingsDiv() */
-    $table=false;
-    if(false!==($table=$this->dayBookingsTableHead($rooms))){
-      while($start<(24)){ /*{{{*/
-        $row=$this->bookingsTimeCell($start);
-        $c=count($rooms);
-        for($x=0;$x<$c;$x++){
-          $id=$rooms[$x]->getId();
-          $sql="select * from bookings where roomid=$id and date>=$start and date<=$start+(" . $length*3600 . ") order by date asc";
-          if(false!==($rarr=$this->db->arrayQuery($sql))){
+    if(0!==($tmp=$this->getBookingsForDay($day,$month,$year))){
+      if(false!==($table=$this->dayBookingsTableHead($rooms))){
+        while($start<(24)){ /*{{{*/
+          $row=$this->bookingsTimeCell($start);
+          $c=count($rooms);
+          for($x=0;$x<$c;$x++){
+            $id=$rooms[$x]->getId();
+            $sql="select * from bookings where roomid=$id and date>=$start and date<=$start+(" . $length*3600 . ") order by date asc";
+            if(false!==($rarr=$this->db->arrayQuery($sql))){
 
-          }else{
-            $row.=$this->blankCell();
+            }else{
+              $row.=$this->blankCell();
+            }
           }
-        }
 
-        $start+=$length;
-      } /*}}}*/
+          $start+=$length;
+        } /*}}}*/
+      }
+    }else{
+      $table=$this->noBookingsToday();
     }
     return $table;
+  }/*}}}*/
+  public function addBookingForm($session,$day,$month,$year)/*{{{*/
+  {
+    $op="";
+    if(false!==$session && $session->amOK()){
+      $f=new Form();
+      $f->addHid("a",2);
+    }else{
+      $op=$this->loginForm();
+    }
+    return $op;
+  }/*}}}*/
+  public function processBookingForm()/*{{{*/
+  {
   }/*}}}*/
 }
 ?>

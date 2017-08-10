@@ -1,6 +1,32 @@
+body .container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 980px;
+}
+table.roombookingtable {
+  border: thin solid black;
+}
+table.roombookingtable th {
+  background-color: lightgrey;
+  border: thin solid black;
+}
+th.roomname {
+  text-align: center;
+}
+th.bookingdate {
+  text-align: right;
+}
+th.roomtimestrip {
+  border-right: thin solid black;
+  padding: 1em;
+  text-align: right;
+}
 td.todaymark {
   color: white;
   background-color: #337AB7;
+}
+td.disabledday {
+  color: lightgrey;
 }
 td.calnodeposit {
   background-color: #F08080;
@@ -14,20 +40,38 @@ td.calpaid {
 td.tdkey {
   padding: 1em;
 }
-td.roomtimestrip {
-  border-right: thin solid black;
-  padding: 1em;
-}
 td.roombookingcell {
   border-right: thin solid black;
   padding: 1em;
+  text-align: center;
+}
+a, a:visited, a:link {
+  text-decoration: none;
+  color: green;
+}
+a:hover {
+  border-bottom: thin solid black;
+}
+a.roomcelllink {
+  display: block;
+  width: 100%;
+  color: white;
+  background-color: white;
+}
+a.roomcelllink:hover {
+  background-color: #337AB7;
 }
 tr.roombookingrow {
   border: thin solid black;
 }
 table.roombookingtable {
+  width: 100%;
 }
 .gap {
   margin-top: 20px;
   margin-bottom: 20px;
+}
+.btn-space {
+  margin-left: 1px;
+  margin-right: 2px;
 }

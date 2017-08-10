@@ -3,3 +3,6 @@ villagehall-config.php
 villagehall.log*
 villagehall.db
 testlogfile*
+tags
+www/css/override_default.css
+www/testform.php

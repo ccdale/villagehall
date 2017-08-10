@@ -6,7 +6,7 @@
  * www.php
  *
  * Started: Saturday 24 January 2009, 17:37:47
- * Last Modified: Sunday 19 February 2017, 07:59:27
+ * Last Modified: Saturday  8 April 2017, 07:00:17
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -118,6 +118,12 @@ function GPType($var,$type="string",$trusted=false)/*{{{*/
         $op="$op";
     }
     return $op;
+}/*}}}*/
+function resetPHPSession()/*{{{*/
+{
+  session_unset();
+  session_destroy();
+  session_start();
 }/*}}}*/
 
 ?>

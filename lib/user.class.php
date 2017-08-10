@@ -61,7 +61,7 @@ class User extends Data
         }
         return $ret;
     }/*}}}*/
-    private function createGuid()/*{{{*/
+    public function createGuid()/*{{{*/
     {
       /* function from http://php.net/manual/en/function.com-create-guid.php
        * only works on linux
