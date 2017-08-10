@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Saturday 29 July 2017, 19:03:41
+ * Last Modified: Thursday 10 August 2017, 09:12:51
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -31,6 +31,7 @@ require_once "www.php";
 require_once "session.class.php";
 require_once "calendar.class.php";
 require_once "userforms.class.php";
+require_once "room.class.php";
 
 session_start();
 $session=false;
@@ -59,6 +60,7 @@ $year=getDefaultInt("year",0);
 $starttime=getDefaultInt("start",0);
 $roomid=getDefaultInt("roomid",0);
 $action=getDefaultInt("a",0);
+/* $emailaddress=GP("useremailaddress"); */
 
 $hall=new Hall($logg,$db,$hallname);
 
@@ -68,8 +70,15 @@ case 0:
   $content=$cal->calendarDiv($mo,$year,$month,$day,8,2);
   break;
 case 1:
-  $u=new UForms($logg,$db);
-  $content=$u->preBookingForm($year,$month,$day,$starttime,$roomid);
+  if($roomid>0){
+    $room=new Room($logg,$db,$roomid);
+    $u=new UForms($logg,$db);
+    $content=$u->preBookingForm();
+  }else{
+    $logg->error("Room ID not set in Get params for pre Booking");
+    $content="<div class='error'><p>An Error occurred obtaining room details</p></div>\n";
+  }
+  break;
 case 2:
   $b=new Bookings($logg,$db);
   $content=$b->processBookingForm();
@@ -83,9 +92,11 @@ $pagetitle=$hallname . " " . $displayname;
 include $headfn;
 include $footfn;
 
+/*
 $tag=new Tag("div",$content,array("id"=>"body"));
 $bodytag=$tag->makeTag();
-$tag=new Tag("body",$bheader . $bodytag . $bfooter);
+ */
+$tag=new Tag("body",$bheader . $content . $bfooter);
 $body=$tag->makeTag();
 $tag=new Tag("html",$head . $body,array("lang"=>"en"));
 $html="<!DOCTYPE html>" . $tag->makeTag();

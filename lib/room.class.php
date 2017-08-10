@@ -32,7 +32,12 @@ class Room extends Data
 {
     public function __construct($logg=false,$db=false,$id=false)/*{{{*/
     {
+        if(is_int($id)){
+            $id="$id";
+        }
         parent::__construct($logg,$db,"rooms","id",$id);
+        $this->debug("class room, id: $id");
+        $this->debug("room name: " . $this->getName());
     }/*}}}*/
     public function __destruct()/*{{{*/
     {

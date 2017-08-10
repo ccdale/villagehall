@@ -55,12 +55,16 @@ class Data extends Base
             $class=get_class($this->db);
             if($class=="SSql"){
                 $this->getSSqlFields();
+                $this->debug("data class: db object is sqlite");
             }elseif($class=="MySql"){
                 $this->getMysqlFields();
+                $this->debug("data class: db object is mysql");
             }else{
                 $this->error("DB class is neither MySql nor SSql");
                 return false;
             }
+        }else{
+            $this->warn("data class: db is not an object");
         }
         if($this->ValidStr($field) && $this->ValidStr($data)){
             $sql="select * from $this->table where $field='" . $this->db->escape($data) . "'";
@@ -68,6 +72,12 @@ class Data extends Base
             $this->data=$tmp[0];
             $this->id=$this->data["id"];
             unset($this->data["id"]);
+        }else{
+            if($this->ValidStr($field)){
+                $this->warn("data class: \$data '$data' is not a valid string");
+            }else{
+                $this->warn("data class: \$field: '$field' is not a valid string");
+            }
         }
     }/*}}}*/
     private function getMysqlFields()/*{{{*/

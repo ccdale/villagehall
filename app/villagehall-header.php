@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Tuesday 21 February 2017, 06:00:53
- * Last Modified: Saturday 29 July 2017, 16:56:12
+ * Last Modified: Thursday 10 August 2017, 09:06:53
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -28,16 +28,27 @@ $bootstrap=<<<EOBS
 <meta charset='utf-8' >
 <meta name='viewport' content='width=device-width, initial-scale=1' >
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- commented out
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+-->
+
 <!-- colour and footer overrides -->
 <!--
 This is not affective, so is commented out
 <link rel="stylesheet" type="text/css" media="screen" href="css/override_default.css">
 -->
+
 <!-- jQuery library -->
+
+<!-- commented out
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+-->
+
 <!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- commented out
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+-->
 <!-- /Bootstrap -->
 
 EOBS;
@@ -51,7 +62,7 @@ $head=$tag->makeTag();
 $link=new ALink("",$pagetitle);
 $tag=new Tag("h2",$link->makeLink());
 $pagetitle=$tag->makeTag();
-$tag=new Tag("div",$pagetitle,array("class"=>"centre"));
+$tag=new Tag("div",$pagetitle,array("class"=>"center"));
 $pagetitle=$tag->makeTag();
 $tag=new Tag("div",$pagetitle,array("id"=>"header"));
 $bheader="\n<div class='container'>\n" . $tag->makeTag();
