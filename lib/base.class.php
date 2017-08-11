@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Friday 11 August 2017, 07:44:05
+ * Last Modified: Friday 11 August 2017, 07:51:20
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -332,6 +332,24 @@ class Base
     if($int!=$default){
       $op["val"]=$int;
       $op["valid"]=true;
+    }
+    return $op;
+  }/*}}}*/
+  public function validateInputArray($arr)/*{{{*/
+  {
+    $op=array();
+    foreach($arr as $k=>$v){
+      if($v["type"]=="str"){
+        $tmp=$this->validateInputString($v["name"]);
+        if($tmp["valid"]){
+          $op[$v["name"]]=$tmp["val"];
+        }
+      }elseif($v["type"]=="int"){
+        $tmp=$this->validateInputInt($v["name"],$v["default"]);
+        if($tmp["valid"]){
+          $op[$v["name"]]=$tmp["val"];
+        }
+      }
     }
     return $op;
   }/*}}}*/
