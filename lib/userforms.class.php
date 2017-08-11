@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 16 April 2017, 09:32:28
- * Last Modified: Thursday 10 August 2017, 09:57:18
+ * Last Modified: Friday 11 August 2017, 08:32:37
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -94,7 +94,7 @@ class UForms extends Base
     $rows=$this->subheadingRow($heading);
     /* $rows.=$this->bookingTimeSelector($this->hour); */
     $rows.=$this->bookingTimeTable($this->hour);
-    $rows.=$this->hiddenFieldsRow(array("a"=>2));
+    $rows.=$this->hiddenFieldsRow(array("a"=>2,"year"=>$this->year,"month"=>$this->month,"day"=>$this->day,"roomid"=>$this->roomid,"start"=>$this->hour));
     $rows.=$this->blankRow();
     $rows.=$this->emailRow("useremailaddress");
     $rows.=$this->blankRow();
