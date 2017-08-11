@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Saturday 29 July 2017, 18:48:38
+ * Last Modified: Friday 11 August 2017, 07:44:05
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -253,7 +253,7 @@ class Base
   public function getDefaultInt($var,$default)
   {
     $op=false;
-    if(false!==($tmp=GP($var))){
+    if(false!==($tmp=$this->GP($var))){
       $tmp=intval($tmp);
       if($tmp>0){
         $op=$tmp;
@@ -278,12 +278,12 @@ class Base
       reset($namearr);
       while(list(,$v)=each($namearr))
       {
-        $arr[$v]=GP($v);
+        $arr[$v]=$this->GP($v);
       }
     }else{
       if(is_string($namearr))
       {
-        $arr[$namearr]=GP($namearr);
+        $arr[$namearr]=$this->GP($namearr);
       }
     }
     return $arr;
@@ -304,13 +304,34 @@ class Base
   } // }}}
   public function GPType($var,$type="string",$trusted=false)/*{{{*/
   {
-    $op=GP($var,$trusted);
+    $op=$this->GP($var,$trusted);
     switch($type){
     case "int":
       $op=intval($op);
       break;
     case "string":
       $op="$op";
+    }
+    return $op;
+  }/*}}}*/
+  public function validateInputString($inputstring)/*{{{*/
+  {
+    $op=array("valid"=>false);
+    if(false!==($str=$this->GP($inputstring))){
+      if(false!==($this->ValidString($str))){
+        $op["val"]=$str;
+        $op["valid"]=true;
+      }
+    }
+    return $op;
+  }/*}}}*/
+  public function validateInputInt($inputint,$default=0)/*{{{*/
+  {
+    $op=array("valid"=>false);
+    $int=$this->getDefaultInt($inputint,$default);
+    if($int!=$default){
+      $op["val"]=$int;
+      $op["valid"]=true;
     }
     return $op;
   }/*}}}*/
