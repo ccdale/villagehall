@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Saturday 12 August 2017, 12:41:47
+ * Last Modified: Saturday 12 August 2017, 13:24:16
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -24,6 +24,9 @@
  */
 
 require_once "data.class.php";
+require_once "user.class.php";
+require_once "room.class.php";
+require_once "hall.class.php";
 
 class PreBooking extends Data
 {
@@ -59,6 +62,44 @@ class PreBooking extends Data
     }else{
       $this->warning("failed to obtain/generate a userid for username: $username, email: $emailaddress");
       $this->warning("not setting up a pre-booking for roomid: $roomid, at: $starttime of length: $length");
+    }
+    return $ret;
+  }/*}}}*/
+  public function sendEmail()/*{{{*/
+  {
+    $ret=false;
+    if($this->ValidInt($this->id)){
+      $u=new User($this->log,$this->db,$this->getField("userid"));
+      $username=$u->getField("name");
+      $r=new Room($this->log,$this->db,$this->getField("roomid"));
+      $roomname=$r->getField("name");
+      $h=new Hall($this->log,$this->db,$r->getField("hallid"));
+      $hallservername=$h->getField("servername");
+      $hallname=$h->getField("name");
+      $guid=$this->getField("guid");
+      $start=$this->getField("date");
+      $length=$this->getField("length");
+      $bdate=$this->stringDate($start);
+      $btime=$this->stringTime($start);
+      $blen=$this->secToHMSString($length);
+      $link="https://$hallservername.vhall.uk/index.php?g=" . urlencode($guid);
+      $str="Hello $username\r\n\r\n";
+      $str.="Please confirm your booking by clicking the link below, or copying it and pasting it into your browser\r\n\r\n";
+      $str.="Details:\r\n";
+      $str.="    Hall: $hallname\r\n";
+      $str.="    Room: $roomname\r\n";
+      $str.="    Date: $bdate\r\n";
+      $str.="    Time: $btime\r\n";
+      $str.="  Length: $blen\r\n\r\n";
+      $str.=$link . "\r\n\r\n";
+      if(mail("chris.charles.allison+testvhall@gmail.com","$hallname Booking on $bdate",$str)){
+        $this->debug("booking mail sent ok");
+        $ret=true;
+      }else{
+        $this->warning("failed to send booking mail: $str");
+      }
+    }else{
+      $this->warning("pre-booking has not been setup correctly");
     }
     return $ret;
   }/*}}}*/
