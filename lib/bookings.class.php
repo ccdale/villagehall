@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday 12 August 2017, 12:49:24
+ * Last Modified: Saturday 12 August 2017, 13:26:43
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -28,6 +28,7 @@
 
 require_once "base.class.php";
 require_once "booking.class.php";
+require_once "prebooking.class.php";
 require_once "www.php";
 require_once "HTML/link.class.php";
 require_once "HTML/tag.class.php";
