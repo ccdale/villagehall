@@ -45,6 +45,14 @@ class Hall extends Data
     }/*}}}*/
     public function findHall($tmphallname)/*{{{*/
     {
+        if(false!==($id=$this->setFromFindField("name",$tmphallname))){
+            $this->readRooms();
+            $this->debug("hall found: " . $this->getName());
+            return true;
+        }else{
+            $this->warning("Failed to set the hall from name: $tmphallname");
+        }
+        /*
         $sql="select * from hall where name like '" . $this->db->escape($tmphallname) . "'";
         $arr=$this->db->arrayQuery($sql);
         if(false!==($junk=$this->ValidArray($arr))){
@@ -60,6 +68,7 @@ class Hall extends Data
         }else{
             $this->warning("Failed to find the correct hall from server address: $tmphallname");
         }
+         */
     }/*}}}*/
     public function numRooms()/*{{{*/
     {
