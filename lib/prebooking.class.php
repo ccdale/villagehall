@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Saturday 12 August 2017, 16:52:39
+ * Last Modified: Saturday 12 August 2017, 17:04:18
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -42,13 +42,25 @@ class PreBooking extends Data
   {
     parent::__destruct();
   }/*}}}*/
+  private function validateInts($uid,$roomid,$starttime,$length)/*{{{*/
+  {
+    $invalid=array();
+    $arr=array("uid"=>$uid,"roomid"=>$roomid,"starttime"=>$starttime,"length"=>$length);
+    foreach($arr as $k=>$v){
+      if(!$this->ValidInt($v)){
+        $invalid[]=array($k=>$v);
+      }
+    }
+    return $invalid;
+  }/*}}}*/
   public function setupPreBooking($username,$emailaddress,$roomid,$starttime,$length)/*{{{*/
   {
     $ret=false;
     $u=new User($this->log,$this->db);
     $u->selectByEmail($emailaddress,$username);
     $uid=$u->getId();
-    if($this->ValidInt($uid) && $this->ValidInt($roomid) && $this->ValidInt($starttime) && $this->ValidInt($length)){
+    $invarr=$this->validateInts($uid,$roomid,$starttime,$length);
+    if(0==($cn=count($invarr))){
       $this->id=false;
       $arr=array("userid"=>$uid,"guuid"=>$u->createGuid(),"roomid"=>$roomid,"date"=>$starttime,"length"=>$length);
       $this->setDataA($arr);
@@ -60,7 +72,9 @@ class PreBooking extends Data
         $this->warning("Failed to generate a prebooking id for $tmp");
       }
     }else{
+      $invalid=print_r($invarr,true);
       $this->warning("failed to obtain/generate a userid for username: $username, email: $emailaddress");
+      $this->warning("invalid: $invalid");
       $this->warning("not setting up a pre-booking for roomid: $roomid, at: $starttime of length: $length");
     }
     return $ret;
