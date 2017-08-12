@@ -51,6 +51,7 @@ class Hall extends Data
             return true;
         }else{
             $this->warning("Failed to set the hall from name: $tmphallname");
+            return false;
         }
         /*
         $sql="select * from hall where name like '" . $this->db->escape($tmphallname) . "'";
