@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Saturday 12 August 2017, 16:40:28
+ * Last Modified: Saturday 12 August 2017, 16:41:17
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -362,7 +362,7 @@ class Base
           $op[$v["name"]]=$tmp["val"];
         }
       }elseif($v["type"]=="int"){
-        $tmp=$this->validateInputInt($v["name"],$v["default"]);
+        $tmp=$this->validateInputInt($v["name"],$v["default"],true);
         if($tmp["valid"]){
           $op[$v["name"]]=$tmp["val"];
         }else{
