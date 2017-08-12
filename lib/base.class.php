@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Saturday 12 August 2017, 13:19:24
+ * Last Modified: Saturday 12 August 2017, 16:40:28
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -262,12 +262,17 @@ class Base
    * returns the contents of the GET or POST variable
    * as an int, or the default value if it isn't set
    */
-  public function getDefaultInt($var,$default)
+  public function getDefaultInt($var,$default,$zerobased=false)
   {
     $op=false;
     if(false!==($tmp=$this->GP($var))){
       $tmp=intval($tmp);
-      if($tmp>0){
+      if($zerobased){
+        $test=-1;
+      }else{
+        $test=0;
+      }
+      if($tmp>$test){
         $op=$tmp;
       }else{
         $op=$default;
