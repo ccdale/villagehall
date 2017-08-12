@@ -74,7 +74,7 @@ class User extends Data
     public function selectByEmail($emailaddress,$username)/*{{{*/
     {
       if(false!==($id=$this->setFromField("email",$emailaddress))){
-        $this->debug("returning user id: $id");
+        $this->debug("returning user id: " . $this->id);
       }else{
         $arr=array("name"=>$username,"email"=>$emailaddress);
         $this->setDataA($arr);
