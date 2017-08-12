@@ -43,6 +43,24 @@ class Hall extends Data
         $this->rooms=false;
         parent::__destruct();
     }/*}}}*/
+    public function findHall($tmphallname)/*{{{*/
+    {
+        $sql="select * from hall where name like '" . $this->db->escape($tmphallname) . "'";
+        $arr=$this->db->arrayQuery($sql);
+        if(false!==($junk=$this->ValidArray($arr))){
+            if(isset($arr[0]) && isset($arr[0]["id"]) && isset($arr[0]["name"])){
+                $this->debug("Found hall: " . $arr[0]["name"] . " from server address.");
+                $this->data=$arr[0];
+                $this->id=$this->data["id"];
+                unset($this->data["id"]);
+                $this->readRooms();
+            }else{
+                $this->warning("Did not receive complete information about the hall: $tmphallname from db.");
+            }
+        }else{
+            $this->warning("Failed to find the correct hall from server address: $tmphallname");
+        }
+    }/*}}}*/
     public function numRooms()/*{{{*/
     {
         return $this->numrooms;

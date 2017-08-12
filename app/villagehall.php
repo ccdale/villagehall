@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Thursday 10 August 2017, 09:12:51
+ * Last Modified: Saturday 12 August 2017, 11:19:33
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -62,7 +62,8 @@ $roomid=getDefaultInt("roomid",0);
 $action=getDefaultInt("a",0);
 /* $emailaddress=GP("useremailaddress"); */
 
-$hall=new Hall($logg,$db,$hallname);
+$hall=new Hall($logg,$db);
+$hall->findHall($thallname);
 
 switch($action){
 case 0:
