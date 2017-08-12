@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Saturday 12 August 2017, 12:34:45
+ * Last Modified: Saturday 12 August 2017, 13:19:24
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -177,6 +177,10 @@ class Base
   public function stringDate($timestamp)/*{{{*/
   {
     return date("D jS M Y",$timestamp);
+  }/*}}}*/
+  public function stringTime($timestamp)/*{{{*/
+  {
+    return date("H:i",$timestamp);
   }/*}}}*/
   private function loghelper($msg,$level)/*{{{*/
   {
