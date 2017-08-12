@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Thursday 10 August 2017, 16:31:33
+ * Last Modified: Saturday 12 August 2017, 11:28:46
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -155,13 +155,13 @@ class Calendar extends Base
         if(!isset($skip[$x])){
           $skip[$x]=1;
         }
-        $this->info("before skip: " . $skip[$x] . " x: $x");
+        $this->debug("before skip: " . $skip[$x] . " x: $x");
         if($skip[$x]>1){
           $skip[$x]--;
-          $this->info("skipping 1, skip is now: " . $skip[$x] . " x: $x");
+          $this->debug("skipping 1, skip is now: " . $skip[$x] . " x: $x");
           continue;
         }
-        $this->info("after skip: " . $skip[$x] . " x: $x");
+        $this->debug("after skip: " . $skip[$x] . " x: $x");
         $link=true;
         $class="roombookingcell";
         $cn=$this->bookings->getRoomBookings($this->rooms[$x]->getId(),$tm,$length*3600);
