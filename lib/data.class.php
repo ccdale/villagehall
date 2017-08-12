@@ -171,7 +171,7 @@ class Data extends Base
         if(false!==($rarr=$this->db->arrayQuery($sql))){
             $this->data=$rarr[0];
             unset($this->data["id"]);
-            $this->id=$rarr[0]["id"];
+            $this->id=intval($rarr[0]["id"]);
             $ret=$this->id;
         }
         return $ret;
