@@ -43,6 +43,17 @@ class Hall extends Data
         $this->rooms=false;
         parent::__destruct();
     }/*}}}*/
+    public function findHall($tmphallname)/*{{{*/
+    {
+        if(false!==($id=$this->setFromField("servername",$tmphallname))){
+            $this->readRooms();
+            $this->debug("hall found: " . $this->getName());
+            return true;
+        }else{
+            $this->warning("Failed to set the hall from name: $tmphallname");
+            return false;
+        }
+    }/*}}}*/
     public function numRooms()/*{{{*/
     {
         return $this->numrooms;
@@ -50,6 +61,10 @@ class Hall extends Data
     public function getRooms()/*{{{*/
     {
         return $this->rooms;
+    }/*}}}*/
+    public function getName()/*{{{*/
+    {
+        return $this->getField("name");
     }/*}}}*/
     private function readRooms()/*{{{*/
     {

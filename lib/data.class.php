@@ -171,6 +171,18 @@ class Data extends Base
         if(false!==($rarr=$this->db->arrayQuery($sql))){
             $this->data=$rarr[0];
             unset($this->data["id"]);
+            $this->id=intval($rarr[0]["id"]);
+            $ret=$this->id;
+        }
+        return $ret;
+    }/*}}}*/
+    public function setFromFindField($field,$val)/*{{{*/
+    {
+        $ret=false;
+        $sql="select * from " . $this->table . " where $field like " . $this->db->makeFindString($val);
+        if(false!==($rarr=$this->db->arrayQuery($sql))){
+            $this->data=$rarr[0];
+            unset($this->data["id"]);
             $this->id=$rarr[0]["id"];
             $ret=$this->id;
         }

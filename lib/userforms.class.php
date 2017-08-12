@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 16 April 2017, 09:32:28
- * Last Modified: Thursday 10 August 2017, 09:57:18
+ * Last Modified: Saturday 12 August 2017, 11:40:51
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -94,7 +94,9 @@ class UForms extends Base
     $rows=$this->subheadingRow($heading);
     /* $rows.=$this->bookingTimeSelector($this->hour); */
     $rows.=$this->bookingTimeTable($this->hour);
-    $rows.=$this->hiddenFieldsRow(array("a"=>2));
+    $rows.=$this->hiddenFieldsRow(array("a"=>2,"year"=>$this->year,"month"=>$this->month,"day"=>$this->day,"roomid"=>$this->roomid,"start"=>$this->hour));
+    $rows.=$this->blankRow();
+    $rows.=$this->userNameRow();
     $rows.=$this->blankRow();
     $rows.=$this->emailRow("useremailaddress");
     $rows.=$this->blankRow();
@@ -145,6 +147,17 @@ class UForms extends Base
     $attcol12=array("class"=>"col-12");
     $em=new InputField();
     $d=new Tag("div",$em->Text($name,"",20,"Email Address"),$attcol12);
+    $sop=$d->makeTag();
+    $rdiv=new Tag("div",$sop,$attrow);
+    return $rdiv->makeTag();
+  }/*}}}*/
+  private function userNameRow($name="username")/*{{{*/
+  {
+    $attrow=array("class"=>"row");
+    $attcol8=array("class"=>"col-8");
+    $attcol12=array("class"=>"col-12");
+    $em=new InputField();
+    $d=new Tag("div",$em->Text($name,"",20,"Name"),$attcol12);
     $sop=$d->makeTag();
     $rdiv=new Tag("div",$sop,$attrow);
     return $rdiv->makeTag();

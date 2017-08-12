@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 16 April 2017, 10:44:24
+ * Last Modified: Saturday 12 August 2017, 16:48:46
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -28,6 +28,7 @@
 
 require_once "base.class.php";
 require_once "booking.class.php";
+require_once "prebooking.class.php";
 require_once "www.php";
 require_once "HTML/link.class.php";
 require_once "HTML/tag.class.php";
@@ -214,8 +215,63 @@ class Bookings extends Base
     }
     return $op;
   }/*}}}*/
+  private function validBookingForm()/*{{{*/
+  {
+    $op=array("valid"=>array(),"invalid"=>array(),"invalidcn"=>0);
+    $arr=array(
+      array("type"=>"str","name"=>"useremailaddress"),
+      array("type"=>"str","name"=>"username"),
+      array("type"=>"int","name"=>"starthour","default"=>-1),
+      array("type"=>"int","name"=>"startmin","default"=>-1),
+      array("type"=>"int","name"=>"endhour","default"=>-1),
+      array("type"=>"int","name"=>"endmin","default"=>-1),
+      array("type"=>"int","name"=>"roomid","default"=>-1),
+      array("type"=>"int","name"=>"start","default"=>-1),
+      array("type"=>"int","name"=>"year","default"=>-1),
+      array("type"=>"int","name"=>"day","default"=>-1),
+      array("type"=>"int","name"=>"month","default"=>-1),
+    );
+    $iparr=$this->validateInputArray($arr);
+    foreach($arr as $k=>$v){
+      if(isset($iparr[$v["name"]])){
+        $op["valid"][$v["name"]]=$iparr[$v["name"]];
+      }else{
+        $op["invalid"][$v["name"]]=true;
+        $this->debug($v["name"] . " is invalid: " . $op["invalid"][$v["name"]]);
+        $op["invalidcn"]+=1;
+      }
+    }
+    return $op;
+  }/*}}}*/
   public function processBookingForm()/*{{{*/
   {
+    $errstr="<p>It is a simple form, do try and fill it in correctly. Click the link above to start again.</p>";
+    $input=$this->validBookingForm();
+    $debug=print_r($input,true);
+    $this->debug($debug);
+    if($input["invalidcn"]>0){
+      return $errstr;
+    }
+    $starttm=mktime($input["valid"]["starthour"],$input["valid"]["startmin"],0,$input["valid"]["month"],$input["valid"]["day"],$input["valid"]["year"]);
+    $endtm=mktime($input["valid"]["endhour"],$input["valid"]["endmin"],0,$input["valid"]["month"],$input["valid"]["day"],$input["valid"]["year"]);
+    if($endtm<=$starttm){
+      $str="<p>The ending time cannot be earlier than the starting time.</p>";
+      return $str . $errstr;
+    }
+    $length=$endtm-$starttm;
+    if(false===($pos=strpos($input["valid"]["useremailaddress"],"@"))){
+      $str="<p>Hmm, that would appear to be an invalid email address.</p>";
+      return $str . $errstr;
+    }
+    /* ok, so every thing checks out */
+    $pre=new PreBooking($this->log,$this->db);
+    $arr=$input["valid"];
+    if(false!==($chk=$pre->setupPreBooking($arr["username"],$arr["useremailaddress"],$arr["roomid"],$starttm,$length))){
+      $this->debug("Booking Form processed ok");
+      $pre->sendEmail();
+    }else{
+      $this->warning("Failed to process the Booking Form");
+    }
   }/*}}}*/
 }
 ?>

@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Thursday 10 August 2017, 16:31:33
+ * Last Modified: Saturday 12 August 2017, 12:02:05
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -128,106 +128,111 @@ class Calendar extends Base
   }/*}}}*/
   public function roomBookingsDiv($midnight,$year,$month,$day,$start=8,$length=4)/*{{{*/
   {
-    $table="<col style='width:20%'>\n";
-    $iwidth=intval(80/$this->numrooms);
-    for($x=0;$x<$this->numrooms;$x++){
-      $table.="<col style='width:" . $iwidth . "%'>\n";
-    }
-    $dayheader=date("l jS F Y",$midnight);
-    $tag=new Tag("th",$dayheader,array("class"=>"bookingdate"));
-    $row=$tag->makeTag();
-    for($x=0;$x<$this->numrooms;$x++){
-      $tag=new Tag("th",$this->rooms[$x]->getField("name"),array("class"=>"roomname"));
-      $row.=$tag->makeTag();
-    }
-    $tag=new Tag("tr",$row);
-    $table.=$tag->makeTag();
-    $skip=array();
-    while($start<(25-$length)){
-      $row="";
-      $dtime=$start<10?"0" . $start:$start;
-      $dtime.=":00";
-      $tag=new Tag("th",$dtime,array("class"=>"roomtimestrip"));
-      $row.=$tag->makeTag();
-      $tm=$midnight+($start*3600);
-      $tme=$tm+($length*3600);
+    if($this->numrooms){
+      $table="<col style='width:20%'>\n";
+      $iwidth=intval(80/$this->numrooms);
       for($x=0;$x<$this->numrooms;$x++){
-        if(!isset($skip[$x])){
-          $skip[$x]=1;
-        }
-        $this->info("before skip: " . $skip[$x] . " x: $x");
-        if($skip[$x]>1){
-          $skip[$x]--;
-          $this->info("skipping 1, skip is now: " . $skip[$x] . " x: $x");
-          continue;
-        }
-        $this->info("after skip: " . $skip[$x] . " x: $x");
-        $link=true;
-        $class="roombookingcell";
-        $cn=$this->bookings->getRoomBookings($this->rooms[$x]->getId(),$tm,$length*3600);
-        $txt="&nbsp;";
-        if($cn){
-          $link=false;
-          $booking=$this->bookings->nextBooking();
-          $starttime=$booking->getField("date");
-          $bookinglength=$booking->getField("length");
-          $blenhours=intval($bookinglength/3600);
-          if($blenhours==0){
-            $blenhours=1;
-          }
-          $shour=date("H",$starttime);
-          $smin=date("i",$starttime);
-          $txt=$shour . ":" . $smin . " - " . $this->secToHMSString($bookinglength);
-          $status=$booking->getField("status");
-          switch($status){
-          case 3:
-            $class.=" calnodeposit";
-            break;
-          case 2:
-            $class.=" caldeposit";
-            break;
-          case 1:
-            $class.=" calpaid";
-            break;
-          }
-          $slots=$this->fitBooking($midnight,$start,$length,$starttime,$bookinglength);
-          if($slots>1){
-            $skip[$x]=$slots;
-          }
-        }else{
-          /* make the unbooked time cell clickable */
-          $atts=array("a"=>1,
-            "roomid"=>$this->rooms[$x]->getId(),
-            "start"=>$start,
-            "year"=>$year,
-            "month"=>$month,
-            "day"=>$day);
-          $linkcell=new ALink($atts,"click to book","","roomcelllink");
-          $txt=$linkcell->makeLink();
-        }
-        if($skip[$x]>1){
-          $tag=new Tag("td",$txt,array("class"=>$class,"rowspan"=>$skip[$x]));
-        }else{
-          $tag=new Tag("td",$txt,array("class"=>$class));
-        }
+        $table.="<col style='width:" . $iwidth . "%'>\n";
+      }
+      $dayheader=date("l jS F Y",$midnight);
+      $tag=new Tag("th",$dayheader,array("class"=>"bookingdate"));
+      $row=$tag->makeTag();
+      for($x=0;$x<$this->numrooms;$x++){
+        $tag=new Tag("th",$this->rooms[$x]->getField("name"),array("class"=>"roomname"));
         $row.=$tag->makeTag();
       }
-      $tag=new Tag("tr",$row,array("class"=>"roombookingrow"));
+      $tag=new Tag("tr",$row);
       $table.=$tag->makeTag();
-      $start+=$length;
-    }
-    $tag=new Tag("table",$table,array("class"=>"table roombookingtable"));
-    $table=$tag->makeTag();
-    $tag=new Tag("div",$table,array("class"=>"table.responsive"));
-    $table=$tag->makeTag();
-    $tag=new Tag("div",$table,array("class"=>"col-md-12 gap"));
+      $skip=array();
+      while($start<(25-$length)){
+        $row="";
+        $dtime=$start<10?"0" . $start:$start;
+        $dtime.=":00";
+        $tag=new Tag("th",$dtime,array("class"=>"roomtimestrip"));
+        $row.=$tag->makeTag();
+        $tm=$midnight+($start*3600);
+        $tme=$tm+($length*3600);
+        for($x=0;$x<$this->numrooms;$x++){
+          if(!isset($skip[$x])){
+            $skip[$x]=1;
+          }
+          $this->debug("before skip: " . $skip[$x] . " x: $x");
+          if($skip[$x]>1){
+            $skip[$x]--;
+            $this->debug("skipping 1, skip is now: " . $skip[$x] . " x: $x");
+            continue;
+          }
+          $this->debug("after skip: " . $skip[$x] . " x: $x");
+          $link=true;
+          $class="roombookingcell";
+          $cn=$this->bookings->getRoomBookings($this->rooms[$x]->getId(),$tm,$length*3600);
+          $txt="&nbsp;";
+          if($cn){
+            $link=false;
+            $booking=$this->bookings->nextBooking();
+            $starttime=$booking->getField("date");
+            $bookinglength=$booking->getField("length");
+            $blenhours=intval($bookinglength/3600);
+            if($blenhours==0){
+              $blenhours=1;
+            }
+            $shour=date("H",$starttime);
+            $smin=date("i",$starttime);
+            $txt=$shour . ":" . $smin . " - " . $this->secToHMSString($bookinglength);
+            $status=$booking->getField("status");
+            switch($status){
+            case 3:
+              $class.=" calnodeposit";
+              break;
+            case 2:
+              $class.=" caldeposit";
+              break;
+            case 1:
+              $class.=" calpaid";
+              break;
+            }
+            $slots=$this->fitBooking($midnight,$start,$length,$starttime,$bookinglength);
+            if($slots>1){
+              $skip[$x]=$slots;
+            }
+          }else{
+            /* make the unbooked time cell clickable */
+            $atts=array("a"=>1,
+              "roomid"=>$this->rooms[$x]->getId(),
+              "start"=>$start,
+              "year"=>$year,
+              "month"=>$month,
+              "day"=>$day);
+            $linkcell=new ALink($atts,"click to book","","roomcelllink");
+            $txt=$linkcell->makeLink();
+          }
+          if($skip[$x]>1){
+            $tag=new Tag("td",$txt,array("class"=>$class,"rowspan"=>$skip[$x]));
+          }else{
+            $tag=new Tag("td",$txt,array("class"=>$class));
+          }
+          $row.=$tag->makeTag();
+        }
+        $tag=new Tag("tr",$row,array("class"=>"roombookingrow"));
+        $table.=$tag->makeTag();
+        $start+=$length;
+      }
+      $tag=new Tag("table",$table,array("class"=>"table roombookingtable"));
+      $table=$tag->makeTag();
+      $tag=new Tag("div",$table,array("class"=>"table.responsive"));
+      $table=$tag->makeTag();
+      $tag=new Tag("div",$table,array("class"=>"col-md-12 gap"));
     /*
     $table=$tag->makeTag();
     $tag=new Tag("div","Bookings",array("class"=>"panel-heading"));
     $tmp=$tag->makeTag();
     $tag=new Tag("div",$tmp . $table,array("class"=>"panel panel-primary"));
      */
-    return $tag->makeTag();
+      return $tag->makeTag();
+    }else{
+      $this->warning("This hall has no rooms!");
+      return false;
+    }
   }/*}}}*/
   private function singleCalendar($month, $year,$day=0,$showyear=false)/*{{{*/
   {
