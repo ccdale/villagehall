@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Saturday 12 August 2017, 16:41:17
+ * Last Modified: Saturday 12 August 2017, 16:46:00
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -262,20 +262,19 @@ class Base
    * returns the contents of the GET or POST variable
    * as an int, or the default value if it isn't set
    */
-  public function getDefaultInt($var,$default,$zerobased=false)
+  public function getDefaultInt($var,$default)
   {
     $op=false;
     if(false!==($tmp=$this->GP($var))){
       $tmp=intval($tmp);
-      if($zerobased){
-        $test=-1;
+      if($default>-1){
+        if($tmp>0){
+          $op=$tmp;
+        }else{
+          $op=$default;
+        }
       }else{
-        $test=0;
-      }
-      if($tmp>$test){
         $op=$tmp;
-      }else{
-        $op=$default;
       }
     }else{
       $op=$default;
@@ -362,7 +361,7 @@ class Base
           $op[$v["name"]]=$tmp["val"];
         }
       }elseif($v["type"]=="int"){
-        $tmp=$this->validateInputInt($v["name"],$v["default"],true);
+        $tmp=$this->validateInputInt($v["name"],$v["default"]);
         if($tmp["valid"]){
           $op[$v["name"]]=$tmp["val"];
         }else{
