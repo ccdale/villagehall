@@ -69,6 +69,10 @@ class Hall extends Data
     {
         return $this->rooms;
     }/*}}}*/
+    public function getName()/*{{{*/
+    {
+        return $this->getField("name");
+    }/*}}}*/
     private function readRooms()/*{{{*/
     {
         if(false!==$this->id){

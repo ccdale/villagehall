@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Saturday 12 August 2017, 11:19:33
+ * Last Modified: Saturday 12 August 2017, 11:24:51
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -88,7 +88,7 @@ case 2:
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
 $footfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-footer.php";
 
-$pagetitle=$hallname . " " . $displayname;
+$pagetitle=$hall->getName() . " " . $displayname;
 
 include $headfn;
 include $footfn;
