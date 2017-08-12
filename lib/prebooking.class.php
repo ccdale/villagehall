@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Saturday 12 August 2017, 10:55:47
+ * Last Modified: Saturday 12 August 2017, 12:41:47
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -38,6 +38,29 @@ class PreBooking extends Data
   public function __destruct()/*{{{*/
   {
     parent::__destruct();
+  }/*}}}*/
+  public function setupPreBooking($username,$emailaddress,$roomid,$starttime,$length)/*{{{*/
+  {
+    $ret=false;
+    $u=new User($this->log,$this->db);
+    $u->selectByEmail($emailaddress,$username);
+    $uid=$u->getId();
+    if($this->ValidInt($uid) && $this->ValidInt($roomid) && $this->ValidInt($starttime) && $this->ValidInt($length)){
+      $this->id=false;
+      $arr=array("uid"=>$uid,"guuid"=>$u->createGuid(),"roomid"=>$roomid,"date"=>$starttime,"length"=>$length);
+      $this->setDataA($arr);
+      if($this->ValidInt($this->id)){
+        $this->debug("setup prebooking ok for email: $emailaddress, on $starttime, length: $length in roomid: $roomid");
+        $ret=true;
+      }else{
+        $tmp=print_r($arr,true);
+        $this->warning("Failed to generate a prebooking id for $tmp");
+      }
+    }else{
+      $this->warning("failed to obtain/generate a userid for username: $username, email: $emailaddress");
+      $this->warning("not setting up a pre-booking for roomid: $roomid, at: $starttime of length: $length");
+    }
+    return $ret;
   }/*}}}*/
 }
 ?>
