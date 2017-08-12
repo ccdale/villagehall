@@ -6,7 +6,7 @@
  * simple-mysql.class.php
  *
  * Started: Monday 23 July 2012, 13:41:11
- * Last Modified: Saturday  8 April 2017, 07:50:23
+ * Last Modified: Saturday 12 August 2017, 11:53:59
  *
  * Copyright (c) 2014 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -206,9 +206,17 @@ class MySql extends Base
   public function makeFieldString($val)/*{{{*/
   {
     if(false!==($cn=$this->ValidString($val))){
-      $op="'$val'";
+      $op="'" . $this->escape($val) . "'";
     }else{
       $op=$val;
+    }
+    return $op;
+  }/*}}}*/
+  public function makeFindString($val)/*{{{*/
+  {
+    $op=false;
+    if(false!==($cn=$this->ValidString($val))){
+      $op="'%" . $this->escape($val) . "%'";
     }
     return $op;
   }/*}}}*/
