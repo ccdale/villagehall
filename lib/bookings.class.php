@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday 12 August 2017, 13:26:43
+ * Last Modified: Saturday 12 August 2017, 16:48:46
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -266,7 +266,7 @@ class Bookings extends Base
     /* ok, so every thing checks out */
     $pre=new PreBooking($this->log,$this->db);
     $arr=$input["valid"];
-    if(false!==($chk=$pre->setupPreBooking($arr["username"],$arr["emailaddress"],$arr["roomid"],$starttm,$length))){
+    if(false!==($chk=$pre->setupPreBooking($arr["username"],$arr["useremailaddress"],$arr["roomid"],$starttm,$length))){
       $this->debug("Booking Form processed ok");
       $pre->sendEmail();
     }else{
