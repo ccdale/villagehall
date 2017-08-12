@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Friday 11 August 2017, 07:51:20
+ * Last Modified: Saturday 12 August 2017, 12:34:45
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -76,6 +76,14 @@ class Base
     }else{
       return false;
     }
+  }/*}}}*/
+  public function ValidInt($int)/*{{{*/
+  {
+    $tmp=$int + 0;
+    if($tmp===$int){
+      return true;
+    }
+    return false;
   }/*}}}*/
   public function hmsToSec($hms) // {{{
   {
@@ -348,6 +356,8 @@ class Base
         $tmp=$this->validateInputInt($v["name"],$v["default"]);
         if($tmp["valid"]){
           $op[$v["name"]]=$tmp["val"];
+        }else{
+          $op["invalid"][$v["name"]]=$this->GP($v["name"]);
         }
       }
     }
