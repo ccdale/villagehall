@@ -45,7 +45,7 @@ class Hall extends Data
     }/*}}}*/
     public function findHall($tmphallname)/*{{{*/
     {
-        if(false!==($id=$this->setFromFindField("name",$tmphallname))){
+        if(false!==($id=$this->setFromField("servername",$tmphallname))){
             $this->readRooms();
             $this->debug("hall found: " . $this->getName());
             return true;
