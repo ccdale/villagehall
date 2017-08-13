@@ -7,7 +7,7 @@ table.roombookingtable {
   border: thin solid black;
 }
 table.roombookingtable th {
-  background-color: lightgrey;
+  background-color: lightyellow;
   border: thin solid black;
 }
 th.roomname {
@@ -22,8 +22,8 @@ th.roomtimestrip {
   text-align: right;
 }
 td.todaymark {
-  color: white;
-  background-color: green;
+  color: black;
+  border: thin solid green;
 }
 td.disabledday {
   color: lightgrey;
@@ -32,7 +32,7 @@ td.calnodeposit {
   background-color: #A0F0A0;
 }
 td.caldeposit {
-  background-color: #80A080;
+  background-color: #70C070;
 }
 td.calpaid {
   background-color: green;
