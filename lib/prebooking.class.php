@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Sunday 13 August 2017, 09:14:40
+ * Last Modified: Sunday 13 August 2017, 09:22:18
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -129,7 +129,7 @@ class PreBooking extends Data
         $arr=$this->getDataA();
         unset($arr["guuid"]);
         unset($arr["timestamp"]);
-        $arr["status"]=0;
+        $arr["status"]=1;
         $b=new Booking($this->logg,$this->db);
         if(false!==($junk=$b->createFromArray($arr))){
           $this->debug("prebooking transferred to booking");
