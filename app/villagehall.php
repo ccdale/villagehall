@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Saturday 12 August 2017, 11:24:51
+ * Last Modified: Sunday 13 August 2017, 08:52:51
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -60,7 +60,10 @@ $year=getDefaultInt("year",0);
 $starttime=getDefaultInt("start",0);
 $roomid=getDefaultInt("roomid",0);
 $action=getDefaultInt("a",0);
-/* $emailaddress=GP("useremailaddress"); */
+$guuid=GP("g");
+if(strlen($guuid)){
+  $action=3;
+}
 
 $hall=new Hall($logg,$db);
 $hall->findHall($thallname);
@@ -83,6 +86,11 @@ case 1:
 case 2:
   $b=new Bookings($logg,$db);
   $content=$b->processBookingForm();
+  break;
+case 3:
+  $b=new Bookings($logg,$db);
+  $content=$b->processGuuid($guuid);
+  break;
 }
 
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";

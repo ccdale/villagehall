@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Friday 21 July 2017, 09:45:14
+ * Last Modified: Sunday 13 August 2017, 09:05:41
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -41,10 +41,7 @@ class Booking extends Data
   {
     if(false!==($junk=$this->ValidArray($data)) && isset($data["id"])){
       parent::__construct($logg,$db,"booking","id",$data["id"]);
-      $this->hour=date("G",$this->data["date"]);
-      $this->shour=$this->hour<10?"0" . $this->hour:$this->hour;
-      $this->minute=intval(date("i",$this->data["date"]));
-      $this->sminute=$this->minute<10?"0" . $this->minute:$this->minute;
+      $this->setupTimes();
     }else{
       parent::__construct($logg,$db,"booking");
     }
@@ -52,6 +49,15 @@ class Booking extends Data
   public function __destruct()/*{{{*/
   {
     parent::__destruct();
+  }/*}}}*/
+  private function setupTimes()/*{{{*/
+  {
+    if(isset($this->data["date"])){
+      $this->hour=date("G",$this->data["date"]);
+      $this->shour=$this->hour<10?"0" . $this->hour:$this->hour;
+      $this->minute=intval(date("i",$this->data["date"]));
+      $this->sminute=$this->minute<10?"0" . $this->minute:$this->minute;
+    }
   }/*}}}*/
   public function bookingTableCell($rowheight=(4*3600))/*{{{*/
   {

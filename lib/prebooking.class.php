@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Sunday 13 August 2017, 08:37:47
+ * Last Modified: Sunday 13 August 2017, 08:44:37
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -62,7 +62,7 @@ class PreBooking extends Data
     $invarr=$this->validateInts($uid,$roomid,$starttime,$length);
     if(0==($cn=count($invarr))){
       $this->id=false;
-      $arr=array("userid"=>$uid,"guuid"=>$u->createGuid(),"roomid"=>$roomid,"date"=>$starttime,"length"=>$length);
+      $arr=array("userid"=>$uid,"guuid"=>$u->createGuid(),"roomid"=>$roomid,"date"=>$starttime,"length"=>$length,"timestamp"=>mktime());
       $this->setDataA($arr);
       if($this->ValidInt($this->id)){
         $this->debug("setup prebooking ok for email: $emailaddress, on $starttime, length: $length in roomid: $roomid");
