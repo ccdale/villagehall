@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Sunday 13 August 2017, 08:25:22
+ * Last Modified: Sunday 13 August 2017, 08:37:47
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -105,7 +105,7 @@ class PreBooking extends Data
       $str.="    Room: $roomname\r\n";
       $str.="    Date: $bdate\r\n";
       $str.="    Time: $btime\r\n";
-      $str.="  Length: $blen\r\n\r\n";
+      $str.="    Length: $blen\r\n\r\n";
       $str.=$link . "\r\n\r\n";
       if(mail("chris.charles.allison+testvhall@gmail.com","$hallname Booking on $bdate",$str)){
         $this->debug("booking mail sent ok");
