@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Sunday 13 August 2017, 08:44:37
+ * Last Modified: Sunday 13 August 2017, 09:14:40
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -27,6 +27,7 @@ require_once "data.class.php";
 require_once "user.class.php";
 require_once "room.class.php";
 require_once "hall.class.php";
+require_once "booking.class.php";
 
 class PreBooking extends Data
 {
@@ -115,6 +116,32 @@ class PreBooking extends Data
       }
     }else{
       $this->warning("pre-booking has not been setup correctly");
+    }
+    return $ret;
+  }/*}}}*/
+  public function validateGuuid()/*{{{*/
+  {
+    $ret=-1;
+    if($this->id){
+      $ts=$this->getField("timestamp");
+      $ts+=(24*3600*7);
+      if(mktime()<$ts){
+        $arr=$this->getDataA();
+        unset($arr["guuid"]);
+        unset($arr["timestamp"]);
+        $arr["status"]=0;
+        $b=new Booking($this->logg,$this->db);
+        if(false!==($junk=$b->createFromArray($arr))){
+          $this->debug("prebooking transferred to booking");
+          $this->debug("deleting prebooking after transfer");
+          $this->deleteMe();
+          $ret=0;
+        }
+      }else{
+        $this->info("prebooking has expired, deleting");
+        $this->deleteMe();
+        $ret=-2;
+      }
     }
     return $ret;
   }/*}}}*/
