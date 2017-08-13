@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday 12 August 2017, 16:48:46
+ * Last Modified: Sunday 13 August 2017, 08:35:36
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -268,10 +268,16 @@ class Bookings extends Base
     $arr=$input["valid"];
     if(false!==($chk=$pre->setupPreBooking($arr["username"],$arr["useremailaddress"],$arr["roomid"],$starttm,$length))){
       $this->debug("Booking Form processed ok");
-      $pre->sendEmail();
+      if($pre->sendEmail()){
+        $str="<p>A confirmation email has been sent to you with a link which you will need to click to activate this booking.</p><p>The link will remain active for 7 days, after that the booking will be removed.</p>";
+      }else{
+        $str="<p>Something went wrong sending you the confirmation email.  This has been logged and will be attended to shortly.</p><p>Meanwhile, please contact the secretary directly.</p>\n";
+      }
     }else{
       $this->warning("Failed to process the Booking Form");
+      $str="<p>Something went wrong processing the Booking Form.  This has been logged and will be attended to shortly.</p><p>Meanwhile, please contact the secretary directly.</p>\n";
     }
+    return $str;
   }/*}}}*/
 }
 ?>
