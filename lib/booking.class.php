@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 13 August 2017, 09:05:41
+ * Last Modified: Sunday 13 August 2017, 09:07:34
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -92,6 +92,11 @@ class Booking extends Data
   public function getBookingTime()/*{{{*/
   {
     return array("hour"=>$this->hour,"minute"=>$this->minute);
+  }/*}}}*/
+  public function createFromArray($arr)/*{{{*/
+  {
+    $this->setDataA($arr);
+    $this->setupTimes();
   }/*}}}*/
 }
 ?>
