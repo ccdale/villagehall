@@ -23,19 +23,19 @@ th.roomtimestrip {
 }
 td.todaymark {
   color: white;
-  background-color: #337AB7;
+  background-color: green;
 }
 td.disabledday {
   color: lightgrey;
 }
 td.calnodeposit {
-  background-color: #F08080;
+  background-color: #A0F0A0;
 }
 td.caldeposit {
-  background-color: #F0F080;
+  background-color: #80A080;
 }
 td.calpaid {
-  background-color: #80F080;
+  background-color: green;
 }
 td.tdkey {
   padding: 1em;
