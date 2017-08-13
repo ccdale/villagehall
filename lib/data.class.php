@@ -74,9 +74,9 @@ class Data extends Base
             unset($this->data["id"]);
         }else{
             if($this->ValidStr($field)){
-                $this->warn("data class: \$data '$data' is not a valid string");
+                $this->debug("data class: \$data '$data' is not a valid string");
             }else{
-                $this->warn("data class: \$field: '$field' is not a valid string");
+                $this->debug("data class: \$field: '$field' is not a valid string");
             }
         }
     }/*}}}*/
