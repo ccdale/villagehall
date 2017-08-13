@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 13 August 2017, 08:35:36
+ * Last Modified: Sunday 13 August 2017, 09:18:22
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -276,6 +276,21 @@ class Bookings extends Base
     }else{
       $this->warning("Failed to process the Booking Form");
       $str="<p>Something went wrong processing the Booking Form.  This has been logged and will be attended to shortly.</p><p>Meanwhile, please contact the secretary directly.</p>\n";
+    }
+    return $str;
+  }/*}}}*/
+  public function processGuuid($guuid)/*{{{*/
+  {
+    $str="<p class='bodytext'>There was an error validating your booking, sorry.</p>";
+    $pre=new PreBooking($this->log,$this->db,$guuid);
+    $res=$pre->validateGuuid();
+    switch($res){
+    case 0:
+      $str="<p class='bodytext'>Successfully validated your booking, thankyou.<p>";
+      break;
+    case -2:
+      $str="<p class='bodytext'>Your booking has expired, please try again.</p>";
+      break;
     }
     return $str;
   }/*}}}*/
