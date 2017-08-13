@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Sunday 13 August 2017, 08:02:40
+ * Last Modified: Sunday 13 August 2017, 08:25:22
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -30,10 +30,10 @@ require_once "hall.class.php";
 
 class PreBooking extends Data
 {
-  public function __construct($logg=false,$db=false,$guid=false)/*{{{*/
+  public function __construct($logg=false,$db=false,$guuid=false)/*{{{*/
   {
-    if(false!==($junk=$this->ValidStr($guid))){
-      parent::__construct($logg,$db,"prebooking","guid",$guid);
+    if(false!==($junk=$this->ValidStr($guuid))){
+      parent::__construct($logg,$db,"prebooking","guuid",$guuid);
     }else{
       parent::__construct($logg,$db,"prebooking");
     }
@@ -91,13 +91,13 @@ class PreBooking extends Data
       $h->setFromField("id",$r->getField("hallid"));
       $hallservername=$h->getField("servername");
       $hallname=$h->getField("name");
-      $guid=$this->getField("guid");
+      $guuid=$this->getField("guuid");
       $start=$this->getField("date");
       $length=$this->getField("length");
       $bdate=$this->stringDate($start);
       $btime=$this->stringTime($start);
       $blen=$this->secToHMSString($length);
-      $link="https://$hallservername.vhall.uk/index.php?g=" . urlencode($guid);
+      $link="https://$hallservername.vhall.uk/index.php?g=" . urlencode($guuid);
       $str="Hello $username\r\n\r\n";
       $str.="Please confirm your booking by clicking the link below, or copying it and pasting it into your browser\r\n\r\n";
       $str.="Details:\r\n";
