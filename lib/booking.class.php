@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 13 August 2017, 09:07:34
+ * Last Modified: Sunday 13 August 2017, 09:09:58
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -95,8 +95,13 @@ class Booking extends Data
   }/*}}}*/
   public function createFromArray($arr)/*{{{*/
   {
+    $ret=false;
     $this->setDataA($arr);
-    $this->setupTimes();
+    if($this->id){
+      $this->setupTimes();
+      $ret=true;
+    }
+    return $ret;
   }/*}}}*/
 }
 ?>
