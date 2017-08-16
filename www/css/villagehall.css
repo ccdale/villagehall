@@ -42,6 +42,7 @@ td.caldeposit {
   background-color: #70C070;
 }
 td.calpaid {
+  color: white;
   background-color: green;
 }
 td.calpaid a {
