@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Sunday 13 August 2017, 08:52:51
+ * Last Modified: Saturday 19 August 2017, 09:20:21
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -28,11 +28,13 @@
 
 
 require_once "www.php";
-require_once "session.class.php";
+/* require_once "session.class.php"; */
+require_once "base.class.php";
 require_once "calendar.class.php";
 require_once "userforms.class.php";
 require_once "room.class.php";
 
+/*
 session_start();
 $session=false;
 if(isset($_SESSION["sessionid"])){
@@ -52,7 +54,9 @@ if(false!==($uuid=GP("uuid"))){
     $session=false;
   }
 }
+ */
 
+/*
 $mo=getDefaultInt("monthoffset",0);
 $day=getDefaultInt("day",0);
 $month=getDefaultInt("month",0);
@@ -64,10 +68,16 @@ $guuid=GP("g");
 if(strlen($guuid)){
   $action=3;
 }
-
+$admin=GP("z");
+if(strlen($admin)){
+  $action=99;
+}
+ */
 $hall=new Hall($logg,$db);
 $hall->findHall($thallname);
-
+$sw=new Switchboard($logg,$db,$hall);
+$content=$sw->doAction();
+/*
 switch($action){
 case 0:
   $cal=new Calendar($logg,$db,$hall,$session);
@@ -92,6 +102,7 @@ case 3:
   $content=$b->processGuuid($guuid);
   break;
 }
+ */
 
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
 $footfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-footer.php";
