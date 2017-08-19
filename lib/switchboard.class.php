@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 19 August 2017, 09:03:04
- * Last Modified: Saturday 19 August 2017, 09:25:58
+ * Last Modified: Saturday 19 August 2017, 09:27:42
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -73,11 +73,11 @@ class Switchboard extends Base
     switch($this->action){
     case 0:
       $cal=new Calendar($this->logg,$this->db,$this->hall);
-      $op=$cal->calendarDiv($mo,$year,$month,$day,8,2);
+      $op=$cal->calendarDiv($this->mo,$this->year,$this->month,$this->day,8,2);
       break;
     case 1:
       if($roomid>0){
-        $room=new Room($this->logg,$this->db,$roomid);
+        $room=new Room($this->logg,$this->db,$this->roomid);
         $u=new UForms($this->logg,$this->db);
         $op=$u->preBookingForm();
       }else{
