@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 19 August 2017, 09:03:04
- * Last Modified: Saturday 19 August 2017, 09:22:28
+ * Last Modified: Saturday 19 August 2017, 09:24:00
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -31,6 +31,7 @@ class Switchboard extends Base
 {
   private $db=false;
   private $hall=false;
+  private $logg=false;
   private $action=0;
   private $mo=0;
   private $day=0;
@@ -44,6 +45,7 @@ class Switchboard extends Base
   public function __construct($logg=false,$db=false,$hall=false)/*{{{*/
   {
     parent::__construct($logg);
+    $this->logg=$logg;
     $this->db=$db;
     $this->mo=$this->getDefaultInt("monthoffset",0);
     $this->day=$this->getDefaultInt("day",0);
