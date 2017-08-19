@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Saturday 19 August 2017, 09:20:21
+ * Last Modified: Saturday 19 August 2017, 09:22:35
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -30,9 +30,12 @@
 require_once "www.php";
 /* require_once "session.class.php"; */
 require_once "base.class.php";
+require_once "switchboard.class.php";
+/*
 require_once "calendar.class.php";
 require_once "userforms.class.php";
 require_once "room.class.php";
+ */
 
 /*
 session_start();
