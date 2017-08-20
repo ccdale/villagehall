@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Sunday 20 August 2017, 05:58:23
+ * Last Modified: Sunday 20 August 2017, 05:59:41
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -31,8 +31,8 @@ require_once "booking.class.php";
 
 class PreBooking extends Data
 {
-  private $logg=false;
-  private $db=false;
+  protected $logg=false;
+  protected $db=false;
 
   public function __construct($logg=false,$db=false,$guuid=false)/*{{{*/
   {
