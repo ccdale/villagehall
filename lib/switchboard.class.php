@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 19 August 2017, 09:03:04
- * Last Modified: Sunday 20 August 2017, 05:34:44
+ * Last Modified: Sunday 20 August 2017, 05:42:06
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -72,10 +72,6 @@ class Switchboard extends Base
   {
     $op="<p class='errortext'>Error: Action not found.</p>\n";
     switch($this->action){
-    case 0:
-      $cal=new Calendar($this->logg,$this->db,$this->hall);
-      $op=$cal->calendarDiv($this->mo,$this->year,$this->month,$this->day,8,2);
-      break;
     case 1:
       if($this->roomid>0){
         $room=new Room($this->logg,$this->db,$this->roomid);
@@ -93,6 +89,12 @@ class Switchboard extends Base
     case 3:
       $b=new Bookings($this->logg,$this->db);
       $op=$b->processGuuid($this->guuid);
+      break;
+    case 99:
+      break;
+    default:
+      $cal=new Calendar($this->logg,$this->db,$this->hall);
+      $op=$cal->calendarDiv($this->mo,$this->year,$this->month,$this->day,8,2);
       break;
     }
     return $op;
