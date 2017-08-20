@@ -2,7 +2,7 @@
 /*
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  * Started: Sunday  5 March 2017, 11:17:25
- * Last Modified: Sunday 20 August 2017, 08:49:47
+ * Last Modified: Sunday 20 August 2017, 08:51:59
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -21,6 +21,9 @@
  * You should have received a copy of the GNU General Public License
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once "base.class.php";
+
 switch($logtype){
 case "file":
   require_once "logfile.class.php";
@@ -31,9 +34,6 @@ case "syslog":
   $logg=new Logging(false,"VHPHP",0,$loglevel,false,false,$logtracelevel);
   break;
 }
-
-require_once "base.class.php";
-
 /*
  * setup database connection
  */
