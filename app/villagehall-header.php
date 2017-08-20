@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Tuesday 21 February 2017, 06:00:53
- * Last Modified: Thursday 10 August 2017, 09:06:53
+ * Last Modified: Sunday 20 August 2017, 08:36:44
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -57,7 +57,8 @@ $title=$tag->makeTag();
 $cssarray=array("rel"=>"stylesheet","type"=>"text/css","href"=>"css/villagehall.css","media"=>"screen");
 $tag=new Tag("link","",$cssarray,true,false,true);
 $css=$tag->makeTag();
-$tag=new Tag("head",$bootstrap . $title . $css);
+/* $tag=new Tag("head",$bootstrap . $title . $css); */
+$tag=new Tag("head",$title . $css);
 $head=$tag->makeTag();
 $link=new ALink("",$pagetitle);
 $tag=new Tag("h2",$link->makeLink());
