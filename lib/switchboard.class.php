@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 19 August 2017, 09:03:04
- * Last Modified: Saturday 19 August 2017, 09:33:21
+ * Last Modified: Sunday 20 August 2017, 05:34:44
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -77,12 +77,12 @@ class Switchboard extends Base
       $op=$cal->calendarDiv($this->mo,$this->year,$this->month,$this->day,8,2);
       break;
     case 1:
-      if($roomid>0){
+      if($this->roomid>0){
         $room=new Room($this->logg,$this->db,$this->roomid);
         $u=new UForms($this->logg,$this->db);
         $op=$u->preBookingForm();
       }else{
-        $logg->error("Room ID not set in Get params for pre Booking");
+        $this->error("Room ID not set in Get params for pre Booking");
         $op="<div class='error'><p>An Error occurred obtaining room details</p></div>\n";
       }
       break;
