@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Sunday 20 August 2017, 08:44:24
+ * Last Modified: Sunday 20 August 2017, 18:15:01
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -29,13 +29,13 @@
 
 $hall=new Hall($logg,$db);
 $hall->findHall($thallname);
+$pagetitle=$hall->getName() . " " . $displayname;
+
 $sw=new Switchboard($logg,$db,$hall);
 $content=$sw->doAction();
 
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
 $footfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-footer.php";
-
-$pagetitle=$hall->getName() . " " . $displayname;
 
 include $headfn;
 include $footfn;
