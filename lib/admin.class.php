@@ -1,14 +1,11 @@
 <?php
-
 /*
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
- * villagehall.php
+ * Started: Sunday 20 August 2017, 05:45:43
+ * Last Modified: Sunday 20 August 2017, 08:42:53
  *
- * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Sunday 20 August 2017, 08:44:24
- *
- * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
+ * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
  * This file is part of villagehall.
  * 
@@ -26,23 +23,18 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+class Admin extends Base
+{
+  private $logg=false;
+  private $db=false;
 
-$hall=new Hall($logg,$db);
-$hall->findHall($thallname);
-$sw=new Switchboard($logg,$db,$hall);
-$content=$sw->doAction();
-
-$headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
-$footfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-footer.php";
-
-$pagetitle=$hall->getName() . " " . $displayname;
-
-include $headfn;
-include $footfn;
-
-$tag=new Tag("body",$bheader . $content . $bfooter);
-$body=$tag->makeTag();
-$tag=new Tag("html",$head . $body,array("lang"=>"en"));
-$html="<!DOCTYPE html>" . $tag->makeTag();
-echo $html;
+  public function __construct($logg=false,$db=false,$admin=false)/*{{{*/
+  {
+    parent::__construct($logg);
+  }/*}}}*/
+  public function __destruct()/*{{{*/
+  {
+    parent::__destruct();
+  }/*}}}*/
+}
 ?>

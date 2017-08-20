@@ -26,8 +26,6 @@
  * Last Modified: Tuesday 15 April 2014, 07:27:19
  */
 
-require_once "data.class.php";
-
 class Hall extends Data
 {
     private $numrooms=false;

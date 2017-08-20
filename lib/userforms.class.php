@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 16 April 2017, 09:32:28
- * Last Modified: Saturday 12 August 2017, 11:40:51
+ * Last Modified: Sunday 20 August 2017, 08:48:54
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -22,13 +22,6 @@
  * You should have received a copy of the GNU General Public License
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once "base.class.php";
-require_once "HTML/form.class.php";
-require_once "HTML/tag.class.php";
-require_once "HTML/select_field.class.php";
-require_once "HTML/option_field.class.php";
-require_once "HTML/class.table.php";
-require_once "room.class.php";
 
 class UForms extends Base
 {

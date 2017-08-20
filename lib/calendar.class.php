@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 19 August 2017, 09:35:15
+ * Last Modified: Sunday 20 August 2017, 08:44:03
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -22,12 +22,6 @@
  * You should have received a copy of the GNU General Public License
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once "base.class.php";
-require_once "bookings.class.php";
-require_once "room.class.php";
-require_once "HTML/link.class.php";
-require_once "HTML/tag.class.php";
 
 class Calendar extends Base
 {
@@ -108,14 +102,19 @@ class Calendar extends Base
     $shour=date("G",$bstartsec);
     $smin=date("i",$bstartsec);
     $blenhours=intval($blensec/3600);
+    /*
     if($blenhours==0){
       $blenhours=1;
     }
+     */
     if(($blensec%3600)>0){
       $blenhours++;
     }
     $adjhour=$shour-$start;
+    /*
     $adjlen=$blenhours+$adjhour;
+     */
+    $adjlen=$blenhours;
     $slots=intval($adjlen/$length);
     if(($adjlen%$length)>0){
       $slots++;

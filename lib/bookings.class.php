@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 13 August 2017, 09:18:22
+ * Last Modified: Sunday 20 August 2017, 08:43:46
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -25,14 +25,6 @@
  * You should have received a copy of the GNU General Public License
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once "base.class.php";
-require_once "booking.class.php";
-require_once "prebooking.class.php";
-require_once "www.php";
-require_once "HTML/link.class.php";
-require_once "HTML/tag.class.php";
-require_once "HTML/form.class.php";
 
 class Bookings extends Base
 {
@@ -104,7 +96,7 @@ class Bookings extends Base
   }/*}}}*/
   private function getBookings($starttm,$length=86400,$room=false)/*{{{*/
   {
-    $sql="select * from booking where date>=$starttm and date<=($starttm+$length)";
+    $sql="select * from booking where date>=$starttm and date<($starttm+$length)";
     if(false!==$room){
       $sql.=" and roomid=$room";
     }

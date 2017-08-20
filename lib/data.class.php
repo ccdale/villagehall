@@ -27,8 +27,6 @@
  * Last Modified: Tuesday 15 April 2014, 07:27:19
  */
 
-require_once "base.class.php";
-
 class Data extends Base
 {
     private $dirty=false;

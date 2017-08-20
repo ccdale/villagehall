@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Sunday 20 August 2017, 05:59:41
+ * Last Modified: Sunday 20 August 2017, 08:42:30
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -22,12 +22,6 @@
  * You should have received a copy of the GNU General Public License
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once "data.class.php";
-require_once "user.class.php";
-require_once "room.class.php";
-require_once "hall.class.php";
-require_once "booking.class.php";
 
 class PreBooking extends Data
 {

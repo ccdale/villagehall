@@ -6,7 +6,7 @@
  * simple-mysql.class.php
  *
  * Started: Monday 23 July 2012, 13:41:11
- * Last Modified: Saturday 12 August 2017, 11:53:59
+ * Last Modified: Sunday 20 August 2017, 08:47:05
  *
  * Copyright (c) 2014 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -25,8 +25,6 @@
  * You should have received a copy of the GNU General Public License
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once "base.class.php";
 
 /** MySql Class
  * simple class to connect and do db stuff

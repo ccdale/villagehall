@@ -6,7 +6,7 @@
  * cli.class.php
  *
  * Started: Sunday  6 October 2013, 11:21:55
- * Last Modified: Monday 26 December 2016, 07:05:03
+ * Last Modified: Sunday 20 August 2017, 08:45:28
  * 
  * Copyright (c) 2014 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -68,8 +68,6 @@ define("CCA_CDGrey",CCA_CStart . "[" . CCA_DGray . CCA_CEnd);
 define("CCA_CPurple",CCA_CStart . "[" . CCA_LPurple . CCA_CEnd);
 define("CCA_CDPurple",CCA_CStart . "[" . CCA_Purple . CCA_CEnd);
 // end colour defines }}}
-
-require_once "base.class.php";
 
 class CLI extends Base
 {

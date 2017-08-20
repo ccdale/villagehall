@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 19 August 2017, 09:03:04
- * Last Modified: Sunday 20 August 2017, 05:42:06
+ * Last Modified: Sunday 20 August 2017, 08:49:40
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -22,10 +22,6 @@
  * You should have received a copy of the GNU General Public License
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once "base.class.php";
-require_once "calendar.class.php";
-require_once "userforms.class.php";
-require_once "room.class.php";
 
 class Switchboard extends Base
 {
