@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Sunday 20 August 2017, 08:42:30
+ * Last Modified: Sunday 20 August 2017, 19:06:25
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -85,6 +85,7 @@ class PreBooking extends Data
     if($this->ValidInt($this->id)){
       $u=new User($this->log,$this->db,$this->getField("userid"));
       $username=$u->getField("name");
+      $emailaddr=$u->getField("email");
       $r=new Room($this->log,$this->db,$this->getField("roomid"));
       $roomname=$r->getField("name");
       $h=new Hall($this->log,$this->db);
@@ -107,7 +108,7 @@ class PreBooking extends Data
       $str.="    Time: $btime\r\n";
       $str.="    Length: $blen\r\n\r\n";
       $str.=$link . "\r\n\r\n";
-      if(mail("chris.charles.allison+testvhall@gmail.com","$hallname Booking on $bdate",$str)){
+      if(mail($emailaddr,"$hallname $roomname Booking on $bdate",$str)){
         $this->debug("booking mail sent ok");
         $ret=true;
       }else{
