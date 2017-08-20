@@ -6,7 +6,7 @@
  * villagehall.php
  *
  * Started: Sunday 20 November 2016, 08:04:47
- * Last Modified: Saturday 19 August 2017, 09:22:35
+ * Last Modified: Sunday 20 August 2017, 05:39:35
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -28,84 +28,14 @@
 
 
 require_once "www.php";
-/* require_once "session.class.php"; */
 require_once "base.class.php";
 require_once "switchboard.class.php";
-/*
-require_once "calendar.class.php";
-require_once "userforms.class.php";
-require_once "room.class.php";
- */
 
-/*
-session_start();
-$session=false;
-if(isset($_SESSION["sessionid"])){
-  $session=new Session($logg,$db,$_SESSION["sessionid"]);
-  if(false==$session->amOK()){
-    $session->deleteMe();
-    $session=false;
-    resetPHPSession();
-  }
-}
-if(false!==($uuid=GP("uuid"))){
-  resetPHPSession();
-  $session=new Session($logg,$db);
-  if(false!==($id=$session->setFromUUID($uuid))){
-    $_SESSION["sessionid"]=$id;
-  }else{
-    $session=false;
-  }
-}
- */
 
-/*
-$mo=getDefaultInt("monthoffset",0);
-$day=getDefaultInt("day",0);
-$month=getDefaultInt("month",0);
-$year=getDefaultInt("year",0);
-$starttime=getDefaultInt("start",0);
-$roomid=getDefaultInt("roomid",0);
-$action=getDefaultInt("a",0);
-$guuid=GP("g");
-if(strlen($guuid)){
-  $action=3;
-}
-$admin=GP("z");
-if(strlen($admin)){
-  $action=99;
-}
- */
 $hall=new Hall($logg,$db);
 $hall->findHall($thallname);
 $sw=new Switchboard($logg,$db,$hall);
 $content=$sw->doAction();
-/*
-switch($action){
-case 0:
-  $cal=new Calendar($logg,$db,$hall,$session);
-  $content=$cal->calendarDiv($mo,$year,$month,$day,8,2);
-  break;
-case 1:
-  if($roomid>0){
-    $room=new Room($logg,$db,$roomid);
-    $u=new UForms($logg,$db);
-    $content=$u->preBookingForm();
-  }else{
-    $logg->error("Room ID not set in Get params for pre Booking");
-    $content="<div class='error'><p>An Error occurred obtaining room details</p></div>\n";
-  }
-  break;
-case 2:
-  $b=new Bookings($logg,$db);
-  $content=$b->processBookingForm();
-  break;
-case 3:
-  $b=new Bookings($logg,$db);
-  $content=$b->processGuuid($guuid);
-  break;
-}
- */
 
 $headfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-header.php";
 $footfn=$apppath . DIRECTORY_SEPARATOR . $appname . "-footer.php";
@@ -115,10 +45,6 @@ $pagetitle=$hall->getName() . " " . $displayname;
 include $headfn;
 include $footfn;
 
-/*
-$tag=new Tag("div",$content,array("id"=>"body"));
-$bodytag=$tag->makeTag();
- */
 $tag=new Tag("body",$bheader . $content . $bfooter);
 $body=$tag->makeTag();
 $tag=new Tag("html",$head . $body,array("lang"=>"en"));
