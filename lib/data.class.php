@@ -162,6 +162,12 @@ class Data extends Base
         }
         return $ret;
     }/*}}}*/
+    public function selectFromField($field,$operator,$val)/*{{{*/
+    {
+        $ret=false;
+        $sql="select * from " . $this->table . " where " . $field . $operator . $this->db->makeFieldString($val);
+        $ret=$this->db->arrayQuery($sql);
+    }/*}}}*/
     public function setFromField($field,$val)/*{{{*/
     {
         $ret=false;
