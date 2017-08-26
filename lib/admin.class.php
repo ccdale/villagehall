@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Saturday 26 August 2017, 18:12:32
+ * Last Modified: Saturday 26 August 2017, 18:14:45
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -112,7 +112,7 @@ class Admin extends Base
           $subselect=$rid;
         }
       }
-      $sql="select * from bookings where roomid in ($subselect) and status>1 order by date asc";
+      $sql="select * from booking where roomid in ($subselect) and status>1 order by date asc";
       if(false!==($arr=$this->db->arrayQuery($sql))){
         $tableheadrow=$this->makeAdminTableHead();
         $rows="";
