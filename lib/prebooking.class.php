@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Saturday 26 August 2017, 07:20:22
+ * Last Modified: Saturday 26 August 2017, 07:31:51
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -82,6 +82,24 @@ class PreBooking extends Data
       $this->warning("failed to obtain/generate a userid for username: $username, email: $emailaddress");
       $this->warning("invalid: $invalid");
       $this->warning("not setting up a pre-booking for roomid: $roomid, at: $starttime of length: $length");
+    }
+    return $ret;
+  }/*}}}*/
+  public function setupAdminAccess($user)/*{{{*/
+  {
+    $ret=false;
+    if($user && is_object($user) && get_class($user)=="User"){
+      $this->id=false;
+      $arr=array("userid"=>$user->getId(),"guuid"=>$user->createGuid(),"timestamp"=>mktime(),"roomid"=>0,"date"=>0,"length"=>0);
+      $this->setDataA($arr);
+      if($this->ValidInt($this->id)){
+        $this->debug("setup prebooking for admin access");
+        $ret=true;
+      }else{
+        $this->warning("failed to setup pre-booking for admin access");
+      }
+    }else{
+      $this->warning("\$user variable is not a valid user class");
     }
     return $ret;
   }/*}}}*/
