@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 19 August 2017, 09:03:04
- * Last Modified: Sunday 20 August 2017, 19:53:15
+ * Last Modified: Saturday 26 August 2017, 07:53:35
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -85,6 +85,12 @@ class Switchboard extends Base
     case 3:
       $b=new Bookings($this->logg,$this->db);
       $op=$b->processGuuid($this->guuid);
+      break;
+    case 21:
+      $op="<p class='bodytext'>This is the booking system for the Village Hall</p>\n";
+      break;
+    case 22:
+      $op="<p class='bodytext'>The Secretary can be contacted at secretary@vhall.uk</p>\n";
       break;
     case 99:
       /*
