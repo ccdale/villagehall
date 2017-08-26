@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Saturday 26 August 2017, 07:16:09
+ * Last Modified: Saturday 26 August 2017, 16:55:47
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -185,6 +185,18 @@ class Base
   public function stringTime($timestamp)/*{{{*/
   {
     return date("H:i",$timestamp);
+  }/*}}}*/
+  public function arrayToday()/*{{{*/
+  {
+    $ret=array("hour"=>date("G"),
+      "minute"=>date("i"),
+      "second"=>intval(date("s")),
+      "day"=>date("j"),
+      "month"=>date("n"),
+      "year"=>date("Y"),
+      "timestamp"=>mktime()
+    );
+    return $ret;
   }/*}}}*/
   private function loghelper($msg,$level)/*{{{*/
   {
