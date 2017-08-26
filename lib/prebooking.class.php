@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Sunday 20 August 2017, 19:06:25
+ * Last Modified: Saturday 26 August 2017, 07:12:31
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -27,6 +27,8 @@ class PreBooking extends Data
 {
   protected $logg=false;
   protected $db=false;
+  private $prebtimeout=0;
+  private $admintimeout=0;
 
   public function __construct($logg=false,$db=false,$guuid=false)/*{{{*/
   {
@@ -37,6 +39,8 @@ class PreBooking extends Data
     }
     $this->logg=$logg;
     $this->db=$db;
+    $this->prebtimeout=(24*3600);
+    $this->admintimeout=(15*60);
   }/*}}}*/
   public function __destruct()/*{{{*/
   {
@@ -124,7 +128,7 @@ class PreBooking extends Data
     $ret=-1;
     if($this->id){
       $ts=$this->getField("timestamp");
-      $ts+=(24*3600*7);
+      $ts+=$this->prebtimeout;
       if(mktime()<$ts){
         $arr=$this->getDataA();
         unset($arr["guuid"]);
@@ -139,6 +143,23 @@ class PreBooking extends Data
         }
       }else{
         $this->info("prebooking has expired, deleting");
+        $this->deleteMe();
+        $ret=-2;
+      }
+    }
+    return $ret;
+  }/*}}}*/
+  public function validateAdminGuuid()/*{{{*/
+  {
+    $ret=-1;
+    if($this->id){
+      $xts=$this->getField("timestamp");
+      $xts+=$this->admintimeout;
+      if(mktime()<$xts){
+        $this->deleteMe();
+        $ret=0;
+      }else{
+        $this->info("admin timeout has expired, deleting");
         $this->deleteMe();
         $ret=-2;
       }
