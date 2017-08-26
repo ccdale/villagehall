@@ -60,6 +60,17 @@ class Hall extends Data
     {
         return $this->rooms;
     }/*}}}*/
+    public function getRoomIds()/*{{{*/
+    {
+        $roomids=false;
+        if(false!==$this->rooms){
+            $roomids=array();
+            foreach($this->rooms as $room){
+                $roomids[]=$room->getId();
+            }
+        }
+        return $roomids;
+    }/*}}}*/
     public function getName()/*{{{*/
     {
         return $this->getField("name");
