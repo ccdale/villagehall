@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Saturday 26 August 2017, 18:11:06
+ * Last Modified: Saturday 26 August 2017, 18:12:32
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -80,6 +80,7 @@ class Admin extends Base
     switch($valid){
     case 0:
       /* validated */
+      return $this->adminPage($hall);
       break;
     case -1:
       /* incorrect guuid / no guuid */
