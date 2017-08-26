@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Saturday 26 August 2017, 15:31:53
+ * Last Modified: Saturday 26 August 2017, 18:11:06
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -97,6 +97,64 @@ class Admin extends Base
       return $tag->makeTag();
       break;
     }
+  }/*}}}*/
+  public function adminPage($hall)/*{{{*/
+  {
+    $op="<p>No bookings found</p>\n";
+    if(is_object($hall) && get_class($hall)=="Hall"){
+      $roomids=$hall->getRoomIds();
+      $subselect="";
+      foreach($roomids as $rid){
+        if(strlen($subselect)){
+          $subselect.="," . $rid;
+        }else{
+          $subselect=$rid;
+        }
+      }
+      $sql="select * from bookings where roomid in ($subselect) and status>1 order by date asc";
+      if(false!==($arr=$this->db->arrayQuery($sql))){
+        $tableheadrow=$this->makeAdminTableHead();
+        $rows="";
+        foreach($arr as $barr){
+          $r=new Room($this->logg,$this->db,$barr["roomid"]);
+          $u=new User($this->logg,$this->db,$barr["userid"]);
+          $rows.=$this->makeAdminRow(array("id"=>$barr["id"],"name"=>$u->getName(),"email"=>$u->getEmail(),"roomname"=>$r->getName(),"date"=>$this->stringDate($barr["date"]) . " at " . $this->stringTime($barr["date"]),"status"=>$barr["status"]));
+        }
+        $tag=new Tag("table",$tableheadrow . $rows);
+        $op=$tag->makeTag();
+      }
+    }
+    return $op;
+  }/*}}}*/
+  private function makeAdminTableHead()/*{{{*/
+  {
+    $row=$this->makeTH("Date");
+    $row.=$this->makeTH("Name");
+    $row.=$this->makeTH("Email Address");
+    $row.=$this->makeTH("Room Name");
+    $row.=$this->makeTH("Status");
+    $tag=new Tag("tr",$row);
+    return $tag->makeTag();
+  }/*}}}*/
+  private function makeAdminRow($arr)/*{{{*/
+  {
+    $row=$this->makeTD($arr["date"]);
+    $row.=$this->makeTD($arr["name"]);
+    $row.=$this->makeTD($arr["email"]);
+    $row.=$this->makeTD($arr["roomname"]);
+    $row.=$this->makeTD($arr["status"]);
+    $tag=new Tag("tr",$row);
+    return $tag->makeTag();
+  }/*}}}*/
+  private function makeTD($str)/*{{{*/
+  {
+    $tag=new Tag("td",$str);
+    return $tag->makeTag();
+  }/*}}}*/
+  private function makeTH($str)/*{{{*/
+  {
+    $tag=new Tag("th",$str);
+    return $tag->makeTag();
   }/*}}}*/
 }
 ?>
