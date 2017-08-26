@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Saturday 12 August 2017, 17:08:57
+ * Last Modified: Saturday 26 August 2017, 07:16:09
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -79,14 +79,14 @@ class Base
   }/*}}}*/
   public function ValidInt($int)/*{{{*/
   {
-    $this->debug("input: '$int'");
+    $this->debug("ValidInt: input: '$int'");
     $tmp=$int + 0;
-    $this->debug("testing against (input+0): '$tmp'");
+    $this->debug("ValidInt: testing against (input+0): '$tmp'");
     if($tmp===$int){
-      $this->debug("$int is a valid int");
+      $this->debug("ValidInt: $int is a valid int");
       return true;
     }
-    $this->debug("'$int' is not a valid int - it is a " . gettype($int));
+    $this->debug("ValidInt: '$int' is not a valid int - it is a " . gettype($int));
     return false;
   }/*}}}*/
   public function hmsToSec($hms) // {{{
