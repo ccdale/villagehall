@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Saturday 26 August 2017, 07:58:52
+ * Last Modified: Saturday 26 August 2017, 15:15:39
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -48,20 +48,23 @@ class Admin extends Base
     $pv=new Priv($this->logg,$this->db);
     if(false!==($junk=$pv->selectByHallAdmin($hall->getId()))){
       $u=new User($this->logg,$this->db,$pv->getField("userid"));
-      $this->info("ADMIN userid: " . $u->getId());
-      $email=$u->getField("email");
-      $guuid=$u->createGuid();
-      if(false!==($junk=$this->ValidString($email))){
-        $this->info("ADMIN email: $email");
-        $hallservername=$hall->getField("servername");
-        $link="https://$hallservername.vhall.uk/index.php?y=" . urlencode($guuid);
-        if(mail($email,"$hallname ADMIN login request",$link)){
-          $ret=true;
+      $pre=new PreBooking($this->logg,$this->db);
+      if(false!==($junk=$pre->setupAdminAccess($u))){
+        $email=$u->getField("email");
+        $guuid=$pre->getField("guuid");
+        $this->info("ADMIN userid: " . $u->getId());
+        if(false!==($junk=$this->ValidString($email))){
+          $this->info("ADMIN email: $email");
+          $hallservername=$hall->getField("servername");
+          $link="https://$hallservername.vhall.uk/index.php?y=" . urlencode($guuid);
+          if(mail($email,"$hallname ADMIN login request",$link)){
+            $ret=true;
+          }else{
+            $this->warning("Failed to send init email for hall $hallname to $email");
+          }
         }else{
-          $this->warning("Failed to send init email for hall $hallname to $email");
+          $this->warning("Failed to find ADMIN email address for hall $hallname");
         }
-      }else{
-        $this->warning("Failed to find ADMIN email address for hall $hallname");
       }
     }else{
       $this->warning("Failed to find ADMIN PRIV for hall $hallname");
