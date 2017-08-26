@@ -79,5 +79,13 @@ class User extends Data
         $this->debug("new user id: " . $this->id);
       }
     }/*}}}*/
+    public function getName()/*{{{*/
+    {
+        return $this->getField("name");
+    }/*}}}*/
+    public function getEmail()/*{{{*/
+    {
+        return $this->getField("email");
+    }/*}}}*/
 }
 ?>
