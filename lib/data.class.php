@@ -249,6 +249,9 @@ class Data extends Base
             $sql="delete from " . $this->table . " where id=" . $this->id;
             if(false==($numrows=$this->db->deleteQuery($sql))){
                 $this->error("Failed to delete row from " . $this->table . ": rowid: " . $this->id);
+            }else{
+                $this->data=false;
+                $this->id=false;
             }
         }
         return $numrows;
