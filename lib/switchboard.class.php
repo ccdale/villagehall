@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 19 August 2017, 09:03:04
- * Last Modified: Saturday 26 August 2017, 07:53:35
+ * Last Modified: Saturday 26 August 2017, 07:56:42
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -96,6 +96,8 @@ class Switchboard extends Base
       /*
        * initiate an admin login
        */
+      require_once "privileges.class.php";
+      require_once "admin.class.php";
       $ad=new Admin($this->logg,$this->db);
       if(false!==($junk=$ad->initSendEmail($this->hall))){
         $op="<p>An email has been sent to allow the administrator to logon</p>\n";
