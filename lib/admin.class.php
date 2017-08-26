@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Saturday 26 August 2017, 15:15:39
+ * Last Modified: Saturday 26 August 2017, 15:31:53
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -70,6 +70,33 @@ class Admin extends Base
       $this->warning("Failed to find ADMIN PRIV for hall $hallname");
     }
     return $ret;
+  }/*}}}*/
+  public function processAdminLogin($hall)/*{{{*/
+  {
+    $hallname=$hall->getField("name");
+    $this->info("Processing ADMIN request for hall $hallname");
+    $pre=new PreBooking($this->logg,$this->db,$this->admin);
+    $valid=$pre->validateAdminGuuid();
+    switch($valid){
+    case 0:
+      /* validated */
+      break;
+    case -1:
+      /* incorrect guuid / no guuid */
+      $tag=new Tag("p","Invalid attempt to login as Administrator detected.");
+      $this->warning("invalid attempt to login as Admin detected");
+      $p=$tag->makeTag();
+      $tag=new Tag("div",$p);
+      return $tag->makeTag();
+      break;
+    case 2:
+      /* timeout on guuid */
+      $tag=new Tag("p","That link has timed out, please use the Admin link below to generate another one.");
+      $p=$tag->makeTag();
+      $tag=new Tag("div",$p);
+      return $tag->makeTag();
+      break;
+    }
   }/*}}}*/
 }
 ?>
