@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Saturday 26 August 2017, 18:17:09
+ * Last Modified: Saturday 26 August 2017, 18:20:27
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -119,7 +119,7 @@ class Admin extends Base
         foreach($arr as $barr){
           $r=new Room($this->logg,$this->db,$barr["roomid"]);
           $u=new User($this->logg,$this->db,$barr["userid"]);
-          $rows.=$this->makeAdminRow(array("id"=>$barr["id"],"name"=>$u->getName(),"email"=>$u->getEmail(),"roomname"=>$r->getName(),"date"=>$this->stringDate($barr["date"]) . " at " . $this->stringTime($barr["date"]),"status"=>$barr["status"]));
+          $rows.=$this->makeAdminRow(array("id"=>$barr["id"],"name"=>$u->getName(),"email"=>$u->getEmail(),"roomname"=>$r->getName(),"date"=>$this->stringDate($barr["date"]) . " at " . $this->stringTime($barr["date"]) . " for " . $this->secToHMSString($barr["length"]),"status"=>$barr["status"]));
         }
         $tag=new Tag("table",$tableheadrow . $rows,array("border"=>1));
         $op=$tag->makeTag();
