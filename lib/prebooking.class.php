@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Saturday 26 August 2017, 07:12:31
+ * Last Modified: Saturday 26 August 2017, 07:20:22
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -39,8 +39,10 @@ class PreBooking extends Data
     }
     $this->logg=$logg;
     $this->db=$db;
-    $this->prebtimeout=(24*3600);
-    $this->admintimeout=(15*60);
+    /* pre-booking timeout == 1 day */
+    $this->setPrebtimeout(24*3600);
+    /* admin access timeout == 15 minutes */
+    $this->setAdmintimeout(15*60);
   }/*}}}*/
   public function __destruct()/*{{{*/
   {
@@ -166,5 +168,25 @@ class PreBooking extends Data
     }
     return $ret;
   }/*}}}*/
+  public function getAdmintimeout() /*{{{*/
+  {
+    return $this->admintimeout;
+  } /*}}}*/
+  public function setAdmintimeout($admintimeout="") /*{{{*/
+  {
+    if($this->ValidInt($admintimeout)){
+      $this->admintimeout=$admintimeout;
+    }
+  } /*}}}*/
+  public function getPrebtimeout() /*{{{*/
+  {
+    return $this->prebtimeout;
+  } /*}}}*/
+  public function setPrebtimeout($prebtimeout="") /*{{{*/
+  {
+    if($this->ValidInt($prebtimeout)){
+      $this->prebtimeout=$prebtimeout;
+    }
+  } /*}}}*/
 }
 ?>
