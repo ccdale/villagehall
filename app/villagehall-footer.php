@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Tuesday 21 February 2017, 06:02:54
- * Last Modified: Saturday 25 March 2017, 13:19:56
+ * Last Modified: Saturday 26 August 2017, 07:49:28
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -27,9 +27,23 @@
  * close the container div
  */
 $bfooter="\n</div>\n";
+$about=new ALink(array("a"=>21),"About");
+$contact=new ALink(array("a"=>22),"Contact");
+$admin=new Alink(array("z"=>"admin","a"=>99),"Admin");
+$td=new Tag("td",$about->makeLink());
+$row=$td->makeTag();
+$td=new Tag("td",$contact->makeLink());
+$row.=$td->makeTag();
+$td=new Tag("td",$admin->makeLink());
+$row.=$td->makeTag();
+$tr=new Tag("tr",$row);
+$row=$tr->makeTag();
+$table=new Tag("table",$row,array("border"=>0));
+$tag=new Tag("div",$table->makeTag());
+$links=$tag->makeTag();
 $footcontent="Copyright © 2016-" . date("Y") . " Chris Allison";
 $tag=new Tag("div",$footcontent);
 $footcontent=$tag->makeTag();
-$tmp=new Tag("footer",$footcontent,array("class"=>"container bg-4 text-center"));
+$tmp=new Tag("footer",$links . $footcontent,array("class"=>"container bg-4 text-center"));
 $bfooter.=$tmp->makeTag();
 ?>
