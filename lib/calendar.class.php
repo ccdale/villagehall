@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Sunday 20 August 2017, 08:44:03
+ * Last Modified: Saturday 26 August 2017, 15:39:53
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -40,7 +40,7 @@ class Calendar extends Base
   {
     parent::__construct($logg);
     $this->db=$db;
-    $this->bookings=new Bookings($logg,$db);
+    $this->bookings=new Bookings($logg,$db,$hall);
     $this->hall=$hall;
     $this->getRooms();
     $this->mo=$this->getDefaultInt("monthoffset",0);
