@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Saturday 26 August 2017, 17:04:42
+ * Last Modified: Saturday 26 August 2017, 17:15:07
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -43,10 +43,34 @@ class PreBooking extends Data
     $this->setPrebtimeout(24*3600);
     /* admin access timeout == 15 minutes */
     $this->setAdmintimeout(15*60);
+    $this->cleanUpGuuids();
+    $this->cleanUpAdminGuuids();
   }/*}}}*/
   public function __destruct()/*{{{*/
   {
     parent::__destruct();
+  }/*}}}*/
+  private function cleanUpAdminGuuids()/*{{{*/
+  {
+    $cn=0;
+    $tarr=$this->arrayToday();
+    $older=$tarr["timestamp"]-$this->admintimeout;
+    $sql="select * from prebooking where timestamp<$older and room=0 and date=0 and length=0";
+    if(false!==($arr=$this->db->arrayQuery($sql))){
+      if(false!==($cn=$this->ValidArray($arr))){
+        foreach($arr as $v){
+          if($v["id"]!=$this->getId()){
+            $pb=new PreBooking($this->logg,$this->db,$v["guuid"]);
+            $pb->deleteMe();
+          }else{
+            $this->deleteMe();
+          }
+        }
+      }
+    }
+    if($cn>0){
+      $this->info("Cleaned up $cn expired admin login rows.");
+    }
   }/*}}}*/
   private function cleanUpGuuids()/*{{{*/
   {
@@ -56,12 +80,16 @@ class PreBooking extends Data
     $selection=$this->selectFromField("timestamp","<",$older);
     if(false!==($cn=$this->ValidArray($selection))){
       foreach($selection as $v){
-        $pb=new PreBooking($this->logg,$this->db,$v["guuid"]);
-        $pb->deleteMe();
+        if($v["id"]!=$this->getId()){
+          $pb=new PreBooking($this->logg,$this->db,$v["guuid"]);
+          $pb->deleteMe();
+        }else{
+          $this->deleteMe();
+        }
       }
     }
     if($cn>0){
-      $this->info("Cleaned up $cn old prebooking rows.");
+      $this->info("Cleaned up $cn expired prebooking rows.");
     }
   }/*}}}*/
   private function validateInts($uid,$roomid,$starttime,$length)/*{{{*/
