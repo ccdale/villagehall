@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Saturday 26 August 2017, 17:15:07
+ * Last Modified: Saturday 26 August 2017, 17:18:19
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -55,7 +55,7 @@ class PreBooking extends Data
     $cn=0;
     $tarr=$this->arrayToday();
     $older=$tarr["timestamp"]-$this->admintimeout;
-    $sql="select * from prebooking where timestamp<$older and room=0 and date=0 and length=0";
+    $sql="select * from prebooking where timestamp<$older and roomid=0 and date=0 and length=0";
     if(false!==($arr=$this->db->arrayQuery($sql))){
       if(false!==($cn=$this->ValidArray($arr))){
         foreach($arr as $v){
