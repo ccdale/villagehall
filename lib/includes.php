@@ -2,7 +2,7 @@
 /*
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  * Started: Sunday  5 March 2017, 11:17:25
- * Last Modified: Sunday 20 August 2017, 19:27:24
+ * Last Modified: Saturday 26 August 2017, 07:55:40
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -72,6 +72,7 @@ require_once "hall.class.php";
 require_once "prebooking.class.php";
 require_once "switchboard.class.php";
 require_once "privileges.class.php";
+require_once "admin.class.php";
 require_once "HTML/link.class.php";
 require_once "HTML/tag.class.php";
 require_once "HTML/form.class.php";
