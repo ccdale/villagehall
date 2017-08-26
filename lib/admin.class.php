@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Sunday 20 August 2017, 19:50:11
+ * Last Modified: Saturday 26 August 2017, 07:58:06
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -46,7 +46,7 @@ class Admin extends Base
     $hallname=$hall->getField("name");
     $this->info("Init ADMIN request for hall $hallname");
     $pv=new Priv($this->logg,$this->db);
-    if(false!==($junk=$pv->selectByHallAdmin($hall->id))){
+    if(false!==($junk=$pv->selectByHallAdmin($hall->getId()))){
       $u=new User($this->logg,$this->db,$pv->getField("userid"));
       $this->info("ADMIN userid: " . $u->id);
       $email=$u->getField("email");
