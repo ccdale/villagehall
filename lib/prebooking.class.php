@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Saturday 26 August 2017, 07:31:51
+ * Last Modified: Saturday 26 August 2017, 17:04:42
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -47,6 +47,22 @@ class PreBooking extends Data
   public function __destruct()/*{{{*/
   {
     parent::__destruct();
+  }/*}}}*/
+  private function cleanUpGuuids()/*{{{*/
+  {
+    $cn=0;
+    $tarr=$this->arrayToday();
+    $older=$tarr["timestamp"]-$this->prebtimeout;
+    $selection=$this->selectFromField("timestamp","<",$older);
+    if(false!==($cn=$this->ValidArray($selection))){
+      foreach($selection as $v){
+        $pb=new PreBooking($this->logg,$this->db,$v["guuid"]);
+        $pb->deleteMe();
+      }
+    }
+    if($cn>0){
+      $this->info("Cleaned up $cn old prebooking rows.");
+    }
   }/*}}}*/
   private function validateInts($uid,$roomid,$starttime,$length)/*{{{*/
   {
