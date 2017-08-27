@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 26 August 2017, 16:27:41
- * Last Modified: Saturday 26 August 2017, 16:39:37
+ * Last Modified: Sunday 27 August 2017, 09:05:39
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -46,12 +46,34 @@ class ArchiveBooking extends Data
     if($this->ValidInt($bid)){
       $b=new Booking($this->logg,$this->db,array("id"=>$bid));
       if(false!==($da=$b->getDataA())){
+        $this->debug("Archiving booking for room " . $da["roomid"] . " on " . $this->stringDate($da["date"]));
         $this->setDataA($da);
         $b->deleteMe();
         $ret=true;
       }
     }
     return $ret;
+  }/*}}}*/
+  public function archiveOldBookings()/*{{{*/
+  {
+    $cn=0;
+    $yesterday=mktime()-(24*3600);
+    $sql="select * from booking where date<$yesterday";
+    if(false!==($arr=$this->db->arrayQuery($sql))){
+      foreach($arr as $v){
+        if(false!==($junk=$this->moveBookingIdToArchive($v["id"]))){
+          $cn+=1;
+        }else{
+          $this->warning("Failed to archive booking id: " . $v["id"]);
+        }
+      }
+      if($cn==1){
+        $str="booking";
+      }else{
+        $str="bookings";
+      }
+      $this->info("$cn $str archived");
+    }
   }/*}}}*/
 }
 ?>
