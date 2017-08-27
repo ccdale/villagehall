@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 26 August 2017, 16:27:41
- * Last Modified: Sunday 27 August 2017, 09:05:39
+ * Last Modified: Sunday 27 August 2017, 17:08:46
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -61,7 +61,7 @@ class ArchiveBooking extends Data
     $sql="select * from booking where date<$yesterday";
     if(false!==($arr=$this->db->arrayQuery($sql))){
       foreach($arr as $v){
-        if(false!==($junk=$this->moveBookingIdToArchive($v["id"]))){
+        if(false!==($junk=$this->moveBookingIdToArchive(intval($v["id"])))){
           $cn+=1;
         }else{
           $this->warning("Failed to archive booking id: " . $v["id"]);
