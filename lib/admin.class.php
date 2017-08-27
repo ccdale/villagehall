@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Sunday 27 August 2017, 09:06:32
+ * Last Modified: Sunday 27 August 2017, 17:03:27
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -28,6 +28,8 @@ class Admin extends Base
   protected $logg=false;
   protected $db=false;
   private $admin=false;
+  private $hall=false;
+  private $roomids=false;
 
   public function __construct($logg=false,$db=false,$admin=false)/*{{{*/
   {
@@ -99,7 +101,7 @@ class Admin extends Base
       break;
     }
   }/*}}}*/
-  public function adminPage($hall)/*{{{*/
+  public function _adminPage($hall)/*{{{*/
   {
     $op="<p>No bookings found</p>\n";
     if(is_object($hall) && get_class($hall)=="Hall"){
@@ -118,15 +120,94 @@ class Admin extends Base
         $tableheadrow=$this->makeAdminTableHead();
         $rows="";
         foreach($arr as $barr){
-          $r=new Room($this->logg,$this->db,$barr["roomid"]);
-          $u=new User($this->logg,$this->db,$barr["userid"]);
-          $rows.=$this->makeAdminRow(array("id"=>$barr["id"],"name"=>$u->getName(),"email"=>$u->getEmail(),"roomname"=>$r->getName(),"date"=>$this->stringDate($barr["date"]) . " at " . $this->stringTime($barr["date"]) . " for " . $this->secToHMSString($barr["length"]),"status"=>$barr["status"]));
+          $rows.=$this->makeAdminRow($barr);
         }
         $tag=new Tag("table",$tableheadrow . $rows,array("border"=>1));
         $op=$tag->makeTag();
       }
     }
     return $op;
+  }/*}}}*/
+  public function adminPage($hall)/*{{{*/
+  {
+    $op="<p>No bookings found</p>\n";
+    if($this->setHallObject($hall)){
+      $this->archiveBookings();
+      $tableheadrow=$this->makeAdminTableHead();
+      $rows="";
+      if(false!==($outstanding=$this->getBookingList())){
+        $tag=new Tag("h5","Outstanding Bookings");
+        $top=$tag->makeTag();
+        foreach($outstanding as $barr){
+          $rows.=$this->makeAdminRow($barr);
+        }
+        $tag=new Tag("table",$tableheadrow . $rows,array("border"=>1));
+        $top.=$tag->makeTag();
+        $tag=new Tag("div",$top);
+        $oop=$tag->makeTag();
+      }
+      if(false!==($confirmed=$this->getBookingsList(true))){
+        $tag=new Tag("h5","Confirmed Bookings");
+        $top=$tag->makeTag();
+        foreach($confirmed as $barr){
+          $rows.=$this->makeAdminRow($barr);
+        }
+        $tag=new Tag("table",$tableheadrow . $rows,array("border"=>1));
+        $top.=$tag->makeTag();
+        $tag=new Tag("div",$top);
+        $cop=$tag->makeTag();
+      }
+      $str=$oop . $cop;
+      if(strlen($str)){
+        $op=$str;
+      }
+    }else{
+      $this->warning("Hall object passed to adminPage is not a Hall, it is " . gettype($hall) . " of value: " . print_r($hall,true));
+    }
+    return $op;
+  }/*}}}*/
+  private function generateRoomSubselect()/*{{{*/
+  {
+    $ret=false;
+    if(false!==$this->roomids){
+      $subsel="";
+      foreach($roomids as $rid){
+        if(strlen($subsel)){
+          $subsel.="," . $rid;
+        }else{
+          $subsel="$rid";
+        }
+      }
+      $ret=$subsel;
+    }else{
+      $this->warning("roomids are not set for adminPage");
+    }
+    return $ret;
+  }/*}}}*/
+  private function setHallObject($hall)/*{{{*/
+  {
+    $ret=false;
+    if(is_object($hall) && get_class($hall)=="Hall"){
+      $this->hall=$hall;
+      $this->roomids=$this->hall->getRoomIds();
+      $ret=true;
+    }
+    return $ret;
+  }/*}}}*/
+  private function getBookingsList($fullypaid=false)/*{{{*/
+  {
+    $ret=false;
+    if(false!==($subselect=$this->generateRoomSubselect())){
+      $sql="select * from booking where roomid in ($subselect)";
+      if($fullypaid){
+        $sql.=" and status=1";
+      }else{
+        $sql.=" and status>1";
+      }
+      $sql.=" order by date asc";
+      $ret=$this->db->arrayQuery($sql);
+    }
+    return $ret;
   }/*}}}*/
   private function makeAdminTableHead()/*{{{*/
   {
@@ -138,13 +219,15 @@ class Admin extends Base
     $tag=new Tag("tr",$row);
     return $tag->makeTag();
   }/*}}}*/
-  private function makeAdminRow($arr)/*{{{*/
+  private function makeAdminRow($barr)/*{{{*/
   {
-    $row=$this->makeTD($arr["date"]);
-    $row.=$this->makeTD($arr["name"]);
-    $row.=$this->makeTD($arr["email"]);
-    $row.=$this->makeTD($arr["roomname"]);
-    $row.=$this->makeTD($arr["status"]);
+    $r=new Room($this->logg,$this->db,$barr["roomid"]);
+    $u=new User($this->logg,$this->db,$barr["userid"]);
+    $row=$this->makeTD($this->stringDate($barr["date"]) . " at " . $this->stringTime($barr["date"]) . " for " . $this->secToHMSString($barr["length"]));
+    $row.=$this->makeTD($u->getName());
+    $row.=$this->makeTD($u->getEmail());
+    $row.=$this->makeTD($r->getName());
+    $row.=$this->makeTD($barr["status"]);
     $tag=new Tag("tr",$row);
     return $tag->makeTag();
   }/*}}}*/
