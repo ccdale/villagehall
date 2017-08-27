@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Saturday 26 August 2017, 18:25:52
+ * Last Modified: Sunday 27 August 2017, 08:54:23
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -221,7 +221,7 @@ class PreBooking extends Data
       $xts+=$this->admintimeout;
       $yts=mktime();
       if($yts<$xts){
-        $this->setField("timestamp",$yts);
+        $this->setIntField("timestamp",$yts);
         $ret=0;
       }else{
         $this->info("admin timeout has expired, deleting");

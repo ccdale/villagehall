@@ -215,6 +215,16 @@ class Data extends Base
             }
         }
     } /*}}}*/
+    public function setIntField($Field="",$val=false)/*{{{*/
+    {
+        if($this->ValidStr($Field)){
+            if($this->ValidInt($val)){
+                $this->data[$Field]=$val;
+                $this->dirty=true;
+                $this->update();
+            }
+        }
+    }/*}}}*/
     public function getField($Field="")/*{{{*/
     {
         if($this->ValidStr($Field) && isset($this->data[$Field])){
