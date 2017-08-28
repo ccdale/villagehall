@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Saturday 26 August 2017, 15:46:43
+ * Last Modified: Monday 28 August 2017, 13:24:55
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -36,11 +36,13 @@ class Bookings extends Base
   private $currentbooking=0;
   private $bookingstable=false;
   private $hall=false;
+  private $log=false;
 
   public function __construct($logg=false,$db=false,$hall=false)/*{{{*/
   {
     parent::__construct($logg);
     $this->db=$db;
+    $this->log=$logg;
     $this->hall=$hall;
   }/*}}}*/
   public function __destruct()/*{{{*/
