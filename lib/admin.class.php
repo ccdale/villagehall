@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Monday 28 August 2017, 12:17:12
+ * Last Modified: Monday 28 August 2017, 12:18:37
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -84,7 +84,7 @@ class Admin extends Base
     case 0:
       /* validated */
       if($bookingid>0){
-        if(0!==($undo=$this->getDefaultInt("UNDO"))){
+        if(0!==($undo=$this->getDefaultInt("UNDO",0))){
           $this->info("Undoing last Payment action");
           $b=new Booking($this->logg,$this->db,array("id"=>"$bookingid"));
           if(false===($junk=$b->unPayBooking())){
