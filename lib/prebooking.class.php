@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Sunday 27 August 2017, 08:54:23
+ * Last Modified: Monday 28 August 2017, 13:15:32
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -151,12 +151,12 @@ class PreBooking extends Data
   {
     $ret=false;
     if($this->ValidInt($this->id)){
-      $u=new User($this->log,$this->db,$this->getField("userid"));
+      $u=new User($this->logg,$this->db,$this->getField("userid"));
       $username=$u->getField("name");
       $emailaddr=$u->getField("email");
-      $r=new Room($this->log,$this->db,$this->getField("roomid"));
+      $r=new Room($this->logg,$this->db,$this->getField("roomid"));
       $roomname=$r->getField("name");
-      $h=new Hall($this->log,$this->db);
+      $h=new Hall($this->logg,$this->db);
       $h->setFromField("id",$r->getField("hallid"));
       $hallservername=$h->getField("servername");
       $hallname=$h->getField("name");
