@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 19 August 2017, 09:03:04
- * Last Modified: Saturday 26 August 2017, 15:38:10
+ * Last Modified: Monday 28 August 2017, 11:26:15
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -37,6 +37,7 @@ class Switchboard extends Base
   private $roomid=0;
   private $guuid=false;
   private $admin=false;
+  private $bookingid=0;
 
   public function __construct($logg=false,$db=false,$hall=false)/*{{{*/
   {
@@ -61,6 +62,9 @@ class Switchboard extends Base
     }else{
       $this->admin=$this->GP("y");
       if(false!==($cn=$this->ValidStr($this->admin))){
+        if(0!==($this->bookingid=$this->getDefaultInt("bookingid",0))){
+          $this->action=97;
+        }
         $this->action=98;
       }
     }
@@ -96,6 +100,13 @@ class Switchboard extends Base
       break;
     case 22:
       $op="<p class='bodytext'>The Secretary can be contacted at lidlington.vhall.uk@gmail.com</p>\n";
+      break;
+    case 97:
+      /*
+       * process payment update
+       */
+      require_once "admin.class.php";
+      $ad=new Admin($this->logg,$this->db,$this->admin);
       break;
     case 98:
       /*
