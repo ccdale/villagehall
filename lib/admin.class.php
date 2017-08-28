@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Monday 28 August 2017, 12:18:37
+ * Last Modified: Monday 28 August 2017, 12:23:20
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -91,6 +91,7 @@ class Admin extends Base
             $this->warning("failed to undo payment for bookingid: $bookingid");
           }else{
             $this->info("Payment UNDONE OK for bookingid: $bookingid");
+            $undo=false;
           }
         }else{
           $this->info("Processing Payment for booking id: $bookingid");
