@@ -6,7 +6,7 @@
  * base.class.php
  *
  * Started: Friday 24 May 2013, 23:41:08
- * Last Modified: Saturday 26 August 2017, 16:55:47
+ * Last Modified: Monday 28 August 2017, 13:32:29
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -349,7 +349,12 @@ class Base
   public function validateInputString($inputstring)/*{{{*/
   {
     $op=array("valid"=>false);
-    if(false!==($str=$this->GP($inputstring))){
+    if($inputstring=="useremailaddress" && isset($_POST["useremailaddress"])){
+      $str=$_POST["useremailaddress"];
+    }else{
+      $str=$this->GP($inputstring);
+    }
+    if(false!==$str){
       if(false!==($this->ValidString($str))){
         $op["val"]=$str;
         $op["valid"]=true;
