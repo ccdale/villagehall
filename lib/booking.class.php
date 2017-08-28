@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Monday 28 August 2017, 11:23:00
+ * Last Modified: Monday 28 August 2017, 12:12:39
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -36,7 +36,7 @@ class Booking extends Data
   public function __construct($logg=false,$db=false,$dataa=false)/*{{{*/
   {
     if(false!==($junk=$this->ValidArray($dataa)) && isset($dataa["id"])){
-      parent::__construct($logg,$db,"booking","id",intval($dataa["id"]));
+      parent::__construct($logg,$db,"booking","id",$dataa["id"]);
       $this->info("accessing booking id: " . $dataa["id"]);
       $this->setupTimes();
     }else{
@@ -108,7 +108,26 @@ class Booking extends Data
     if($status<1){
       $status=1;
     }
-    $this->setField("status",$status);
+    $sql="update booking set status=$status where id=" . $this->id;
+    $this->db->query($sql);
+    if($this->db->amOK()){
+      return true;
+    }
+    return false;
+  }/*}}}*/
+  public function unPayBooking()/*{{{*/
+  {
+    $status=$this->getField("status");
+    $status+=1;
+    if($status>3){
+      $status=3;
+    }
+    $sql="update booking set status=$status where id=" . $this->id;
+    $this->db->query($sql);
+    if($this->db->amOK()){
+      return true;
+    }
+    return false;
   }/*}}}*/
 }
 ?>

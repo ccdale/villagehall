@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Monday 28 August 2017, 11:23:23
+ * Last Modified: Monday 28 August 2017, 12:17:12
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -75,6 +75,7 @@ class Admin extends Base
   }/*}}}*/
   public function processAdminLogin($hall,$bookingid=0)/*{{{*/
   {
+    $undo=false;
     $hallname=$hall->getField("name");
     $this->info("Processing ADMIN request for hall $hallname");
     $pre=new PreBooking($this->logg,$this->db,$this->admin);
@@ -82,11 +83,27 @@ class Admin extends Base
     switch($valid){
     case 0:
       /* validated */
-      if(0!==$bookingid){
-        $b=new Booking($this->logg,$this->db,array("id"=>$bookingid));
-        $b->payBooking();
+      if($bookingid>0){
+        if(0!==($undo=$this->getDefaultInt("UNDO"))){
+          $this->info("Undoing last Payment action");
+          $b=new Booking($this->logg,$this->db,array("id"=>"$bookingid"));
+          if(false===($junk=$b->unPayBooking())){
+            $this->warning("failed to undo payment for bookingid: $bookingid");
+          }else{
+            $this->info("Payment UNDONE OK for bookingid: $bookingid");
+          }
+        }else{
+          $this->info("Processing Payment for booking id: $bookingid");
+          $b=new Booking($this->logg,$this->db,array("id"=>"$bookingid"));
+          if(false===($junk=$b->payBooking())){
+            $this->warning("failed to update payment for bookingid: $bookingid");
+          }else{
+            $this->info("Payment processed OK for bookingid: $bookingid");
+            $undo=array("bookingid"=>$bookingid);
+          }
+        }
       }
-      return $this->adminPage($hall);
+      return $this->adminPage($hall,$undo);
       break;
     case -1:
       /* incorrect guuid / no guuid */
@@ -105,7 +122,7 @@ class Admin extends Base
       break;
     }
   }/*}}}*/
-  public function adminPage($hall)/*{{{*/
+  public function adminPage($hall,$undo=false)/*{{{*/
   {
     $op="<p>No bookings found</p>\n";
     $str=$oop=$cop=$rows="";
@@ -117,6 +134,9 @@ class Admin extends Base
         $top=$tag->makeTag();
         foreach($outstanding as $barr){
           $rows.=$this->makeAdminRow($barr);
+        }
+        if(false!==$undo){
+          $rows.=$this->makeUndoRow($undo);
         }
         $tag=new Tag("table",$tableheadrow . $rows,array("border"=>1));
         $top.=$tag->makeTag();
@@ -195,6 +215,22 @@ class Admin extends Base
     $row.=$this->makeTH("Room Name");
     $row.=$this->makeTH("Status");
     $tag=new Tag("tr",$row);
+    return $tag->makeTag();
+  }/*}}}*/
+  private function makeUndoRow($undo)/*{{{*/
+  {
+    $ip=new InputField();
+    $hidden=$ip->Hidden("y",$this->admin);
+    $ip=new InputField();
+    $hidden.=$ip->Hidden("bookingid",$undo["bookingid"]);
+    $ip=new InputField();
+    $hidden.=$ip->Hidden("UNDO",1);
+    $ip=new InputField();
+    $txt=$ip->Submit("undo","Undo Last Action");
+    $arr=array("action"=>$_SERVER['PHP_SELF'],"method"=>"POST");
+    $tag=new Tag("form",$hidden . $txt,$arr);
+    $txt=$tag->makeTag();
+    $tag=new Tag("td",$txt,array("colspan"=>5,"align"=>"right"));
     return $tag->makeTag();
   }/*}}}*/
   private function makeAdminRow($barr)/*{{{*/
