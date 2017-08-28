@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Monday 28 August 2017, 12:23:20
+ * Last Modified: Monday 28 August 2017, 12:28:47
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -231,8 +231,7 @@ class Admin extends Base
     $arr=array("action"=>$_SERVER['PHP_SELF'],"method"=>"POST");
     $tag=new Tag("form",$hidden . $txt,$arr);
     $txt=$tag->makeTag();
-    $tag=new Tag("td",$txt,array("colspan"=>5,"align"=>"right"));
-    return $tag->makeTag();
+    return $tag->makeTD($txt,array("colspan"=>5,"align"=>"right"));
   }/*}}}*/
   private function makeAdminRow($barr)/*{{{*/
   {
@@ -272,9 +271,9 @@ class Admin extends Base
     $tag=new Tag("form",$hidden . $txt,$arr);
     return $tag->makeTag();
   }/*}}}*/
-  private function makeTD($str)/*{{{*/
+  private function makeTD($str,$attr=false)/*{{{*/
   {
-    $tag=new Tag("td",$str);
+    $tag=new Tag("td",$str,$attr);
     return $tag->makeTag();
   }/*}}}*/
   private function makeTH($str)/*{{{*/
