@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Monday 28 August 2017, 12:28:47
+ * Last Modified: Monday 28 August 2017, 12:39:53
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -73,7 +73,7 @@ class Admin extends Base
     }
     return $ret;
   }/*}}}*/
-  public function processAdminLogin($hall,$bookingid=0)/*{{{*/
+  public function processAdminLogin($hall,$bookingid=0,$revertid=0)/*{{{*/
   {
     $undo=false;
     $hallname=$hall->getField("name");
@@ -101,6 +101,16 @@ class Admin extends Base
           }else{
             $this->info("Payment processed OK for bookingid: $bookingid");
             $undo=array("bookingid"=>$bookingid);
+          }
+        }
+      }else{
+        if($revertid>0){
+          $b=new Booking($this->logg,$this->db,array("id"=>"$revertid"));
+          $this->info("Reverting booking id: $revertid");
+          if(false===($junk=$b->unPayBooking())){
+            $this->warning("Failed to revert booking id: $revertid");
+          }else{
+            $this->info("booking id: $revertid REVERTED");
           }
         }
       }
@@ -215,6 +225,7 @@ class Admin extends Base
     $row.=$this->makeTH("Email Address");
     $row.=$this->makeTH("Room Name");
     $row.=$this->makeTH("Status");
+    $row.=$this->makeTH("Revert");
     $tag=new Tag("tr",$row);
     return $tag->makeTag();
   }/*}}}*/
@@ -231,7 +242,7 @@ class Admin extends Base
     $arr=array("action"=>$_SERVER['PHP_SELF'],"method"=>"POST");
     $tag=new Tag("form",$hidden . $txt,$arr);
     $txt=$tag->makeTag();
-    return $tag->makeTD($txt,array("colspan"=>5,"align"=>"right"));
+    return $tag->makeTD($txt,array("colspan"=>6,"align"=>"right"));
   }/*}}}*/
   private function makeAdminRow($barr)/*{{{*/
   {
@@ -242,6 +253,7 @@ class Admin extends Base
     $row.=$this->makeTD($u->getEmail());
     $row.=$this->makeTD($r->getName());
     $row.=$this->makeTD($this->makeStatusForm($barr));
+    $row.=$this->makeTD($this->makeRevertForm($barr));
     $tag=new Tag("tr",$row);
     return $tag->makeTag();
   }/*}}}*/
@@ -262,6 +274,32 @@ class Admin extends Base
     case 3:
       $ip=new InputField();
       $txt=$ip->Submit("pay","Pay Deposit");
+      break;
+    default:
+      $txt="Unknown";
+      break;
+    }
+    $arr=array("action"=>$_SERVER['PHP_SELF'],"method"=>"POST");
+    $tag=new Tag("form",$hidden . $txt,$arr);
+    return $tag->makeTag();
+  }/*}}}*/
+  private function makeRevertForm($barr)/*{{{*/
+  {
+    $ip=new InputField();
+    $hidden=$ip->Hidden("y",$this->admin);
+    $ip=new InputField();
+    $hidden.=$ip->Hidden("revertid",$barr["id"]);
+    switch($barr["status"]){
+    case 1:
+      $ip=new InputField();
+      $txt=$ip->Submit("unpay","Unpay Full Amount");
+      break;
+    case 2:
+      $ip=new InputField();
+      $txt=$ip->Submit("unpay","Unpay Deposit");
+      break;
+    case 3:
+      $txt="&nbsp;";
       break;
     default:
       $txt="Unknown";
