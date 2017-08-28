@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Monday 28 August 2017, 10:42:38
+ * Last Modified: Monday 28 August 2017, 11:08:43
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -230,6 +230,26 @@ class Admin extends Base
     $row.=$this->makeTD($r->getName());
     $row.=$this->makeTD($barr["status"]);
     $tag=new Tag("tr",$row);
+    return $tag->makeTag();
+  }/*}}}*/
+  private function makeStatusForm($barr)/*{{{*/
+  {
+    $ip=new InputField();
+    $hidden=$ip->Hidden("y",$this->admin);
+    $hidden.=$ip->Hidden("bookingid",$barr["id"]);
+    switch($barr["status"]){
+    case 2:
+      $txt=$ip->Submit("pay","Pay Full Amount");
+      break;
+    case 3:
+      $txt=$ip->Submit("pay","Pay Deposit");
+      break;
+    default:
+      $txt="Unknown";
+      break;
+    }
+    $arr=array("action"=>$_SERVER['PHP_SELF'],"method"=>"POST");
+    $tag=new Tag("form",$hidden . $txt,$arr);
     return $tag->makeTag();
   }/*}}}*/
   private function makeTD($str)/*{{{*/
