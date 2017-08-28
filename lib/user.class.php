@@ -31,7 +31,7 @@ class User extends Data
 {
     public function __construct($logg=false,$db=false,$id=false)/*{{{*/
     {
-        parent::__construct($logg,$db,"user","id",$id);
+        parent::__construct($logg,$db,"user","id","$id");
     }/*}}}*/
     public function __destruct()/*{{{*/
     {
