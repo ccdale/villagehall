@@ -6,7 +6,7 @@
  * simple-sqlite.class.php
  *
  * Started: Sunday  2 August 2015, 12:29:49
- * Last Modified: Saturday 12 August 2017, 11:54:34
+ * Last Modified: Sunday 20 August 2017, 08:47:12
  * 
  * Copyright (c) 2015 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -25,8 +25,6 @@
  * You should have received a copy of the GNU General Public License
  * along with cristel.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once "base.class.php";
-
 /** SSql Class
  * simple class to do db stuff with sqlite3 databases
  */

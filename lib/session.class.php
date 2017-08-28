@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 26 March 2017, 16:51:58
- * Last Modified: Saturday  8 April 2017, 08:14:41
+ * Last Modified: Sunday 20 August 2017, 08:46:52
  *
  * session.class.php
  *
@@ -24,8 +24,6 @@
  * You should have received a copy of the GNU General Public License
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once "data.class.php";
 
 class Session extends Data
 {

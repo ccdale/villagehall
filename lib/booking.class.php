@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 13 August 2017, 09:09:58
+ * Last Modified: Monday 28 August 2017, 12:12:39
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -26,10 +26,6 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "data.class.php";
-require_once "HTML/link.class.php";
-require_once "HTML/tag.class.php";
-
 class Booking extends Data
 {
   private $hour=false;
@@ -37,13 +33,15 @@ class Booking extends Data
   private $minute=false;
   private $sminute="";
 
-  public function __construct($logg=false,$db=false,$data=false)/*{{{*/
+  public function __construct($logg=false,$db=false,$dataa=false)/*{{{*/
   {
-    if(false!==($junk=$this->ValidArray($data)) && isset($data["id"])){
-      parent::__construct($logg,$db,"booking","id",$data["id"]);
+    if(false!==($junk=$this->ValidArray($dataa)) && isset($dataa["id"])){
+      parent::__construct($logg,$db,"booking","id",$dataa["id"]);
+      $this->info("accessing booking id: " . $dataa["id"]);
       $this->setupTimes();
     }else{
       parent::__construct($logg,$db,"booking");
+      $this->info("New, empty, booking created");
     }
   }/*}}}*/
   public function __destruct()/*{{{*/
@@ -102,6 +100,34 @@ class Booking extends Data
       $ret=true;
     }
     return $ret;
+  }/*}}}*/
+  public function payBooking()/*{{{*/
+  {
+    $status=$this->getField("status");
+    $status-=1;
+    if($status<1){
+      $status=1;
+    }
+    $sql="update booking set status=$status where id=" . $this->id;
+    $this->db->query($sql);
+    if($this->db->amOK()){
+      return true;
+    }
+    return false;
+  }/*}}}*/
+  public function unPayBooking()/*{{{*/
+  {
+    $status=$this->getField("status");
+    $status+=1;
+    if($status>3){
+      $status=3;
+    }
+    $sql="update booking set status=$status where id=" . $this->id;
+    $this->db->query($sql);
+    if($this->db->amOK()){
+      return true;
+    }
+    return false;
   }/*}}}*/
 }
 ?>

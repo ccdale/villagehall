@@ -3,6 +3,13 @@ body .container {
   margin-right: auto;
   max-width: 980px;
 }
+a, a:visited, a:link {
+  text-decoration: none;
+  color: green;
+}
+a:hover {
+  border-bottom: thin solid black;
+}
 table.roombookingtable {
   border: thin solid black;
 }
@@ -35,7 +42,11 @@ td.caldeposit {
   background-color: #70C070;
 }
 td.calpaid {
+  color: white;
   background-color: green;
+}
+td.calpaid a {
+  color: white;
 }
 td.tdkey {
   padding: 1em;
@@ -44,13 +55,6 @@ td.roombookingcell {
   border-right: thin solid black;
   padding: 1em;
   text-align: center;
-}
-a, a:visited, a:link {
-  text-decoration: none;
-  color: green;
-}
-a:hover {
-  border-bottom: thin solid black;
 }
 a.roomcelllink {
   display: block;

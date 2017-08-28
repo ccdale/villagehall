@@ -2,7 +2,7 @@
 /*
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  * Started: Sunday  5 March 2017, 11:17:25
- * Last Modified: Sunday  5 March 2017, 11:22:43
+ * Last Modified: Sunday 27 August 2017, 18:06:45
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -21,6 +21,9 @@
  * You should have received a copy of the GNU General Public License
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once "base.class.php";
+
 switch($logtype){
 case "file":
   require_once "logfile.class.php";
@@ -31,9 +34,6 @@ case "syslog":
   $logg=new Logging(false,"VHPHP",0,$loglevel,false,false,$logtracelevel);
   break;
 }
-
-require_once "base.class.php";
-
 /*
  * setup database connection
  */
@@ -55,12 +55,28 @@ if(!$db->amOK()){
       $db->info($appname . " database setup ok.");
     }else{
       $db->error("failed to setup database for " . $appname);
+      exit(1);
     }
   }
 }
 
-require_once "booking.class.php";
-require_once "user.class.php";
+require_once "data.class.php";
+require_once "bookings.class.php";
+require_once "/home/chris/src/php/villagehall/lib/booking.class.php";
+require_once "xbooking.class.php";
 require_once "room.class.php";
 require_once "hall.class.php";
+require_once "calendar.class.php";
+require_once "userforms.class.php";
+require_once "user.class.php";
+require_once "hall.class.php";
+require_once "prebooking.class.php";
+require_once "switchboard.class.php";
+require_once "archivebookings.class.php";
+require_once "HTML/link.class.php";
+require_once "HTML/tag.class.php";
+require_once "HTML/form.class.php";
+require_once "HTML/select_field.class.php";
+require_once "HTML/option_field.class.php";
+require_once "HTML/class.table.php";
 ?>

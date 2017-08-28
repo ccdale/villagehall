@@ -6,7 +6,7 @@
  * index.php
  *
  * Started: Saturday 19 November 2016, 15:35:53
- * Last Modified: Sunday  5 March 2017, 11:22:34
+ * Last Modified: Saturday 19 August 2017, 08:50:10
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -107,7 +107,7 @@ if(file_exists($libcheck)){
 }
 
 /*
- * if we have the find the config and application files
+ * if we find the config and application files
  * include them (switch to the app file).
  * otherwise, if the config file is not there
  * run setup,

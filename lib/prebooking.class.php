@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 12 August 2017, 10:44:39
- * Last Modified: Sunday 13 August 2017, 09:24:45
+ * Last Modified: Sunday 27 August 2017, 08:54:23
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -23,14 +23,13 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "data.class.php";
-require_once "user.class.php";
-require_once "room.class.php";
-require_once "hall.class.php";
-require_once "booking.class.php";
-
 class PreBooking extends Data
 {
+  protected $logg=false;
+  protected $db=false;
+  private $prebtimeout=0;
+  private $admintimeout=0;
+
   public function __construct($logg=false,$db=false,$guuid=false)/*{{{*/
   {
     if(false!==($junk=$this->ValidStr($guuid))){
@@ -38,10 +37,60 @@ class PreBooking extends Data
     }else{
       parent::__construct($logg,$db,"prebooking");
     }
+    $this->logg=$logg;
+    $this->db=$db;
+    /* pre-booking timeout == 1 day */
+    $this->setPrebtimeout(24*3600);
+    /* admin access timeout == 15 minutes */
+    $this->setAdmintimeout(15*60);
+    $this->cleanUpGuuids();
+    $this->cleanUpAdminGuuids();
   }/*}}}*/
   public function __destruct()/*{{{*/
   {
     parent::__destruct();
+  }/*}}}*/
+  private function cleanUpAdminGuuids()/*{{{*/
+  {
+    $cn=0;
+    $tarr=$this->arrayToday();
+    $older=$tarr["timestamp"]-$this->admintimeout;
+    $sql="select * from prebooking where timestamp<$older and roomid=0 and date=0 and length=0";
+    if(false!==($arr=$this->db->arrayQuery($sql))){
+      if(false!==($cn=$this->ValidArray($arr))){
+        foreach($arr as $v){
+          if($v["id"]!=$this->getId()){
+            $pb=new PreBooking($this->logg,$this->db,$v["guuid"]);
+            $pb->deleteMe();
+          }else{
+            $this->deleteMe();
+          }
+        }
+      }
+    }
+    if($cn>0){
+      $this->info("Cleaned up $cn expired admin login rows.");
+    }
+  }/*}}}*/
+  private function cleanUpGuuids()/*{{{*/
+  {
+    $cn=0;
+    $tarr=$this->arrayToday();
+    $older=$tarr["timestamp"]-$this->prebtimeout;
+    $selection=$this->selectFromField("timestamp","<",$older);
+    if(false!==($cn=$this->ValidArray($selection))){
+      foreach($selection as $v){
+        if($v["id"]!=$this->getId()){
+          $pb=new PreBooking($this->logg,$this->db,$v["guuid"]);
+          $pb->deleteMe();
+        }else{
+          $this->deleteMe();
+        }
+      }
+    }
+    if($cn>0){
+      $this->info("Cleaned up $cn expired prebooking rows.");
+    }
   }/*}}}*/
   private function validateInts($uid,$roomid,$starttime,$length)/*{{{*/
   {
@@ -80,12 +129,31 @@ class PreBooking extends Data
     }
     return $ret;
   }/*}}}*/
+  public function setupAdminAccess($user)/*{{{*/
+  {
+    $ret=false;
+    if($user && is_object($user) && get_class($user)=="User"){
+      $this->id=false;
+      $arr=array("userid"=>$user->getId(),"guuid"=>$user->createGuid(),"timestamp"=>mktime(),"roomid"=>0,"date"=>0,"length"=>0);
+      $this->setDataA($arr);
+      if($this->ValidInt($this->id)){
+        $this->debug("setup prebooking for admin access");
+        $ret=true;
+      }else{
+        $this->warning("failed to setup pre-booking for admin access");
+      }
+    }else{
+      $this->warning("\$user variable is not a valid user class");
+    }
+    return $ret;
+  }/*}}}*/
   public function sendEmail()/*{{{*/
   {
     $ret=false;
     if($this->ValidInt($this->id)){
       $u=new User($this->log,$this->db,$this->getField("userid"));
       $username=$u->getField("name");
+      $emailaddr=$u->getField("email");
       $r=new Room($this->log,$this->db,$this->getField("roomid"));
       $roomname=$r->getField("name");
       $h=new Hall($this->log,$this->db);
@@ -108,7 +176,7 @@ class PreBooking extends Data
       $str.="    Time: $btime\r\n";
       $str.="    Length: $blen\r\n\r\n";
       $str.=$link . "\r\n\r\n";
-      if(mail("chris.charles.allison+testvhall@gmail.com","$hallname Booking on $bdate",$str)){
+      if(mail($emailaddr,"$hallname $roomname Booking on $bdate",$str)){
         $this->debug("booking mail sent ok");
         $ret=true;
       }else{
@@ -124,7 +192,7 @@ class PreBooking extends Data
     $ret=-1;
     if($this->id){
       $ts=$this->getField("timestamp");
-      $ts+=(24*3600*7);
+      $ts+=$this->prebtimeout;
       if(mktime()<$ts){
         $arr=$this->getDataA();
         unset($arr["guuid"]);
@@ -145,5 +213,43 @@ class PreBooking extends Data
     }
     return $ret;
   }/*}}}*/
+  public function validateAdminGuuid()/*{{{*/
+  {
+    $ret=-1;
+    if($this->id){
+      $xts=$this->getField("timestamp");
+      $xts+=$this->admintimeout;
+      $yts=mktime();
+      if($yts<$xts){
+        $this->setIntField("timestamp",$yts);
+        $ret=0;
+      }else{
+        $this->info("admin timeout has expired, deleting");
+        $this->deleteMe();
+        $ret=-2;
+      }
+    }
+    return $ret;
+  }/*}}}*/
+  public function getAdmintimeout() /*{{{*/
+  {
+    return $this->admintimeout;
+  } /*}}}*/
+  public function setAdmintimeout($admintimeout="") /*{{{*/
+  {
+    if($this->ValidInt($admintimeout)){
+      $this->admintimeout=$admintimeout;
+    }
+  } /*}}}*/
+  public function getPrebtimeout() /*{{{*/
+  {
+    return $this->prebtimeout;
+  } /*}}}*/
+  public function setPrebtimeout($prebtimeout="") /*{{{*/
+  {
+    if($this->ValidInt($prebtimeout)){
+      $this->prebtimeout=$prebtimeout;
+    }
+  } /*}}}*/
 }
 ?>

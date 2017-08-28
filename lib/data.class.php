@@ -27,8 +27,6 @@
  * Last Modified: Tuesday 15 April 2014, 07:27:19
  */
 
-require_once "base.class.php";
-
 class Data extends Base
 {
     private $dirty=false;
@@ -51,6 +49,7 @@ class Data extends Base
     }/*}}}*/
     private function init($field=false,$data=false)/*{{{*/
     {
+        $this->debug("data class initialisation for table: " . $this->table);
         if(is_object($this->db)){
             $class=get_class($this->db);
             if($class=="SSql"){
@@ -68,10 +67,12 @@ class Data extends Base
         }
         if($this->ValidStr($field) && $this->ValidStr($data)){
             $sql="select * from $this->table where $field='" . $this->db->escape($data) . "'";
+            $this->debug("init sql: $sql");
             $tmp=$this->db->arrayQuery($sql);
             $this->data=$tmp[0];
             $this->id=$this->data["id"];
             unset($this->data["id"]);
+            $this->debug("data class setup: table: " . $this->table . " field: $field data: $data");
         }else{
             if($this->ValidStr($field)){
                 $this->debug("data class: \$data '$data' is not a valid string");
@@ -79,6 +80,7 @@ class Data extends Base
                 $this->debug("data class: \$field: '$field' is not a valid string");
             }
         }
+        $this->debug("end of data class initialisation for table: " . $this->table);
     }/*}}}*/
     private function getMysqlFields()/*{{{*/
     {
@@ -164,6 +166,12 @@ class Data extends Base
         }
         return $ret;
     }/*}}}*/
+    public function selectFromField($field,$operator,$val)/*{{{*/
+    {
+        $ret=false;
+        $sql="select * from " . $this->table . " where " . $field . $operator . $this->db->makeFieldString($val);
+        $ret=$this->db->arrayQuery($sql);
+    }/*}}}*/
     public function setFromField($field,$val)/*{{{*/
     {
         $ret=false;
@@ -211,6 +219,16 @@ class Data extends Base
             }
         }
     } /*}}}*/
+    public function setIntField($Field="",$val=false)/*{{{*/
+    {
+        if($this->ValidStr($Field)){
+            if($this->ValidInt($val)){
+                $this->data[$Field]=$val;
+                $this->dirty=true;
+                $this->update();
+            }
+        }
+    }/*}}}*/
     public function getField($Field="")/*{{{*/
     {
         if($this->ValidStr($Field) && isset($this->data[$Field])){
@@ -245,6 +263,9 @@ class Data extends Base
             $sql="delete from " . $this->table . " where id=" . $this->id;
             if(false==($numrows=$this->db->deleteQuery($sql))){
                 $this->error("Failed to delete row from " . $this->table . ": rowid: " . $this->id);
+            }else{
+                $this->data=false;
+                $this->id=false;
             }
         }
         return $numrows;

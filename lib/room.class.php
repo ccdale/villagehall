@@ -26,8 +26,6 @@
  * Last Modified: Tuesday 15 April 2014, 07:27:19
  */
 
-require_once "data.class.php";
-
 class Room extends Data
 {
     public function __construct($logg=false,$db=false,$id=false)/*{{{*/

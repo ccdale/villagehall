@@ -26,8 +26,6 @@
  * Last Modified: Tuesday 15 April 2014, 07:27:19
  */
 
-require_once "data.class.php";
-
 class Hall extends Data
 {
     private $numrooms=false;
@@ -61,6 +59,17 @@ class Hall extends Data
     public function getRooms()/*{{{*/
     {
         return $this->rooms;
+    }/*}}}*/
+    public function getRoomIds()/*{{{*/
+    {
+        $roomids=false;
+        if(false!==$this->rooms){
+            $roomids=array();
+            foreach($this->rooms as $room){
+                $roomids[]=$room->getId();
+            }
+        }
+        return $roomids;
     }/*}}}*/
     public function getName()/*{{{*/
     {

@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 13 August 2017, 09:18:22
+ * Last Modified: Saturday 26 August 2017, 15:46:43
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -26,14 +26,6 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "base.class.php";
-require_once "booking.class.php";
-require_once "prebooking.class.php";
-require_once "www.php";
-require_once "HTML/link.class.php";
-require_once "HTML/tag.class.php";
-require_once "HTML/form.class.php";
-
 class Bookings extends Base
 {
   private $db=false;
@@ -43,11 +35,13 @@ class Bookings extends Base
   private $numbookings=0;
   private $currentbooking=0;
   private $bookingstable=false;
+  private $hall=false;
 
-  public function __construct($logg=false,$db=false)/*{{{*/
+  public function __construct($logg=false,$db=false,$hall=false)/*{{{*/
   {
     parent::__construct($logg);
     $this->db=$db;
+    $this->hall=$hall;
   }/*}}}*/
   public function __destruct()/*{{{*/
   {
@@ -104,9 +98,13 @@ class Bookings extends Base
   }/*}}}*/
   private function getBookings($starttm,$length=86400,$room=false)/*{{{*/
   {
-    $sql="select * from booking where date>=$starttm and date<=($starttm+$length)";
+    $sql="select * from booking where date>=$starttm and date<($starttm+$length)";
     if(false!==$room){
       $sql.=" and roomid=$room";
+    }else{
+      if(is_object($this->hall) && get_class($this->hall)=="Hall"){
+        $sql.=" and roomid in (select roomid from rooms where hallid=" . $this->hall->getId() . ")";
+      }
     }
     $sql.=" order by date asc";
     $this->updateBookingList($sql);
@@ -161,14 +159,6 @@ class Bookings extends Base
     $tag=new Tag("td","",$atts);
     return $tag->makeTag();
   }/*}}}*/
-  private function dayBookingsArray($day,$month,$year,$rooms,$start)/*{{{*/
-  {
-    $ret=0;
-    $todaytm=mktime(0,0,0,$month,$day,$year);
-    $sql="select * from bookings where date>=$todaytm and date<=" . $todaytm+(24*3600) . " order by date asc";
-    if(false!==($darr=$this->db->arrayQuery($sql))){
-    }
-  }/*}}}*/
   private function noBookingsToday()/*{{{*/
   {
     $tag=new Tag("div","no bookings today.");
@@ -177,32 +167,6 @@ class Bookings extends Base
   public function loginForm()/*{{{*/
   {
     $f=new Form();
-  }/*}}}*/
-  public function dayBookingsTable($day,$month,$year,$rooms,$start=8)/*{{{*/
-  {
-    /* TODO: this function will replace calendar->roomBookingsDiv() */
-    if(0!==($tmp=$this->getBookingsForDay($day,$month,$year))){
-      if(false!==($table=$this->dayBookingsTableHead($rooms))){
-        while($start<(24)){ /*{{{*/
-          $row=$this->bookingsTimeCell($start);
-          $c=count($rooms);
-          for($x=0;$x<$c;$x++){
-            $id=$rooms[$x]->getId();
-            $sql="select * from bookings where roomid=$id and date>=$start and date<=$start+(" . $length*3600 . ") order by date asc";
-            if(false!==($rarr=$this->db->arrayQuery($sql))){
-
-            }else{
-              $row.=$this->blankCell();
-            }
-          }
-
-          $start+=$length;
-        } /*}}}*/
-      }
-    }else{
-      $table=$this->noBookingsToday();
-    }
-    return $table;
   }/*}}}*/
   public function addBookingForm($session,$day,$month,$year)/*{{{*/
   {

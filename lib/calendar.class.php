@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 25 March 2017, 12:02:15
- * Last Modified: Saturday 12 August 2017, 12:02:05
+ * Last Modified: Saturday 26 August 2017, 15:39:53
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -23,12 +23,6 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "base.class.php";
-require_once "bookings.class.php";
-require_once "room.class.php";
-require_once "HTML/link.class.php";
-require_once "HTML/tag.class.php";
-
 class Calendar extends Base
 {
   private $db=false;
@@ -36,20 +30,18 @@ class Calendar extends Base
   private $hall=false;
   private $rooms=false;
   private $numrooms=0;
-  private $session=false;
   private $year=0;
   private $month=0;
   private $day=0;
   private $hour=0;
   private $mo=0;
 
-  public function __construct($logg=false,$db=false,$hall=false,$session=false)/*{{{*/
+  public function __construct($logg=false,$db=false,$hall=false)/*{{{*/
   {
     parent::__construct($logg);
     $this->db=$db;
-    $this->bookings=new Bookings($logg,$db);
+    $this->bookings=new Bookings($logg,$db,$hall);
     $this->hall=$hall;
-    $this->session=$session;
     $this->getRooms();
     $this->mo=$this->getDefaultInt("monthoffset",0);
     $this->year=$this->getDefaultInt("year",0);
@@ -110,14 +102,19 @@ class Calendar extends Base
     $shour=date("G",$bstartsec);
     $smin=date("i",$bstartsec);
     $blenhours=intval($blensec/3600);
+    /*
     if($blenhours==0){
       $blenhours=1;
     }
+     */
     if(($blensec%3600)>0){
       $blenhours++;
     }
     $adjhour=$shour-$start;
+    /*
     $adjlen=$blenhours+$adjhour;
+     */
+    $adjlen=$blenhours;
     $slots=intval($adjlen/$length);
     if(($adjlen%$length)>0){
       $slots++;
@@ -156,13 +153,13 @@ class Calendar extends Base
           if(!isset($skip[$x])){
             $skip[$x]=1;
           }
-          $this->debug("before skip: " . $skip[$x] . " x: $x");
+          /* $this->debug("before skip: " . $skip[$x] . " x: $x"); */
           if($skip[$x]>1){
             $skip[$x]--;
-            $this->debug("skipping 1, skip is now: " . $skip[$x] . " x: $x");
+          /* $this->debug("skipping 1, skip is now: " . $skip[$x] . " x: $x"); */
             continue;
           }
-          $this->debug("after skip: " . $skip[$x] . " x: $x");
+          /* $this->debug("after skip: " . $skip[$x] . " x: $x"); */
           $link=true;
           $class="roombookingcell";
           $cn=$this->bookings->getRoomBookings($this->rooms[$x]->getId(),$tm,$length*3600);
