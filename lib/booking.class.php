@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 27 August 2017, 18:03:19
+ * Last Modified: Monday 28 August 2017, 11:23:00
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -100,6 +100,15 @@ class Booking extends Data
       $ret=true;
     }
     return $ret;
+  }/*}}}*/
+  public function payBooking()/*{{{*/
+  {
+    $status=$this->getField("status");
+    $status-=1;
+    if($status<1){
+      $status=1;
+    }
+    $this->setField("status",$status);
   }/*}}}*/
 }
 ?>
