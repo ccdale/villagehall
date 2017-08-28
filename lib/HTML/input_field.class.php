@@ -4,7 +4,7 @@
 *
 * creates a generic html form input field
 *
-* Last Modified: Thursday  3 June 2010, 13:26:22
+* Last Modified: Monday 28 August 2017, 11:01:51
 */
 class InputField
 {
@@ -242,6 +242,14 @@ class InputField
 		$this->setValue($value);
 		return $this->getfield();
 	}
+  /* returns a submit button */
+  function Submit($name,$value)
+  {
+    $this->setType("submit");
+    $this->setName($name);
+    $this->setValue($value);
+    return $this->getField();
+  }
 	/**
  * returns a text input field
  *
