@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Monday 28 August 2017, 11:09:56
+ * Last Modified: Monday 28 August 2017, 11:12:26
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -209,12 +209,18 @@ class Admin extends Base
   {
     $ip=new InputField();
     $hidden=$ip->Hidden("y",$this->admin);
+    $ip=new InputField();
     $hidden.=$ip->Hidden("bookingid",$barr["id"]);
     switch($barr["status"]){
+    case 1:
+      $txt="Fully Paid";
+      break;
     case 2:
+      $ip=new InputField();
       $txt=$ip->Submit("pay","Pay Full Amount");
       break;
     case 3:
+      $ip=new InputField();
       $txt=$ip->Submit("pay","Pay Deposit");
       break;
     default:
