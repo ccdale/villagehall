@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 26 August 2017, 16:27:41
- * Last Modified: Sunday 27 August 2017, 17:08:46
+ * Last Modified: Sunday 27 August 2017, 18:26:43
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -30,6 +30,8 @@ class ArchiveBooking extends Data
 
   public function __construct($logg=false,$db=false,$dataid=false)/*{{{*/
   {
+    $this->logg=$logg;
+    $this->db=$db;
     if($this->ValidInt($dataid)){
       parent::__construct($logg,$db,"archivebooking","id",$dataid);
     }else{
@@ -44,12 +46,20 @@ class ArchiveBooking extends Data
   {
     $ret=false;
     if($this->ValidInt($bid)){
-      $b=new Booking($this->logg,$this->db,array("id"=>$bid));
+      $this->debug("attempting to move booking id $bid to the archive");
+      $b=new xBooking($this->logg,$this->db,array("id"=>$bid));
+      $this->debug("booking object is now type " . gettype($b) . " and class: " . get_class($b));
       if(false!==($da=$b->getDataA())){
-        $this->debug("Archiving booking for room " . $da["roomid"] . " on " . $this->stringDate($da["date"]));
-        $this->setDataA($da);
-        $b->deleteMe();
-        $ret=true;
+        if(isset($da["roomid"]) && $da["roomid"]){
+          /* $this->debug("booking data returned type: " . gettype($da) . " and val: " . print_r($da,true)); */
+          $this->debug("Archiving booking for room " . $da["roomid"] . " on " . $this->stringDate($da["date"]));
+          $this->setDataA($da);
+          $this->id=false;
+          $b->deleteMe();
+          $ret=true;
+        }else{
+          $this->warning("Seems we have an empty array returned from booking class: " . print_r($da,true));
+        }
       }
     }
     return $ret;

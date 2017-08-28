@@ -49,6 +49,7 @@ class Data extends Base
     }/*}}}*/
     private function init($field=false,$data=false)/*{{{*/
     {
+        $this->debug("data class initialisation for table: " . $this->table);
         if(is_object($this->db)){
             $class=get_class($this->db);
             if($class=="SSql"){
@@ -66,10 +67,12 @@ class Data extends Base
         }
         if($this->ValidStr($field) && $this->ValidStr($data)){
             $sql="select * from $this->table where $field='" . $this->db->escape($data) . "'";
+            $this->debug("init sql: $sql");
             $tmp=$this->db->arrayQuery($sql);
             $this->data=$tmp[0];
             $this->id=$this->data["id"];
             unset($this->data["id"]);
+            $this->debug("data class setup: table: " . $this->table . " field: $field data: $data");
         }else{
             if($this->ValidStr($field)){
                 $this->debug("data class: \$data '$data' is not a valid string");
@@ -77,6 +80,7 @@ class Data extends Base
                 $this->debug("data class: \$field: '$field' is not a valid string");
             }
         }
+        $this->debug("end of data class initialisation for table: " . $this->table);
     }/*}}}*/
     private function getMysqlFields()/*{{{*/
     {

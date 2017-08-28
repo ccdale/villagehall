@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Sunday 27 August 2017, 17:06:49
+ * Last Modified: Monday 28 August 2017, 10:42:38
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -131,10 +131,10 @@ class Admin extends Base
   public function adminPage($hall)/*{{{*/
   {
     $op="<p>No bookings found</p>\n";
+    $str=$oop=$cop=$rows="";
     if($this->setHallObject($hall)){
       $this->archiveBookings();
       $tableheadrow=$this->makeAdminTableHead();
-      $rows="";
       if(false!==($outstanding=$this->getBookingsList())){
         $tag=new Tag("h5","Outstanding Bookings");
         $top=$tag->makeTag();
@@ -146,6 +146,7 @@ class Admin extends Base
         $tag=new Tag("div",$top);
         $oop=$tag->makeTag();
       }
+      $rows="";
       if(false!==($confirmed=$this->getBookingsList(true))){
         $tag=new Tag("h5","Confirmed Bookings");
         $top=$tag->makeTag();
@@ -171,7 +172,7 @@ class Admin extends Base
     $ret=false;
     if(false!==$this->roomids){
       $subsel="";
-      foreach($roomids as $rid){
+      foreach($this->roomids as $rid){
         if(strlen($subsel)){
           $subsel.="," . $rid;
         }else{

@@ -6,7 +6,7 @@
  * booking.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Sunday 27 August 2017, 17:19:39
+ * Last Modified: Sunday 27 August 2017, 18:03:19
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -33,15 +33,15 @@ class Booking extends Data
   private $minute=false;
   private $sminute="";
 
-  public function __construct($logg=false,$db=false,$data=false)/*{{{*/
+  public function __construct($logg=false,$db=false,$dataa=false)/*{{{*/
   {
-    if(false!==($junk=$this->ValidArray($data)) && isset($data["id"])){
-      parent::__construct($logg,$db,"booking","id",$data["id"]);
-      $this->debug("accessing booking id: " . $data["id"]);
+    if(false!==($junk=$this->ValidArray($dataa)) && isset($dataa["id"])){
+      parent::__construct($logg,$db,"booking","id",intval($dataa["id"]));
+      $this->info("accessing booking id: " . $dataa["id"]);
       $this->setupTimes();
     }else{
       parent::__construct($logg,$db,"booking");
-      $this->debug("New, empty, booking created");
+      $this->info("New, empty, booking created");
     }
   }/*}}}*/
   public function __destruct()/*{{{*/
