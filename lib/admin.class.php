@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday 20 August 2017, 05:45:43
- * Last Modified: Monday 28 August 2017, 11:08:43
+ * Last Modified: Monday 28 August 2017, 11:09:56
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -100,33 +100,6 @@ class Admin extends Base
       return $tag->makeTag();
       break;
     }
-  }/*}}}*/
-  public function _adminPage($hall)/*{{{*/
-  {
-    $op="<p>No bookings found</p>\n";
-    if(is_object($hall) && get_class($hall)=="Hall"){
-      $this->archiveBookings();
-      $roomids=$hall->getRoomIds();
-      $subselect="";
-      foreach($roomids as $rid){
-        if(strlen($subselect)){
-          $subselect.="," . $rid;
-        }else{
-          $subselect=$rid;
-        }
-      }
-      $sql="select * from booking where roomid in ($subselect) and status>1 order by date asc";
-      if(false!==($arr=$this->db->arrayQuery($sql))){
-        $tableheadrow=$this->makeAdminTableHead();
-        $rows="";
-        foreach($arr as $barr){
-          $rows.=$this->makeAdminRow($barr);
-        }
-        $tag=new Tag("table",$tableheadrow . $rows,array("border"=>1));
-        $op=$tag->makeTag();
-      }
-    }
-    return $op;
   }/*}}}*/
   public function adminPage($hall)/*{{{*/
   {
@@ -228,7 +201,7 @@ class Admin extends Base
     $row.=$this->makeTD($u->getName());
     $row.=$this->makeTD($u->getEmail());
     $row.=$this->makeTD($r->getName());
-    $row.=$this->makeTD($barr["status"]);
+    $row.=$this->makeTD($this->makeStatusForm($barr));
     $tag=new Tag("tr",$row);
     return $tag->makeTag();
   }/*}}}*/
