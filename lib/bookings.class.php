@@ -6,7 +6,7 @@
  * bookings.class.php
  *
  * Started: Tuesday 22 November 2016, 10:15:38
- * Last Modified: Monday 28 August 2017, 13:24:55
+ * Last Modified: Monday 28 August 2017, 13:34:08
  *
  * Copyright (c) 2016 Chris Allison chris.charles.allison+vh@gmail.com
  *
@@ -28,7 +28,7 @@
 
 class Bookings extends Base
 {
-  private $db=false;
+  protected $db=false;
   private $bookinglist=false;
   private $bookings=false;
   private $rbookings=false;
@@ -36,7 +36,7 @@ class Bookings extends Base
   private $currentbooking=0;
   private $bookingstable=false;
   private $hall=false;
-  private $log=false;
+  protected $log=false;
 
   public function __construct($logg=false,$db=false,$hall=false)/*{{{*/
   {
