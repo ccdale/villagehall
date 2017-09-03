@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 19 August 2017, 09:03:04
- * Last Modified: Monday 28 August 2017, 12:36:29
+ * Last Modified: Sunday  3 September 2017, 09:40:59
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -101,6 +101,15 @@ class Switchboard extends Base
       break;
     case 22:
       $op="<p class='bodytext'>The Secretary can be contacted at lidlington.vhall.uk@gmail.com</p>\n";
+      break;
+    case 23:
+      $op="<p class='bodytext'>This is the pricing page.</p>\n";
+      break;
+    case 24:
+      $op="<p class='bodytext'>Terms and Conditions page.</p>\n";
+      break;
+    case 25:
+      $op="<p class='bodytext'>Privacy page.</p>\n";
       break;
     case 98:
       /*
