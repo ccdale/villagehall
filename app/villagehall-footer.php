@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Tuesday 21 February 2017, 06:02:54
- * Last Modified: Saturday 26 August 2017, 08:04:16
+ * Last Modified: Sunday  3 September 2017, 09:16:48
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -29,7 +29,7 @@
 $bfooter="\n</div>\n";
 $about=new ALink(array("a"=>21),"About");
 $contact=new ALink(array("a"=>22),"Contact");
-$admin=new Alink(array("z"=>"admin","a"=>99),"Admin");
+/* $admin=new Alink(array("z"=>"admin","a"=>99),"Admin"); */
 $td=new Tag("td",$about->makeLink());
 $row=$td->makeTag();
 $td=new Tag("td","&nbsp;");
@@ -38,7 +38,8 @@ $td=new Tag("td",$contact->makeLink());
 $row.=$td->makeTag();
 $td=new Tag("td","&nbsp;");
 $row.=$td->makeTag();
-$td=new Tag("td",$admin->makeLink());
+/* $td=new Tag("td",$admin->makeLink()); */
+$td=new Tag("td","&nbsp;");
 $row.=$td->makeTag();
 $tr=new Tag("tr",$row);
 $row=$tr->makeTag();
