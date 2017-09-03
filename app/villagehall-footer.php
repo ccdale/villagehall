@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Tuesday 21 February 2017, 06:02:54
- * Last Modified: Sunday  3 September 2017, 09:35:47
+ * Last Modified: Sunday  3 September 2017, 09:39:08
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -34,6 +34,7 @@ $linksarray=array(
   array("a"=>24,"text"=>"Terms and Conditions"),
   array("a"=>25,"text"=>"Privacy")
 );
+
 $row="";
 foreach($linksarray as $la){
   $alink=new ALink($la,$la["text"]);
@@ -43,36 +44,6 @@ foreach($linksarray as $la){
   $row.=$td->makeTag();
 }
 
-/*
-$about=new ALink(array("a"=>21),"About");
-$contact=new ALink(array("a"=>22),"Contact");
-$terms=new ALing(array("a"=>23),"Terms and Conditions");
-$privacy=new Alink(array("a"=>24),"Privacy");
- */
-/* $admin=new Alink(array("z"=>"admin","a"=>99),"Admin"); */
-/*
-$td=new Tag("td",$about->makeLink());
-$row=$td->makeTag();
-$td=new Tag("td","&nbsp;");
-$row.=$td->makeTag();
-$td=new Tag("td",$contact->makeLink());
-$row.=$td->makeTag();
-$td=new Tag("td","&nbsp;");
-$row.=$td->makeTag();
-$td=new Tag("td",$terms->makeLink());
-$row.=$td->makeTag();
-$td=new Tag("td","&nbsp;");
-$row.=$td->makeTag();
-$td=new Tag("td",$privacy->makeLink());
-$row.=$td->makeTag();
-$td=new Tag("td","&nbsp;");
-$row.=$td->makeTag();
- */
-/* $td=new Tag("td",$admin->makeLink()); */
-/*
-$td=new Tag("td","&nbsp;");
-$row.=$td->makeTag();
- */
 $tr=new Tag("tr",$row);
 $row=$tr->makeTag();
 $table=new Tag("table",$row,array("border"=>0));
