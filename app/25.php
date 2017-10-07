@@ -23,7 +23,7 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 $html=<<<HTML
-<p>This is the Booking System for the $hallname Village Hall.</p>
+<p>This is the Booking System for the Village Hall.</p>
 <h3>Privacy</h3>
 <p>We will store your email address for the purpose of linking you to a booking.</p>
 <p>We will not use your email address or name for any other purpose other than in the administration of that booking.</p>

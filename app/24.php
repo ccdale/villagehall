@@ -23,7 +23,7 @@
  * along with villagehall.  If not, see <http://www.gnu.org/licenses/>.
  */
 $html=<<<HTML
-<p>This is the Booking System for the $hallname Village Hall.</p>
+<p>This is the Booking System for the Village Hall.</p>
 <h3>Terms and Conditions</h3>
 <p>If you make a booking, you have 7 days to pay a deposit, or the full amount, to the Secretary.</p>
 <p>You must pay the full amount 6 weeks before the booking date.</p>
