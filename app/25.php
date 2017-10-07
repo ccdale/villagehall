@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday  3 September 2017, 09:43:04
- * Last Modified: Saturday  7 October 2017, 10:12:26
+ * Last Modified: Saturday  7 October 2017, 10:26:23
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -28,5 +28,7 @@ $html=<<<HTML
 <p>We will store your email address for the purpose of linking you to a booking.</p>
 <p>We will not use your email address or name for any other purpose other than in the administration of that booking.</p>
 <p>This website neither sets nor reads any cookies.</p>
+<p></p>
+<p>The secretary can be contacted via email at <a href="mailto:lidlington.vhall.uk@gmail.com">lidlington.vhall.uk@gmail.com</a></p>
 HTML;
 ?>

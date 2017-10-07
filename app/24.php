@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Sunday  3 September 2017, 09:43:04
- * Last Modified: Saturday  7 October 2017, 10:19:58
+ * Last Modified: Saturday  7 October 2017, 10:26:01
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -25,11 +25,12 @@
 $html=<<<HTML
 <p>This is the Booking System for the $hallname Village Hall.</p>
 <h3>Terms and Conditions</h3>
-<p>The secretary can be contacted at lidlington.vhall.uk@gmail.com</p>
 <p>If you make a booking, you have 7 days to pay a deposit, or the full amount, to the Secretary.</p>
 <p>You must pay the full amount 6 weeks before the booking date.</p>
 <p>If you are booking a date that is less than 6 weeks in the future, you must pay the full amount to the Secretary within 7 days of making the booking.</p>
 <p>If a deposit, or the full amount, is not made within the 7 day period, the booking will be cancelled.</p>
 <p>If the full amount is not paid before the 6 week deadline the booking will be cancelled.</p>
+<p></p>
+<p>The secretary can be contacted via email at <a href="mailto:lidlington.vhall.uk@gmail.com">lidlington.vhall.uk@gmail.com</a></p>
 HTML;
 ?>
