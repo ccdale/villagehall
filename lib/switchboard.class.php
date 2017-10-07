@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Saturday 19 August 2017, 09:03:04
- * Last Modified: Sunday  3 September 2017, 09:40:59
+ * Last Modified: Saturday  7 October 2017, 10:20:59
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -39,6 +39,7 @@ class Switchboard extends Base
   private $admin=false;
   private $bookingid=0;
   private $revertid=0;
+  private $appdir=false;
 
   public function __construct($logg=false,$db=false,$hall=false)/*{{{*/
   {
@@ -46,6 +47,7 @@ class Switchboard extends Base
     $this->logg=$logg;
     $this->db=$db;
     $this->hall=$hall;
+    $this->appdir=dirname(__FILE__) . "/../app";
     $this->mo=$this->getDefaultInt("monthoffset",0);
     $this->day=$this->getDefaultInt("day",0);
     $this->month=$this->getDefaultInt("month",0);
@@ -97,19 +99,14 @@ class Switchboard extends Base
       $op=$b->processGuuid($this->guuid);
       break;
     case 21:
-      $op="<p class='bodytext'>This is the booking system for the Village Hall</p>\n";
-      break;
     case 22:
-      $op="<p class='bodytext'>The Secretary can be contacted at lidlington.vhall.uk@gmail.com</p>\n";
-      break;
     case 23:
-      $op="<p class='bodytext'>This is the pricing page.</p>\n";
-      break;
     case 24:
-      $op="<p class='bodytext'>Terms and Conditions page.</p>\n";
-      break;
     case 25:
-      $op="<p class='bodytext'>Privacy page.</p>\n";
+      $aboutfn=$this->appdir . "/" . $this->action . ".php";
+      $this->debug("including $aboutfn");
+      include $aboutfn;
+      $op=$html;
       break;
     case 98:
       /*

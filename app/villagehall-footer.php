@@ -3,7 +3,7 @@
  * vim: set expandtab tabstop=4 shiftwidth=2 softtabstop=4 foldmethod=marker:
  *
  * Started: Tuesday 21 February 2017, 06:02:54
- * Last Modified: Sunday  3 September 2017, 09:39:08
+ * Last Modified: Sunday  3 September 2017, 10:01:05
  *
  * Copyright © 2017 Chris Allison <chris.charles.allison+vh@gmail.com>
  *
@@ -35,6 +35,10 @@ $linksarray=array(
   array("a"=>25,"text"=>"Privacy")
 );
 
+$td=new Tag("td","<hr />",array("colspan"=>count($linksarray)*2));
+$row=$td->makeTag();
+$hline=new Tag("tr",$row);
+$rows=$hline->makeTag();
 $row="";
 foreach($linksarray as $la){
   $alink=new ALink($la,$la["text"]);
@@ -45,8 +49,9 @@ foreach($linksarray as $la){
 }
 
 $tr=new Tag("tr",$row);
-$row=$tr->makeTag();
-$table=new Tag("table",$row,array("border"=>0));
+$rows.=$tr->makeTag();
+$rows.=$hline->makeTag();
+$table=new Tag("table",$rows,array("border"=>0));
 $tag=new Tag("div",$table->makeTag());
 $links=$tag->makeTag();
 $nocookies="This website does not set nor read cookies.\n";
